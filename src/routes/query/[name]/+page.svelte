@@ -9,11 +9,11 @@
 output goes here
 
 <pre>
-    {data.outrows}
+    {data.outRows}
 </pre>
 
 <nl>
-{#each data.outrowsRaw as singleRow}
-    <li>{singleRow}</li>
+{#each data.outRowsRaw as singleRow}
+    <li><pre>{JSON.stringify(singleRow)}</pre></li>
 {/each}
 </nl>
