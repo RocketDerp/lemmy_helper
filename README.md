@@ -2,11 +2,7 @@
 
 Lemmy social media, federated application
 
-This is an attempt to create a SvelteKit webapp for server operators to work directly with the PostgreSQL database tables.
-
-Work in progress / unstable project.
-
-Lemmy social media community for this project: https://lemmy.ml/c/lemmy_helper
+This is an attempt to create a SvelteKit webapp for server operators to work directly with the PostgreSQL database tables. Work in progress / unstable project. Lemmy social media community for this project: https://lemmy.ml/c/lemmy_helper
 
 
 ## Developing
