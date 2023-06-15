@@ -9,5 +9,5 @@
 output goes here
 
 <pre>
-    {data.sqlRows}
+    {data.outrows}
 </pre>
