@@ -32,7 +32,7 @@ export const load: PageServerLoad = async (incoming) => {
 		await client.connect()
 		
 		try {
-			const res = await client.query()
+			const res = await client.query(sqlQuery)
 			console.log(res.rows[0].message) // Hello world!
 			outRows = JSON.stringify(res.rows);
 		} catch (err) {
