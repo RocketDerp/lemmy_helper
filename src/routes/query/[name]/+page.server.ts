@@ -6,6 +6,7 @@ export const load: PageServerLoad = async (incoming) => {
 
 	let sqlQuery;
 	let outRows = {};
+	let outRowsRaw = [];
 
 	// this switch statement gurads the parameter, only whitelist matching.
 	switch (incoming.params.name) {
@@ -35,6 +36,7 @@ export const load: PageServerLoad = async (incoming) => {
 			const res = await client.query(sqlQuery)
 			console.log(res.rows[0].message) // Hello world!
 			outRows = JSON.stringify(res.rows);
+			outRowsRaw = res.rows;
 		} catch (err) {
 			console.error(err);
 		} finally {
@@ -44,6 +46,7 @@ export const load: PageServerLoad = async (incoming) => {
 
 	return {
 		queryName: incoming.params.name,
-		outrows: outRows
+		outrows: outRows,
+		outrowsRaw: outRowsRaw
 	}
 }

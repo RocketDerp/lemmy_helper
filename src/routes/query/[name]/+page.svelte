@@ -11,3 +11,9 @@ output goes here
 <pre>
     {data.outrows}
 </pre>
+
+<nl>
+{#each data.outrowsRaw as singleRow}
+    <li>{singleRow}</li>
+{/each}
+</nl>
