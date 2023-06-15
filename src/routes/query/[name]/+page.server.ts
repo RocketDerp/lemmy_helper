@@ -24,7 +24,8 @@ export const load: PageServerLoad = async (incoming) => {
 			console.log(incoming.params);
 			return {
 				queryName: "error, unrecognized query name, ER001",
-				outRows: {}
+				outRows: {},
+				outRowsRaw: []
 			}
 	}
 
@@ -46,7 +47,7 @@ export const load: PageServerLoad = async (incoming) => {
 
 	return {
 		queryName: incoming.params.name,
-		outrows: outRows,
-		outrowsRaw: outRowsRaw
+		outRows: outRows,
+		outRowsRaw: outRowsRaw
 	}
 }
