@@ -9,6 +9,9 @@ export const load: PageServerLoad = async (incoming) => {
 
 	// this switch statement gurads the parameter, only whitelist matching.
 	switch (incoming.params.name) {
+		case "test1":
+			sqlQuery = 'SELECT $1::text as message', ['Hello world!'];
+			break;
 		case "locks":
 			sqlQuery = "select * from pg_locks;";
 			break;
@@ -29,7 +32,7 @@ export const load: PageServerLoad = async (incoming) => {
 		await client.connect()
 		
 		try {
-			const res = await client.query('SELECT $1::text as message', ['Hello world!'])
+			const res = await client.query()
 			console.log(res.rows[0].message) // Hello world!
 			outRows = JSON.stringify(res.rows);
 		} catch (err) {

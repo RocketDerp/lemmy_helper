@@ -8,3 +8,6 @@
 
 output goes here
 
+<pre>
+    {data.sqlRows}
+</pre>
