@@ -1,2 +1,10 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<h1>Welcome to Lemmy-Helper</h1>
+
+<p>Lemmy-Helper can give you a web interface to query your Lemmy database directly.</p>
+
+<ul>
+    <li><a href="query/locks/">locks</a> - datatabase locks</li>
+    <li><a href="query/communitypending/">communitypending</a> - community join/subscribe pending</li>
+</ul>
+
+
