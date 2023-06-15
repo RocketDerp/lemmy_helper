@@ -6,6 +6,9 @@ This is an attempt to create a SvelteKit webapp for server operators to work dir
 
 Work in progress / unstable project.
 
+Lemmy social media community for this project: https://lemmy.ml/c/lemmy_helper
+
+
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
