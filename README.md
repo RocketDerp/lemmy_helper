@@ -10,9 +10,11 @@ Lemmy social media community for this project: https://lemmy.ml/c/lemmy_helper
 
 You will need NodeJS installed on your system. I used pnpm to do the project creation and install, you can likely use normal npm or yarn (untested). To build project:
 
+```
 git clone https://github.com/RocketDerp/lemmy_helper.git
 cd lemmy_helper
 pnpm install
+```
 
 # PostgreSQL username and password
 
