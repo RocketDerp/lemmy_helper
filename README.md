@@ -16,7 +16,7 @@ pnpm install
 
 # PostgreSQL username and password
 
-PGUSER and PGPASSWORD enviornment variables are used by the NodeJS pg library used in the app. You can temporarily set these variables before the npm run command (exanple uses pnpm):
+PGUSER and PGPASSWORD environment variables are used by the NodeJS pg library used in the app. You can temporarily set these variables before the npm run command (exanple uses pnpm):
 
 `PGUSER=lemmy PGPASSWORD=mypassword pnpm run dev --host --port 9000`
 
