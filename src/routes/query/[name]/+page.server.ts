@@ -19,6 +19,15 @@ export const load: PageServerLoad = async (incoming) => {
 		case "communitypending":
 			sqlQuery = "SELECT * FROM community_follower WHERE pending='t';"
 			break;
+		case 'communitypending1':
+			sqlQuery = `SELECT person_id, p.name, community_id, c.name, i.domain, published
+			FROM community_follower
+			inner join person p on p.id = community_follower.person_id
+			inner join community c on c.id = community_follower.community_id
+			inner join instance i on c.instance_id = i.id
+			WHERE pending='t'
+			;`
+			break;
 		default:
 			console.error("/routes/query did not recognize params ER001");
 			console.log(incoming.params);
