@@ -34,7 +34,7 @@ export const load: PageServerLoad = async (incoming) => {
 			console.log(incoming.params);
 			return {
 				queryName: "error, unrecognized query name, ER001",
-				outRows: {},
+				outRows: { rows: [] },
 				outRowsRaw: []
 			}
 	}
@@ -51,7 +51,7 @@ export const load: PageServerLoad = async (incoming) => {
 			console.error(err);
 			return {
 				queryName: "error, exception on query execution, ER002",
-				outRows: {},
+				outRows: { rows: [] },
 				outRowsRaw: []
 			}
 		} finally {
