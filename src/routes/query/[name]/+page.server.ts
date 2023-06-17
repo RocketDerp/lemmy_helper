@@ -29,6 +29,13 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY community_follower.published
 			;`
 			break;
+		case 'posts':
+			sqlQuery = `SELECT *
+			FROM post
+			WHERE published >= NOW() - INTERVAL '1 HOUR'
+			ORDER BY published
+			;`
+			break;
 		default:
 			console.error("/routes/query did not recognize params ER001");
 			console.log(incoming.params);
