@@ -11,7 +11,8 @@
 Database result row count: {rowCount}
 
 {#if rowCount > 0}
-connect time: {timeConnect} query time: {timeQuery}
+
+connect time: {data.timeConnect} query time: {data.timeQuery}
 
 <pre>
     {data.outRows}
