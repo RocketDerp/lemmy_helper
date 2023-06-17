@@ -2,11 +2,13 @@
     import type { PageData } from './$types'
 
     export let data: PageData
+
+    const rowCount = data.outRowsRaw.length;
 </script>
 
 <h1>Lemmy-Helper Query: {data.queryName}</h1>
 
-Database result row count: {data.outRowsRaw.length}
+Database result row count: {rowCount}
 
 <pre>
     {data.outRows}
@@ -14,6 +16,7 @@ Database result row count: {data.outRowsRaw.length}
 
 <hr />
 
+{#if rowCount > 0}
 <nl>
 {#each data.outRowsRaw as singleRow}
     <li><pre>{JSON.stringify(singleRow)}</pre></li>
@@ -41,7 +44,7 @@ Database result row count: {data.outRowsRaw.length}
     {/each}
   </tbody>
 </table>
-
+{/if}
 
 <style>
     table, th, td {
