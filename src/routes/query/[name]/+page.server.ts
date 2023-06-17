@@ -45,10 +45,8 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 		case 'localusers':
-			sqlQuery = `SELECT id, published, *
+			sqlQuery = `SELECT id, *
 			FROM local_user
-			WHERE published >= NOW() - INTERVAL '1 HOUR'
-			ORDER BY published
 			;`
 			break;
 		default:
@@ -61,12 +59,19 @@ export const load: PageServerLoad = async (incoming) => {
 			}
 	}
 
+	let timeConnect = 0.0;
+	let timeQuery = 0.0;
+
     if (sqlQuery) {
 		const client = new Client()
+		const startTime = process.hrtime();
 		await client.connect()
-		
+		timeConnect = parseHrtimeToSeconds(process.hrtime(startTime))
+
 		try {
+			const queryTime = process.hrtime();
 			const res = await client.query(sqlQuery)
+			timeQuery = parseHrtimeToSeconds(process.hrtime(queryTime))
 			outRows = JSON.stringify(res.rows);
 			outRowsRaw = res.rows;
 		} catch (err) {
@@ -84,6 +89,13 @@ export const load: PageServerLoad = async (incoming) => {
 	return {
 		queryName: incoming.params.name,
 		outRows: outRows,
-		outRowsRaw: outRowsRaw
+		outRowsRaw: outRowsRaw,
+		timeQuery: timeQuery,
+		timeConnect: timeConnect
 	}
+}
+
+function parseHrtimeToSeconds(hrtime) {
+    var seconds = (hrtime[0] + (hrtime[1] / 1e9)).toFixed(3);
+    return seconds;
 }

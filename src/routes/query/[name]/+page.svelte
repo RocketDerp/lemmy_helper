@@ -10,13 +10,15 @@
 
 Database result row count: {rowCount}
 
+{#if rowCount > 0}
+connect time: {timeConnect} query time: {timeQuery}
+
 <pre>
     {data.outRows}
 </pre>
 
 <hr />
 
-{#if rowCount > 0}
 <nl>
 {#each data.outRowsRaw as singleRow}
     <li><pre>{JSON.stringify(singleRow)}</pre></li>
