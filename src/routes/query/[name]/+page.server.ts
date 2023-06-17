@@ -45,8 +45,10 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 		case 'localusers':
-			sqlQuery = `SELECT id, *
+			sqlQuery = `SELECT id, person_id, p.name as username, email, email_verified, accepted_application, validator_time
 			FROM local_user
+			inner join person p on p.id = local_user.person_id
+			ORDER BY id
 			;`
 			break;
 		default:
@@ -69,9 +71,9 @@ export const load: PageServerLoad = async (incoming) => {
 		timeConnect = parseHrtimeToSeconds(process.hrtime(startTime))
 
 		try {
-			const queryTime = process.hrtime();
+			const queryTimeStart = process.hrtime();
 			const res = await client.query(sqlQuery)
-			timeQuery = parseHrtimeToSeconds(process.hrtime(queryTime))
+			timeQuery = parseHrtimeToSeconds(process.hrtime(queryTimeStart))
 			outRows = JSON.stringify(res.rows);
 			outRowsRaw = res.rows;
 		} catch (err) {
