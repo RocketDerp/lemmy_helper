@@ -54,6 +54,6 @@ Database result row count: {rowCount}
     }
 
     td, th {
-      padding: 3px 2px;
+      padding: 3px 3px;
     }
 </style>

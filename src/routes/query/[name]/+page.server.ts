@@ -44,6 +44,13 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY published
 			;`
 			break;
+		case 'localusers':
+			sqlQuery = `SELECT id, published, *
+			FROM local_user
+			WHERE published >= NOW() - INTERVAL '1 HOUR'
+			ORDER BY published
+			;`
+			break;
 		default:
 			console.error("/routes/query did not recognize params ER001");
 			console.log(incoming.params);
