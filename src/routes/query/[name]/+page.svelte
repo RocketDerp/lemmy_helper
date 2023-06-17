@@ -6,7 +6,7 @@
 
 <h1>Lemmy-Helper Query: {data.queryName}</h1>
 
-Database result row count: {data.outRowsRaw.count}
+Database result row count: {data.outRowsRaw.length}
 
 <pre>
     {data.outRows}

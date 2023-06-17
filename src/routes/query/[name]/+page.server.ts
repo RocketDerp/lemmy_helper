@@ -14,7 +14,7 @@ export const load: PageServerLoad = async (incoming) => {
 			sqlQuery = 'SELECT $1::text as message', ['Hello world!'];
 			break;
 		case "locks":
-			sqlQuery = "select * from pg_locks;";
+			sqlQuery = "SELECT * FROM pg_locks;";
 			break;
 		case "communitypending":
 			sqlQuery = "SELECT * FROM community_follower WHERE pending='t';"
@@ -26,6 +26,7 @@ export const load: PageServerLoad = async (incoming) => {
 			inner join community c on c.id = community_follower.community_id
 			inner join instance i on c.instance_id = i.id
 			WHERE pending='t'
+			ORDER BY community_follower.published
 			;`
 			break;
 		default:
@@ -44,11 +45,15 @@ export const load: PageServerLoad = async (incoming) => {
 		
 		try {
 			const res = await client.query(sqlQuery)
-			console.log(res.rows[0].message) // Hello world!
 			outRows = JSON.stringify(res.rows);
 			outRowsRaw = res.rows;
 		} catch (err) {
 			console.error(err);
+			return {
+				queryName: "error, exception on query execution, ER002",
+				outRows: {},
+				outRowsRaw: []
+			}
 		} finally {
 			await client.end()
 		}
