@@ -31,14 +31,14 @@ export const load: PageServerLoad = async (incoming) => {
 			break;
 		case 'posts':
 			sqlQuery = `SELECT id, name, creator_id, community_id, published, updated,
-			   ap_id, local, 
+			   ap_id, local 
 			FROM post
 			WHERE published >= NOW() - INTERVAL '1 HOUR'
 			ORDER BY published
 			;`
 			break;
 		case 'comments':
-			sqlQuery = `SELECT id, published, *
+			sqlQuery = `SELECT id, post_id, published, ap_id, path
 			FROM comment
 			WHERE published >= NOW() - INTERVAL '1 HOUR'
 			ORDER BY published
