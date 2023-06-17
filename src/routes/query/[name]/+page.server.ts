@@ -20,7 +20,7 @@ export const load: PageServerLoad = async (incoming) => {
 			sqlQuery = "SELECT * FROM community_follower WHERE pending='t';"
 			break;
 		case 'communitypending1':
-			sqlQuery = `SELECT person_id, p.name, community_id, c.name, i.domain, community_follower.published
+			sqlQuery = `SELECT person_id, p.name AS username, community_id, c.name as community, i.domain, community_follower.published
 			FROM community_follower
 			inner join person p on p.id = community_follower.person_id
 			inner join community c on c.id = community_follower.community_id

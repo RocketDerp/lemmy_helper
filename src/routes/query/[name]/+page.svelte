@@ -52,4 +52,8 @@ Database result row count: {rowCount}
       border-collapse: collapse;
       margin: 10px;
     }
+
+    td, th {
+      padding: 3px 2px;
+    }
 </style>
