@@ -62,11 +62,12 @@ export const load: PageServerLoad = async (incoming) => {
 				GROUP BY
 					community_id
 			) a INNER JOIN community c on c.id = a.community_id
+			ORDER BY c.published
 			;`
 			break;
 		case 'federatedcommentcount':
 			sqlQuery = `
-			SELECT a.post_id, c.community_id, a.comment_count, c.name
+			SELECT a.post_id, c.community_id, a.comment_count, c.published, c.name
 			FROM (
 				SELECT
 					post_id,
@@ -78,6 +79,7 @@ export const load: PageServerLoad = async (incoming) => {
 				GROUP BY
 					post_id
 			) a INNER JOIN post c on c.id = a.post_id
+			ORDER BY c.published
 			;`
 			break;
 		case 'posts':
