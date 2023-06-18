@@ -48,6 +48,19 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY community_follower.published
 			;`
 			break;
+		case 'federatedcount':
+			sqlQuery = `
+			SELECT
+				community_id,
+				COUNT (*) AS "Number of Posts"
+			FROM
+				post
+			WHERE
+			    local=false
+			GROUP BY
+				community_id;
+			;`
+			break;
 		case 'posts':
 			sqlQuery = `SELECT id, name, creator_id, community_id, published, updated,
 			   ap_id, local 
