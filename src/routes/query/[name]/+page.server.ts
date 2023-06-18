@@ -51,14 +51,15 @@ export const load: PageServerLoad = async (incoming) => {
 		case 'federatedcount':
 			sqlQuery = `
 			SELECT
-				community_id,
+				community_id, c.name
 				COUNT (*) AS "Number of Posts"
 			FROM
 				post
+			INNER JOIN community c on c.id = post.community_id
 			WHERE
-			    local=false
+			    post.local=false
 			GROUP BY
-				community_id;
+				post.community_id;
 			;`
 			break;
 		case 'posts':
