@@ -99,7 +99,7 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 		case 'raw_person':
-			sqlQuery = `SELECT id, actor_id, name, display_name, published, local, instance_id, matrox_user_id
+			sqlQuery = `SELECT id, actor_id, name, display_name, published, local, instance_id, matrix_user_id, *
 			FROM person
 			ORDER BY published DESC
 			LIMIT 10
