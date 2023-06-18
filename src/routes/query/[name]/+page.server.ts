@@ -31,6 +31,12 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY query_start desc
 			;`
 			break;
+		case 'pgrunning1':
+			sqlQuery = `SELECT pid, query_start, usename, query 
+			FROM pg_stat_activity 
+			ORDER BY query_start desc
+			;`
+			break;
 		case "pgcounts":
 			sqlQuery = `select table_schema, table_name, 
 			(xpath('/row/cnt/text()', xml_count))[1]::text::int as row_count
