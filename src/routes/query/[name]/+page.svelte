@@ -14,6 +14,7 @@ Database result row count: {rowCount} output: {data.output}
 
 connect time: {data.timeConnect} query time: {data.timeQuery}
 
+{#if data.output !== 'table'}
 <pre>
     {data.outRows}
 </pre>
@@ -27,6 +28,7 @@ connect time: {data.timeConnect} query time: {data.timeQuery}
 </nl>
 
 <hr />
+{/if}
 
 <table>
   <thead>
