@@ -66,17 +66,18 @@ export const load: PageServerLoad = async (incoming) => {
 			break;
 		case 'federatedcommentcount':
 			sqlQuery = `
-			SELECT a.community_id, c.name, a.count
-			SELECT
-				community_id, c.name,
-				COUNT (*) AS "Number of Comments"
-			FROM
-				comment
-			INNER JOIN community c on c.id = comment.community_id
-			WHERE
-				comment.local=false
-			GROUP BY
-				comment.community_id;
+			SELECT a.post_id, c.community_id, a.comment.count
+			FROM (
+				SELECT
+					post_id,
+					COUNT (*) AS comment_count
+				FROM
+					post
+				WHERE
+					local=false
+				GROUP BY
+					community_id
+			) a INNER JOIN post c on c.id = a.post_id
 			;`
 			break;
 		case 'posts':
@@ -97,7 +98,7 @@ export const load: PageServerLoad = async (incoming) => {
 		case 'raw_comments':
 			sqlQuery = `SELECT id, post_id, published, ap_id, path, *
 			FROM comment
-			ORDER BY published
+			ORDER BY published DESC
 			LIMIT 10
 			;`
 		break;
