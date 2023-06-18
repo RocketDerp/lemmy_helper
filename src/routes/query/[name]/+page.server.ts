@@ -200,6 +200,7 @@ SELECT "post"."id", "post"."name", "post"."url", "post"."body", "post"."creator_
 				2,
 				false, 2,
 				// 11 is the community_id, the listing was for a single community postings
+				30, // lemmyworld
 				// 12 is removed, 13 is deleted, 14 removed, 15 deleted
 				false, false, false, false,
 				// 16 limit, 17 offset
