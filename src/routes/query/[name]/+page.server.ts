@@ -40,7 +40,7 @@ export const load: PageServerLoad = async (incoming) => {
 			sqlQuery = `
 			SELECT queryid, calls, rows, mean_exec_time, query
 		    FROM pg_stat_statements
-			ORDER BY calls, rows
+			ORDER BY calls DESC, rows DESC
 			;`
 			break;
 		case 'explain_posts':
