@@ -184,7 +184,7 @@ export const load: PageServerLoad = async (incoming) => {
 			const queryTimeStart = process.hrtime();
 			const res = await client.query(sqlQuery)
 			timeQuery = parseHrtimeToSeconds(process.hrtime(queryTimeStart))
-			outRows = JSON.stringify(res.rows);
+			// outRows = JSON.stringify(res.rows);
 			outRowsRaw = res.rows;
 		} catch (err) {
 			console.error(err);
