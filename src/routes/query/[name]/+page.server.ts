@@ -53,14 +53,14 @@ export const load: PageServerLoad = async (incoming) => {
 			SELECT a.community_id, c.name, a.post_count
 			FROM (
 				SELECT
-					community_id, c.name,
+					community_id,
 					COUNT (*) AS post_count
 				FROM
 					post
 				WHERE
-					post.local=false
+					local=false
 				GROUP BY
-					post.community_id
+					community_id
 			) a INNER JOIN community c on c.id = a.community_id
 			;`
 			break;
