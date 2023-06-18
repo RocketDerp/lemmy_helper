@@ -66,7 +66,7 @@ export const load: PageServerLoad = async (incoming) => {
 			break;
 		case 'federatedcommentcount':
 			sqlQuery = `
-			SELECT a.post_id, c.community_id, a.comment.count
+			SELECT a.post_id, c.community_id, a.comment_count
 			FROM (
 				SELECT
 					post_id,
