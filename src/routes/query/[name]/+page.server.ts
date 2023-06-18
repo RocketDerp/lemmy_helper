@@ -48,10 +48,10 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY community_follower.published
 			;`
 			break;
-		case 'federatedcount':
+		case 'federatedpostcount':
 			sqlQuery = `
 			SELECT
-				community_id, c.name
+				community_id, c.name,
 				COUNT (*) AS "Number of Posts"
 			FROM
 				post
@@ -60,6 +60,20 @@ export const load: PageServerLoad = async (incoming) => {
 			    post.local=false
 			GROUP BY
 				post.community_id;
+			;`
+			break;
+		case 'federatedcommentcount':
+			sqlQuery = `
+			SELECT
+				community_id, c.name,
+				COUNT (*) AS "Number of Comments"
+			FROM
+				comment
+			INNER JOIN community c on c.id = post.community_id
+			WHERE
+				comment.local=false
+			GROUP BY
+				comment.community_id;
 			;`
 			break;
 		case 'posts':
