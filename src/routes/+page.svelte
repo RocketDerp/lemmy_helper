@@ -37,8 +37,9 @@ raw: <a href="query/raw_comments/?output={data.output}">comments</a>,
 <br />
 
 explain: 
-<a href="query/explain_posts/?output={data.output}">posts</a>,
+<a href="query/explain_posts/?output={data.output}">posts</a>
 <br />
 
 search:
 <a href="query/search_posts3/?output={data.output}">posts3</a>,
+<a href="query/search_person/?output={data.output}">person</a>

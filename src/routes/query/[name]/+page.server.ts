@@ -209,6 +209,18 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				40, 0
 			]
 			break;
+		case 'search_person':
+			// stats identified this as a slow query tht is running thousands of time with incomding Federation activity.
+			sqlQuery = `
+			SELECT "person"."id", "person"."name", "person"."display_name", "person"."avatar", "person"."banned", "person"."published", "person"."updated", "person"."actor_id", "person"."bio", "person"."local", "person"."banner", "person"."deleted", "person"."inbox_url", "person"."shared_inbox_url", "person"."matrix_user_id", "person"."admin", "person"."bot_account", "person"."ban_expires", "person"."instance_id",
+			 "person_aggregates"."id", "person_aggregates"."person_id", "person_aggregates"."post_count", "person_aggregates"."post_score", "person_aggregates"."comment_count", "person_aggregates"."comment_score"
+			  FROM ("person" INNER JOIN "person_aggregates" ON ("person_aggregates"."person_id" = "person"."id"))
+			  WHERE (("person"."admin" = $1) AND ("person"."deleted" = $2)) ORDER BY "person"."published"
+			;`
+			sqlParams = [
+				false, false
+			]
+			break;
 		case 'pgrunning1':
 			sqlQuery = `SELECT pid, query_start, usename, query 
 			FROM pg_stat_activity 
