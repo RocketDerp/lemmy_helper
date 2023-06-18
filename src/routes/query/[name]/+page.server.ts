@@ -72,7 +72,7 @@ export const load: PageServerLoad = async (incoming) => {
 					post_id,
 					COUNT (*) AS comment_count
 				FROM
-					post
+					comment
 				WHERE
 					local=false
 				GROUP BY
