@@ -42,14 +42,14 @@ export const load: PageServerLoad = async (incoming) => {
 			sqlQuery = `
 			SELECT queryid, calls, rows, mean_exec_time, query
 		    FROM pg_stat_statements
-			ORDER BY calls DESC, rows DESC
+			ORDER BY calls DESC
 			;`
 			break;
 		case 'pgstatements1':
 			sqlQuery = `
 			SELECT queryid, calls, rows, mean_exec_time, query, *
 			FROM pg_stat_statements
-			ORDER BY calls DESC, rows DESC
+			ORDER BY calls DESC
 			;`
 			break;
 		case 'explain_posts':
@@ -336,6 +336,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			ORDER BY published DESC
 			LIMIT 10
 			;`
+			break;
 		case 'raw_comment_reply':
 			sqlQuery = `SELECT id, *
 			FROM comment_reply
