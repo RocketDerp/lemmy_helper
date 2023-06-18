@@ -30,6 +30,7 @@ export const load: PageServerLoad = async (incoming) => {
 			WHERE query != '<IDLE>' AND query NOT ILIKE '%pg_stat_activity%' 
 			ORDER BY query_start desc
 			;`
+			break;
 		case "pgcounts":
 			sqlQuery = `select table_schema, table_name, 
 			(xpath('/row/cnt/text()', xml_count))[1]::text::int as row_count
