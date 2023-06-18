@@ -52,9 +52,9 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 		case 'activity':
-			sqlQuery = `SELECT id, *
+			sqlQuery = `SELECT id, local, sensitive, published, ap_id
 			FROM activity
-			WHERE id < 100
+			WHERE published >= NOW() - INTERVAL '1 HOUR'
 			;`
 			break;
 		default:
