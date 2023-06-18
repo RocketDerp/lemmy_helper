@@ -167,7 +167,7 @@ SELECT "post"."id", "post"."name", "post"."url", "post"."body", "post"."creator_
 			// /c/lemmyworld@lemmy.world/data_type/Post/sort/New/page/1
 			sqlQuery = `
 SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
-   "post"."url", "post"."body", "post"."creator_id", "post"."community_id", "post"."removed", "post"."locked", "post"."published" AS post_published_0, "post"."updated", "post"."deleted", "post"."nsfw",
+   "post"."url" AS post_url_0, "post"."body", "post"."creator_id", "post"."community_id", "post"."removed", "post"."locked", "post"."published" AS post_published_0, "post"."updated", "post"."deleted", "post"."nsfw",
    "post"."embed_title", "post"."embed_description", "post"."embed_video_url", "post"."thumbnail_url", "post"."ap_id", "post"."local", "post"."language_id", "post"."featured_community", "post"."featured_local",
  "person"."id", "person"."name", "person"."display_name", "person"."avatar", "person"."banned", "person"."published", "person"."updated", "person"."actor_id", "person"."bio", "person"."local", "person"."banner", "person"."deleted", "person"."inbox_url", "person"."shared_inbox_url", "person"."matrix_user_id", "person"."admin", "person"."bot_account", "person"."ban_expires", "person"."instance_id",
  "community"."id", "community"."name", "community"."title", "community"."description", "community"."removed", "community"."published", "community"."updated", "community"."deleted", "community"."nsfw", "community"."actor_id", "community"."local", "community"."icon", "community"."banner", "community"."hidden", "community"."posting_restricted_to_mods", "community"."instance_id",
