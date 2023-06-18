@@ -51,18 +51,27 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY local_user.person_id
 			;`
 			break;
+		case 'activity':
+			sqlQuery = `SELECT id, local, sensitive, published, ap_id, *
+			FROM activity
+			ORDER BY published
+			LIMIT 15
+			;`
+			break;
 		case 'activitylocal':
 			sqlQuery = `SELECT id, local, sensitive, published, ap_id
 			FROM activity
 			WHERE published >= NOW() - INTERVAL '1 HOUR'
-			AND local='true'
+			AND local=true
+			ORDER BY published
 			;`
 			break;
 		case 'activityremote':
 			sqlQuery = `SELECT id, local, sensitive, published, ap_id
 			FROM activity
 			WHERE published >= NOW() - INTERVAL '1 HOUR'
-			AND local=false
+			AND local=
+			ORDER BY published
 			;`
 			break;
 		default:
