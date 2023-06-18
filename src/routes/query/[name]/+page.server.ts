@@ -76,7 +76,7 @@ export const load: PageServerLoad = async (incoming) => {
 				WHERE
 					local=false
 				GROUP BY
-					community_id
+					post_id
 			) a INNER JOIN post c on c.id = a.post_id
 			;`
 			break;
