@@ -4,6 +4,10 @@
     const url = $page.url;
  
     let output = url.searchParams.get('output');
+
+    if (output==null) {
+        output = "table";
+    }
 </script>
 
 <h1>Welcome to Lemmy-Helper</h1>
