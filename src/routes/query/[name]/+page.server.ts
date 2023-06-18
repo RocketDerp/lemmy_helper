@@ -62,7 +62,7 @@ export const load: PageServerLoad = async (incoming) => {
 				GROUP BY
 					community_id
 			) a INNER JOIN community c on c.id = a.community_id
-			ORDER BY c.published DESC
+			ORDER BY c.post_count DESC
 			;`
 			break;
 		case 'federatedcommentcount':
@@ -79,7 +79,7 @@ export const load: PageServerLoad = async (incoming) => {
 				GROUP BY
 					post_id
 			) a INNER JOIN post c on c.id = a.post_id
-			ORDER BY c.published DESC
+			ORDER BY a.comment_count DESC
 			;`
 			break;
 		case 'posts':
