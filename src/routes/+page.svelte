@@ -26,4 +26,5 @@
     <li><a href="query/federatedcommentcount/">federatedcommentcount</a></li>
 </ul>
 
-raw: <a href="query/raw_comments">comments</a>
+raw: <a href="query/raw_comments">comments</a>,
+     <a href="query/raw_posts">posts</a>

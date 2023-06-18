@@ -88,6 +88,13 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY published
 			;`
 			break;
+		case 'raw_posts':
+			sqlQuery = `SELECT id, name, creator_id, community_id, published, updated,
+			   ap_id, local, *
+			FROM post
+			ORDER BY published DESC
+			LIMIT 10
+			;`
 		case 'comments':
 			sqlQuery = `SELECT id, post_id, published, ap_id, path
 			FROM comment
