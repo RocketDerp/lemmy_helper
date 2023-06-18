@@ -95,6 +95,7 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY published DESC
 			LIMIT 10
 			;`
+			break;
 		case 'comments':
 			sqlQuery = `SELECT id, post_id, published, ap_id, path
 			FROM comment
