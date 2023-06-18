@@ -51,6 +51,12 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY local_user.person_id
 			;`
 			break;
+		case 'activity':
+			sqlQuery = `SELECT id, *
+			FROM activity
+			WHERE id < 100
+			;`
+			break;
 		default:
 			console.error("/routes/query did not recognize params ER001");
 			console.log(incoming.params);

@@ -8,4 +8,5 @@
     <li><a href="query/posts/">posts</a> - content, POSTINGS, most recent hour</li>
     <li><a href="query/comments/">comments</a> - content, COMMENTS, most recent hour</li>
     <li><a href="query/localusers/">localusers</a> - local instance users, most recent hour</li>
+    <li><a href="query/activity/">activity</a> - </li>
 </ul>
