@@ -118,8 +118,13 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY published DESC
 			LIMIT 10
 			;`
-		break;
-			case 'localusers':
+		case 'raw_comment_reply':
+			sqlQuery = `SELECT id, *
+			FROM comment_reply
+\			LIMIT 10
+			;`
+			break;
+		case 'localusers':
 			sqlQuery = `SELECT local_user.id, person_id, p.name as username, email, email_verified, accepted_application, validator_time
 			FROM local_user
 			inner join person p on p.id = local_user.person_id
