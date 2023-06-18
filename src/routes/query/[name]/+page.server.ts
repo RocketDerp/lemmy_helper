@@ -16,6 +16,17 @@ export const load: PageServerLoad = async (incoming) => {
 		case "locks":
 			sqlQuery = "SELECT * FROM pg_locks;";
 			break;
+		case "pgcounts":
+			sqlQuery = `select table_schema, table_name, 
+			(xpath('/row/cnt/text()', xml_count))[1]::text::int as row_count
+				from (
+				select table_name, table_schema, 
+						query_to_xml(format('select count(*) as cnt from %I.%I', table_schema, table_name), false, true, '') as xml_count
+				from information_schema.tables
+				where table_schema = 'public' --<< change here for the schema you want
+				) t
+			;`
+			break;
 		case "communitypending":
 			sqlQuery = "SELECT * FROM community_follower WHERE pending='t';"
 			break;
@@ -70,7 +81,7 @@ export const load: PageServerLoad = async (incoming) => {
 			sqlQuery = `SELECT id, local, sensitive, published, ap_id
 			FROM activity
 			WHERE published >= NOW() - INTERVAL '1 HOUR'
-			AND local=
+			AND local=false
 			ORDER BY published
 			;`
 			break;
