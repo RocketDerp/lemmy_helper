@@ -294,10 +294,10 @@ SELECT "post"."id", "post"."name", "post"."url", "post"."body", "post"."creator_
 			;`
 			break;
 		case 'raw_community':
-			sqlQuery = `SELECT id, *
+			sqlQuery = `SELECT id, name, title, published, local, description, *
 			FROM community
 			ORDER BY published DESC
-			LIMIT 10
+			LIMIT 100
 			;`
 			break;
 		case 'comments':
