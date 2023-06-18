@@ -16,6 +16,7 @@
 <ul>
     <li><a href="query/locks/?output={data.output}">locks</a> - datatabase locks</li>
     <li><a href="query/pgcounts/?output={data.output}">pgcounts</a> - datatabase table record counts</li>
+    <li><a href="query/pgrunning/?output={data.output}">pgrunning</a></li>
     <li><a href="query/communitypending1/?output={data.output}">communitypending1</a> - community join/subscribe pending. <a href="query/communitypending/">communitypending</a></li>
     <li><a href="query/posts/?output={data.output}">posts</a> - content, POSTINGS, most recent hour</li>
     <li><a href="query/comments/?output={data.output}">comments</a> - content, COMMENTS, most recent hour</li>

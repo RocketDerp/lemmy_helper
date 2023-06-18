@@ -24,6 +24,12 @@ export const load: PageServerLoad = async (incoming) => {
 		case "locks":
 			sqlQuery = "SELECT * FROM pg_locks;";
 			break;
+		case 'pgrunning':
+			sqlQuery = `SELECT pid, age(clock_timestamp(), query_start), usename, query 
+			FROM pg_stat_activity 
+			WHERE query != '<IDLE>' AND query NOT ILIKE '%pg_stat_activity%' 
+			ORDER BY query_start desc
+			;`
 		case "pgcounts":
 			sqlQuery = `select table_schema, table_name, 
 			(xpath('/row/cnt/text()', xml_count))[1]::text::int as row_count
