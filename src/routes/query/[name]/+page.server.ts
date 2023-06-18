@@ -35,7 +35,8 @@ export const load: PageServerLoad = async (incoming) => {
 			// https://www.timescale.com/blog/identify-postgresql-performance-bottlenecks-with-pg_stat_statements/
 			// install extension:
 			//  sudo -iu postgres psql -c "ALTER SYSTEM SET shared_preload_libraries = 'pg_stat_statements';"
-			sqlQuery = `CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+			sqlQuery = `CREATE EXTENSION IF NOT EXISTS pg_stat_statements;`;
+			sqlQuery = `
 			SELECT * FROM pg_stat_statements
 			;`
 			break;
