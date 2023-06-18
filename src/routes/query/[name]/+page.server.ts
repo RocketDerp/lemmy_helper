@@ -38,7 +38,7 @@ export const load: PageServerLoad = async (incoming) => {
 			//  sudo -iu postgres psql -c "ALTER SYSTEM SET shared_preload_libraries = 'pg_stat_statements';"
 			sqlQuery = `CREATE EXTENSION IF NOT EXISTS pg_stat_statements;`;
 			sqlQuery = `
-			SELECT queryid, calls, rows, mean_exec_time, query*
+			SELECT queryid, calls, rows, mean_exec_time, query
 		    FROM pg_stat_statements
 			ORDER BY calls, rows
 			;`
