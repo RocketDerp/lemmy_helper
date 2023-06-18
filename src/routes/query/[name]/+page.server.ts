@@ -34,10 +34,13 @@ export const load: PageServerLoad = async (incoming) => {
 		case 'pgstatements':
 			// https://www.timescale.com/blog/identify-postgresql-performance-bottlenecks-with-pg_stat_statements/
 			// install extension:
+			//  https://pganalyze.com/docs/install/self_managed/02_enable_pg_stat_statements_deb
 			//  sudo -iu postgres psql -c "ALTER SYSTEM SET shared_preload_libraries = 'pg_stat_statements';"
 			sqlQuery = `CREATE EXTENSION IF NOT EXISTS pg_stat_statements;`;
 			sqlQuery = `
-			SELECT * FROM pg_stat_statements
+			SELECT queryid, calls, rows, mean_exec_time, query*
+		    FROM pg_stat_statements
+			ORDER BY calls, rows
 			;`
 			break;
 		case 'explain_posts':
