@@ -8,11 +8,11 @@
 
 <h1>Lemmy-Helper Query: {data.queryName}</h1>
 
-Database result row count: {rowCount} output: {data.output}
+Database result row count: {rowCount} -- output: {data.output}
 
 {#if rowCount > 0}
 
-connect time: {data.timeConnect} query time: {data.timeQuery}
+ -- connect time: {data.timeConnect} -- query time: {data.timeQuery}
 
 {#if data.output !== 'table'}
 <pre>
