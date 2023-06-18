@@ -8,6 +8,9 @@ export const load: PageServerLoad = async (incoming) => {
 	let outRows = {};
 	let outRowsRaw = [];
 
+	console.log("--------- params")
+	console.log(incoming.params);
+
 	// this switch statement gurads the parameter, only whitelist matching.
 	switch (incoming.params.name) {
 		case "test1":
