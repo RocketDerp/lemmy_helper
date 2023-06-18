@@ -7,9 +7,14 @@ export const load: PageServerLoad = async (incoming) => {
 	let sqlQuery;
 	let outRows = {};
 	let outRowsRaw = [];
+	let output = "all"
 
 	console.log("--------- url")
 	console.log(incoming.url)
+
+	if (incoming.url.searchParams.get("output")) {
+		output = incoming.url.searchParams.get("output");
+	}
 
 	// this switch statement gurads the parameter, only whitelist matching.
 	switch (incoming.params.name) {
@@ -130,7 +135,8 @@ export const load: PageServerLoad = async (incoming) => {
 		outRows: outRows,
 		outRowsRaw: outRowsRaw,
 		timeQuery: timeQuery,
-		timeConnect: timeConnect
+		timeConnect: timeConnect,
+		output: output
 	}
 }
 
