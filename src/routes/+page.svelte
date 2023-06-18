@@ -27,4 +27,5 @@
 </ul>
 
 raw: <a href="query/raw_comments/?output={data.output}">comments</a>,
-     <a href="query/raw_posts/?output={data.output}">posts</a>
+     <a href="query/raw_posts/?output={data.output}">posts</a>,
+     <a href="query/raw_person/?output={data.output}">person</a>

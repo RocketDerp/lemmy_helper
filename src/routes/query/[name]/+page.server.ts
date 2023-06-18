@@ -98,6 +98,12 @@ export const load: PageServerLoad = async (incoming) => {
 			LIMIT 10
 			;`
 			break;
+		case 'raw_person':
+			sqlQuery = `SELECT id, *
+			FROM person
+			LIMIT 10
+			;`
+			break;
 		case 'comments':
 			sqlQuery = `SELECT id, post_id, published, ap_id, path
 			FROM comment
