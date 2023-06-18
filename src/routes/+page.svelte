@@ -32,7 +32,8 @@
 raw: <a href="query/raw_comments/?output={data.output}">comments</a>,
      <a href="query/raw_posts/?output={data.output}">posts</a>,
      <a href="query/raw_person/?output={data.output}">person</a>,
-     <a href="query/raw_comment_reply/?output={data.output}">coment_reply</a>
+     <a href="query/raw_comment_reply/?output={data.output}">coment_reply</a>,
+     <a href="query/raw_community/?output={data.output}">community</a>,
 <br />
 
 explain: 

@@ -5,6 +5,7 @@ import { Client } from 'pg'
 export const load: PageServerLoad = async (incoming) => {
 
 	let sqlQuery;
+	let sqlParams = [];
 	let outRows = {};
 	let outRowsRaw = [];
 	let output = "all"
@@ -19,7 +20,8 @@ export const load: PageServerLoad = async (incoming) => {
 	// this switch statement gurads the parameter, only whitelist matching.
 	switch (incoming.params.name) {
 		case "test1":
-			sqlQuery = 'SELECT $1::text as message', ['Hello world!'];
+			sqlQuery = 'SELECT $1::text as message';
+			sqlParams = ['Hello world!'];
 			break;
 		case "locks":
 			sqlQuery = "SELECT * FROM pg_locks;";
@@ -127,6 +129,83 @@ export const load: PageServerLoad = async (incoming) => {
 					LIMIT '40' OFFSET '0'
 			;`
 			break;
+		case 'search_posts2':
+			sqlQuery = `
+SELECT "post"."id", "post"."name", "post"."url", "post"."body", "post"."creator_id", "post"."community_id", "post"."removed", "post"."locked", "post"."published", "post"."updated", "post"."deleted", "post"."nsfw", "post"."embed_title", "post"."embed_description", "post"."embed_video_url", "post"."thumbnail_url", "post"."ap_id", "post"."local", "post"."language_id", "post"."featured_community", "post"."featured_local",
+ "person"."id", "person"."name", "person"."display_name", "person"."avatar", "person"."banned", "person"."published", "person"."updated", "person"."actor_id", "person"."bio", "person"."local", "person"."banner", "person"."deleted", "person"."inbox_url", "person"."shared_inbox_url", "person"."matrix_user_id", "person"."admin", "person"."bot_account", "person"."ban_expires", "person"."instance_id",
+ "community"."id", "community"."name", "community"."title", "community"."description", "community"."removed", "community"."published", "community"."updated", "community"."deleted", "community"."nsfw", "community"."actor_id", "community"."local", "community"."icon", "community"."banner", "community"."hidden", "community"."posting_restricted_to_mods", "community"."instance_id",
+ "community_person_ban"."id", "community_person_ban"."community_id", "community_person_ban"."person_id", "community_person_ban"."published", "community_person_ban"."expires",
+ "post_aggregates"."id", "post_aggregates"."post_id", "post_aggregates"."comments", "post_aggregates"."score", "post_aggregates"."upvotes", "post_aggregates"."downvotes", "post_aggregates"."published", "post_aggregates"."newest_comment_time_necro", "post_aggregates"."newest_comment_time", "post_aggregates"."featured_community", "post_aggregates"."featured_local", "post_aggregates"."hot_rank", "post_aggregates"."hot_rank_active",
+ "community_follower"."id", "community_follower"."community_id", "community_follower"."person_id", "community_follower"."published", "community_follower"."pending",
+ "post_saved"."id", "post_saved"."post_id", "post_saved"."person_id", "post_saved"."published", "post_read"."id", "post_read"."post_id", "post_read"."person_id", "post_read"."published",
+ "person_block"."id", "person_block"."person_id", "person_block"."target_id", "person_block"."published",
+ "post_like"."score",
+ coalesce(("post_aggregates"."comments" - "person_post_aggregates"."read_comments"), "post_aggregates"."comments")
+ FROM (((((((((((("post" INNER JOIN "person" ON ("post"."creator_id" = "person"."id")) INNER JOIN "community" ON ("post"."community_id" = "community"."id"))
+   LEFT OUTER JOIN "community_person_ban" ON ((("post"."community_id" = "community_person_ban"."community_id") AND ("community_person_ban"."person_id" = "post"."creator_id")) AND (("community_person_ban"."expires" IS NULL) OR ("community_person_ban"."expires" > CURRENT_TIMESTAMP))))
+   INNER JOIN "post_aggregates" ON ("post_aggregates"."post_id" = "post"."id"))
+   LEFT OUTER JOIN "community_follower" ON (("post"."community_id" = "community_follower"."community_id") AND ("community_follower"."person_id" = $1)))
+   LEFT OUTER JOIN "post_saved" ON (("post"."id" = "post_saved"."post_id") AND ("post_saved"."person_id" = $2)))
+   LEFT OUTER JOIN "post_read" ON (("post"."id" = "post_read"."post_id") AND ("post_read"."person_id" = $3)))
+   LEFT OUTER JOIN "person_block" ON (("post"."creator_id" = "person_block"."target_id") AND ("person_block"."person_id" = $4)))
+   LEFT OUTER JOIN "community_block" ON (("community"."id" = "community_block"."community_id") AND ("community_block"."person_id" = $5)))
+   LEFT OUTER JOIN "post_like" ON (("post"."id" = "post_like"."post_id") AND ("post_like"."person_id" = $6)))
+   LEFT OUTER JOIN "person_post_aggregates" ON (("post"."id" = "person_post_aggregates"."post_id") AND ("person_post_aggregates"."person_id" = $7)))
+   LEFT OUTER JOIN "local_user_language" ON (("post"."language_id" = "local_user_language"."language_id") AND ("local_user_language"."local_user_id" = $8)))
+   WHERE ((((((("post"."creator_id" = $9) AND ("post"."nsfw" = $10)) AND ("community"."nsfw" = $11)) AND ("post"."removed" = $12)) AND ("post"."deleted" = $13)) AND ("community"."removed" = $14)) AND ("community"."deleted" = $15))
+   ORDER BY "post_aggregates"."featured_local" DESC , "post_aggregates"."published" DESC LIMIT 40
+   OFFSET 0
+			;`
+			sqlParams = [
+				// first 7 are person_id
+				2, 2, 2, 2, 2, 2, 2,
+				// 8 is only posts from a certain creator, this isn't the query we want
+			]
+			break;
+		case 'search_posts3':
+			// this is a query of a specific community, newst postings
+			// /c/lemmyworld@lemmy.world/data_type/Post/sort/New/page/1
+			sqlQuery = `
+SELECT "post"."id", "post"."name", "post"."url", "post"."body", "post"."creator_id", "post"."community_id", "post"."removed", "post"."locked", "post"."published", "post"."updated", "post"."deleted", "post"."nsfw", "post"."embed_title", "post"."embed_description", "post"."embed_video_url", "post"."thumbnail_url", "post"."ap_id", "post"."local", "post"."language_id", "post"."featured_community", "post"."featured_local",
+ "person"."id", "person"."name", "person"."display_name", "person"."avatar", "person"."banned", "person"."published", "person"."updated", "person"."actor_id", "person"."bio", "person"."local", "person"."banner", "person"."deleted", "person"."inbox_url", "person"."shared_inbox_url", "person"."matrix_user_id", "person"."admin", "person"."bot_account", "person"."ban_expires", "person"."instance_id",
+ "community"."id", "community"."name", "community"."title", "community"."description", "community"."removed", "community"."published", "community"."updated", "community"."deleted", "community"."nsfw", "community"."actor_id", "community"."local", "community"."icon", "community"."banner", "community"."hidden", "community"."posting_restricted_to_mods", "community"."instance_id",
+ "community_person_ban"."id", "community_person_ban"."community_id", "community_person_ban"."person_id", "community_person_ban"."published", "community_person_ban"."expires",
+ "post_aggregates"."id", "post_aggregates"."post_id", "post_aggregates"."comments", "post_aggregates"."score", "post_aggregates"."upvotes", "post_aggregates"."downvotes", "post_aggregates"."published", "post_aggregates"."newest_comment_time_necro", "post_aggregates"."newest_comment_time", "post_aggregates"."featured_community", "post_aggregates"."featured_local", "post_aggregates"."hot_rank", "post_aggregates"."hot_rank_active",
+ "community_follower"."id", "community_follower"."community_id", "community_follower"."person_id", "community_follower"."published", "community_follower"."pending",
+ "post_saved"."id", "post_saved"."post_id", "post_saved"."person_id", "post_saved"."published",
+ "post_read"."id", "post_read"."post_id", "post_read"."person_id", "post_read"."published",
+ "person_block"."id", "person_block"."person_id", "person_block"."target_id", "person_block"."published", "post_like"."score",
+ coalesce(("post_aggregates"."comments" - "person_post_aggregates"."read_comments"), "post_aggregates"."comments")
+ FROM (((((((((((("post"
+ INNER JOIN "person" ON ("post"."creator_id" = "person"."id"))
+ INNER JOIN "community" ON ("post"."community_id" = "community"."id"))
+ LEFT OUTER JOIN "community_person_ban" ON ((("post"."community_id" = "community_person_ban"."community_id") AND ("community_person_ban"."person_id" = "post"."creator_id")) AND (("community_person_ban"."expires" IS NULL) OR ("community_person_ban"."expires" > CURRENT_TIMESTAMP))))
+ INNER JOIN "post_aggregates" ON ("post_aggregates"."post_id" = "post"."id"))
+ LEFT OUTER JOIN "community_follower" ON (("post"."community_id" = "community_follower"."community_id") AND ("community_follower"."person_id" = $1)))
+ LEFT OUTER JOIN "post_saved" ON (("post"."id" = "post_saved"."post_id") AND ("post_saved"."person_id" = $2)))
+ LEFT OUTER JOIN "post_read" ON (("post"."id" = "post_read"."post_id") AND ("post_read"."person_id" = $3)))
+ LEFT OUTER JOIN "person_block" ON (("post"."creator_id" = "person_block"."target_id") AND ("person_block"."person_id" = $4)))
+ LEFT OUTER JOIN "community_block" ON (("community"."id" = "community_block"."community_id") AND ("community_block"."person_id" = $5)))
+ LEFT OUTER JOIN "post_like" ON (("post"."id" = "post_like"."post_id") AND ("post_like"."person_id" = $6)))
+ LEFT OUTER JOIN "person_post_aggregates" ON (("post"."id" = "person_post_aggregates"."post_id") AND ("person_post_aggregates"."person_id" = $7)))
+ LEFT OUTER JOIN "local_user_language" ON (("post"."language_id" = "local_user_language"."language_id") AND ("local_user_language"."local_user_id" = $8)))
+ WHERE (((((((((("community"."hidden" = $9) OR ("community_follower"."person_id" = $10)) AND ("post"."community_id" = $11)) AND ("local_user_language"."language_id" IS NOT NULL)) AND ("community_block"."person_id" IS NULL)) AND ("person_block"."person_id" IS NULL)) AND ("post"."removed" = $12)) AND ("post"."deleted" = $13)) AND ("community"."removed" = $14)) AND ("community"."deleted" = $15))
+ ORDER BY "post_aggregates"."featured_community" DESC , "post_aggregates"."published" DESC
+ LIMIT $16
+ OFFSET $17			;`
+			sqlParams = [
+				// first 7 are person_id
+				2, 2, 2, 2, 2, 2, 2,
+				// 8 is local_user_id for language
+				2,
+				false, 2,
+				// 11 is the community_id, the listing was for a single community postings
+				// 12 is removed, 13 is deleted, 14 removed, 15 deleted
+				false, false, false, false,
+				// 16 limit, 17 offset
+				40, 0
+			]
+			break;
 		case 'pgrunning1':
 			sqlQuery = `SELECT pid, query_start, usename, query 
 			FROM pg_stat_activity 
@@ -214,6 +293,13 @@ export const load: PageServerLoad = async (incoming) => {
 			LIMIT 10
 			;`
 			break;
+		case 'raw_community':
+			sqlQuery = `SELECT id, *
+			FROM person
+			ORDER BY published DESC
+			LIMIT 10
+			;`
+			break;
 		case 'comments':
 			sqlQuery = `SELECT id, post_id, published, ap_id, path
 			FROM comment
@@ -284,7 +370,7 @@ export const load: PageServerLoad = async (incoming) => {
 
 		try {
 			const queryTimeStart = process.hrtime();
-			const res = await client.query(sqlQuery)
+			const res = await client.query(sqlQuery, sqlParams)
 			timeQuery = parseHrtimeToSeconds(process.hrtime(queryTimeStart))
 			// outRows = JSON.stringify(res.rows);
 			outRowsRaw = res.rows;
