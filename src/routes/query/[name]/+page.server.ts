@@ -45,6 +45,13 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY calls DESC, rows DESC
 			;`
 			break;
+		case 'pgstatements1':
+			sqlQuery = `
+			SELECT queryid, calls, rows, mean_exec_time, query, *
+			FROM pg_stat_statements
+			ORDER BY calls DESC, rows DESC
+			;`
+			break;
 		case 'explain_posts':
 			sqlQuery = `EXPLAIN (ANALYZE, COSTS, VERBOSE, BUFFERS, FORMAT JSON)
 			 SELECT post.id, post.name, post.url, post.body, post.creator_id, post.community_id, post.removed, post.locked, post.published, post.updated, post.deleted, post.nsfw, post.embed_title, post.embed_description, post.embed_video_url, post.thumbnail_url, post.ap_id, post.local, post.language_id, post.featured_community, post.featured_local,
