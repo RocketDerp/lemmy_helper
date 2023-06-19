@@ -293,6 +293,24 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			ORDER BY a.comment_count DESC
 			;`
 			break;
+		case 'federatedcommentcount1':
+			sqlQuery = `
+			SELECT a.post_id, a.creator_id, c.local, a.comment_count, c.instance_id, c.published, c.name
+			FROM (
+				SELECT
+					post_id,
+					COUNT (*) AS comment_count
+				FROM
+					comment
+				WHERE
+					local=false
+				GROUP BY
+					post_id
+			) a INNER JOIN person c on a.creator_id = c.id
+			ORDER BY a.comment_count DESC
+			;`
+			// ("comment" INNER JOIN "person" ON ("comment"."creator_id" = "person"."id")
+			break;
 		case 'posts':
 			sqlQuery = `SELECT id, name, creator_id, community_id, published, updated,
 			   ap_id, local 
