@@ -295,7 +295,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 		case 'federatedcommentcount1':
 			sqlQuery = `
-			SELECT a.post_id, a.creator_id, c.local, a.comment_count, c.instance_id, c.published, c.name
+			SELECT a.post_id, c.id AS "person_id", c.local, a.comment_count, c.instance_id, c.published, c.name
 			FROM (
 				SELECT
 					post_id,
