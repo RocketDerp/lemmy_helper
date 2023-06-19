@@ -33,7 +33,8 @@
     </li>
 </ul>
 
-raw: <a href="query/raw_comments/?output={data.output}">comments</a>,
+raw: <a href="query/activity/?output=all">activity</a>,
+     <a href="query/raw_comments/?output={data.output}">comments</a>,
      <a href="query/raw_posts/?output={data.output}">posts</a>,
      <a href="query/raw_person/?output={data.output}">person</a>,
      <a href="query/raw_comment_reply/?output={data.output}">coment_reply</a>,

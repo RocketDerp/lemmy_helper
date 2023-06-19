@@ -39,4 +39,4 @@ A sample nginx.config file is here on this project root. It uses a different hos
 4. run this application on port 9000.
 5. restart nginx
 
-NOTE: there is no login or password on this site, it doees mostly safe read-only queries, although resetting the pg_stats is one write-operation.
+NOTE: there is no login or password on this site, it does mostly safe read-only queries, although resetting the pg_stats is one write-operation.
