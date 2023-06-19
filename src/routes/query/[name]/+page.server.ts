@@ -300,7 +300,6 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			INNER JOIN person c ON a.creator_id = c.id
 			WHERE a.creator_id IN (SELECT id FROM person WHERE local=false)
 			GROUP BY c.instance_id
-			LIMIT 10
 			;`
 			break;
 		case 'federatedcommentcount1':
