@@ -26,7 +26,10 @@
     <li><a href="query/activitylocal/?output={data.output}">activitylocal</a> - table, local, most recent hour</li>
     <li><a href="query/activityremote/?output={data.output}">activityremote</a> - table, remote, most recent hour</li>
     <li><a href="query/federatedpostcount/?output={data.output}">federatedpostcount</a></li>
-    <li><a href="query/federatedcommentcount/?output={data.output}">federatedcommentcount</a></li>
+    <li>
+        <a href="query/federatedcommentcount/?output={data.output}">federatedcommentcount</a>,
+        <a href="query/federatedcommentcount2/?output={data.output}">federatedcommentcount2</a>
+    </li>
 </ul>
 
 raw: <a href="query/raw_comments/?output={data.output}">comments</a>,
@@ -34,6 +37,7 @@ raw: <a href="query/raw_comments/?output={data.output}">comments</a>,
      <a href="query/raw_person/?output={data.output}">person</a>,
      <a href="query/raw_comment_reply/?output={data.output}">coment_reply</a>,
      <a href="query/raw_community/?output={data.output}">community</a>,
+     <a href="query/raw_instance/?output={data.output}">instance</a>,
 <br />
 
 explain: 
