@@ -34,7 +34,7 @@ PGUSER and PGPASSWORD environment variables are utilized by the NodeJS pg librar
 A sample nginx.config file is here on this project root. It uses a different hostname to route access to the admin.
 
 1. You need to add a new CNAME alias to your DNS, such as lemmyadmin.example.com
-2. You will need to change to your Internet domain name from the included "exmaple.com" in the nginx.conf file, put the file in /etc/nginx/sites-enabled/lemmy_helper.conf
+2. You will need to change "example.com" in the nginx.conf file to your Internet domain mame. Put the file in /etc/nginx/sites-enabled/lemmy_helper.conf
 3. generate the certifiate for your new hostname with Linux shell command: `certbot certonly --nginx`
 4. run this application on port 9000.
 5. restart nginx
