@@ -46,6 +46,9 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY calls DESC
 			;`
 			break;
+		case 'reset_pgstatements':
+			sqlQuery = `SELECT pg_stat_statements_reset();`
+			break;			
 		case 'pgstatements1':
 			sqlQuery = `
 			SELECT queryid, calls, rows, mean_exec_time, query, *

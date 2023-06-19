@@ -16,7 +16,8 @@
 <ul>
     <li><a href="query/locks/?output={data.output}">locks</a> - datatabase locks</li>
     <li><a href="query/pgcounts/?output={data.output}">pgcounts</a> - datatabase table record counts</li>
-    <li><a href="query/pgstatements/?output={data.output}">pgcstatements</a> - stats</li>
+    <li><a href="query/pgstatements/?output={data.output}">pgcstatements</a> - stats -
+       <a href="query/reset_pgstatements/?output=raw">RESET</a></li>
     <li><a href="query/pgrunning/?output={data.output}">pgrunning</a></li>
     <li><a href="query/pgrunning1/?output={data.output}">pgrunning1</a></li>
     <li><a href="query/communitypending1/?output={data.output}">communitypending1</a> - community join/subscribe pending. <a href="query/communitypending/">communitypending</a></li>
