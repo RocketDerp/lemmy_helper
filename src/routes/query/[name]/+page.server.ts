@@ -34,6 +34,7 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 		case 'pgstatements':
+			// PostgreSQL extension pg_stat_statements for performance troubleshooting.
 			// https://www.timescale.com/blog/identify-postgresql-performance-bottlenecks-with-pg_stat_statements/
 			// install extension:
 			//  https://pganalyze.com/docs/install/self_managed/02_enable_pg_stat_statements_deb
@@ -236,21 +237,22 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			;`
 			break;
 		case "pgcounts":
-			sqlQuery = `select table_schema, table_name, 
+			sqlQuery = `SELECT table_schema, table_name, 
 			(xpath('/row/cnt/text()', xml_count))[1]::text::int as row_count
-				from (
-				select table_name, table_schema, 
+				FROM (
+					SELECT table_name, table_schema, 
 						query_to_xml(format('select count(*) as cnt from %I.%I', table_schema, table_name), false, true, '') as xml_count
-				from information_schema.tables
-				where table_schema = 'public' --<< change here for the schema you want
+					FROM information_schema.tables
+					WHERE table_schema = 'public' --<< change here for the schema you want
 				) t
+			    ORDER BY table_name
 			;`
 			break;
 		case "communitypending":
 			sqlQuery = "SELECT * FROM community_follower WHERE pending='t';"
 			break;
 		case 'communitypending1':
-			sqlQuery = `SELECT person_id, p.name AS username, community_id, c.name as community, i.domain, community_follower.published
+			sqlQuery = `SELECT person_id, p.name AS username, community_id, c.name AS community, i.domain, community_follower.published AS "cf_published"
 			FROM community_follower
 			inner join person p on p.id = community_follower.person_id
 			inner join community c on c.id = community_follower.community_id
