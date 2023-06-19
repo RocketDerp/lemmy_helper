@@ -295,10 +295,11 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 		case 'federatedcommentcount2':
 			sqlQuery = `
-			SELECT a.id AS "comment_id", a.post_id, c.id AS "person_id", c.local, c.instance_id, c.published, c.name
+			SELECT c.instance_id, COUNT(*)
 			FROM comment a
 			INNER JOIN person c ON a.creator_id = c.id
 			WHERE a.creator_id IN (SELECT id FROM person WHERE local=false)
+			GROUP BY c.instance_id
 			LIMIT 10
 			;`
 			break;
