@@ -391,7 +391,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 		case 'activity':
 			sqlQuery = `SELECT id, local, sensitive, published, ap_id, *
 			FROM activity
-			ORDER BY published
+			ORDER BY published DESC
 			LIMIT 15
 			;`
 			break;
@@ -400,7 +400,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			FROM activity
 			WHERE published >= NOW() - INTERVAL '1 HOUR'
 			AND local=true
-			ORDER BY published
+			ORDER BY published DESC
 			;`
 			break;
 		case 'activityremote':
@@ -408,7 +408,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			FROM activity
 			WHERE published >= NOW() - INTERVAL '1 HOUR'
 			AND local=false
-			ORDER BY published
+			ORDER BY published DESC
 			;`
 			break;
 		default:
