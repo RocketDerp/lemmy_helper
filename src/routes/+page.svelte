@@ -47,3 +47,8 @@ explain:
 search:
 <a href="query/search_posts3/?output={data.output}">posts3</a>,
 <a href="query/search_person/?output={data.output}">person</a>
+<br />
+
+curious query:
+<a href="query/curiousquery/?output={data.output}">curiousquery</a>
+

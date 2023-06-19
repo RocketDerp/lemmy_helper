@@ -236,6 +236,13 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			ORDER BY query_start desc
 			;`
 			break;
+		case "curiousquery":
+			// pg_stats claims this has a lot of rows, slow?
+			sqlQuery = `SELECT "instance"."domain" 
+			FROM ("instance" LEFT OUTER JOIN "federation_blocklist" ON ("federation_blocklist"."instance_id" = "instance"."id"))
+			 WHERE ("federation_blocklist"."id" IS NULL)
+			;`
+			break;
 		case "pgcounts":
 			sqlQuery = `SELECT table_schema, table_name, 
 			(xpath('/row/cnt/text()', xml_count))[1]::text::int as row_count
