@@ -298,6 +298,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			SELECT c.instance_id, COUNT(*) AS comment_count
 			FROM comment a
 			INNER JOIN person c ON a.creator_id = c.id
+			INNER JOIN instance ON c.instance_id = instance.id
 			WHERE a.creator_id IN (SELECT id FROM person WHERE local=false)
 			GROUP BY c.instance_id
 			ORDER BY comment_count DESC
