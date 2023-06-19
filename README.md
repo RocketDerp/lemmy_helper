@@ -29,3 +29,13 @@ PGUSER and PGPASSWORD environment variables are utilized by the NodeJS pg librar
 `PGUSER=lemmy PGPASSWORD=mypassword pnpm run dev --host --port 9000`
 
 
+# sample nginx.confg
+
+A sample nginx.config file is here on this project root. It uses a different hostname to route access to the admin.
+
+1. You need to add a new CNAME alias to your DNS, such as lemmyadmin.example.com
+2. You will need to change to your Internet domain name from the included "exmaple.com" in the nginx.conf file
+3. generate the certifiate for your new hostname with Linux shell command: `certbot certonly --nginx`
+4. run this application on port 9000.
+
+NOTE: there is no login or password on this site, it doees mostly safe read-only queries, although resetting the pg_stats is one write-operation.
