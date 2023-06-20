@@ -20,7 +20,7 @@ export const load: PageServerLoad = async (incoming) => {
 	// this switch statement gurads the parameter, only whitelist matching.
 	switch (incoming.params.name) {
 		case "test1":
-			sqlQuery = 'SELECT $1::text as message';
+			sqlQuery = 'SELECT $1::text AS message';
 			sqlParams = ['Hello world!'];
 			break;
 		case "locks":
@@ -264,9 +264,9 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 		case 'communitypending1':
 			sqlQuery = `SELECT person_id, p.name AS username, community_id, c.name AS community, i.domain, community_follower.published AS "cf_published"
 			FROM community_follower
-			inner join person p on p.id = community_follower.person_id
-			inner join community c on c.id = community_follower.community_id
-			inner join instance i on c.instance_id = i.id
+			INNER JOIN person p ON p.id = community_follower.person_id
+			INNER JOIN community c ON c.id = community_follower.community_id
+			INNER JOIN instance i ON i.id = c.instance_id
 			WHERE pending='t'
 			ORDER BY community_follower.published
 			;`
@@ -382,7 +382,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			;`
 			break;
 		case 'localusers':
-			sqlQuery = `SELECT local_user.id, person_id, p.name as username, email, email_verified, accepted_application, validator_time
+			sqlQuery = `SELECT local_user.id, person_id, p.name AS username, email, email_verified, accepted_application, validator_time
 			FROM local_user
 			inner join person p on p.id = local_user.person_id
 			ORDER BY local_user.person_id
