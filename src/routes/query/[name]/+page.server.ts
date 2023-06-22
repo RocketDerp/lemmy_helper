@@ -46,6 +46,13 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY calls DESC
 			;`
 			break;
+		case 'pg_indexes':
+			sqlQuery = `
+			SELECT *
+			FROM pg_indexes
+			WHERE tablename NOT LIKE 'pg%'
+			;`
+			break;
 		case 'reset_pgstatements':
 			sqlQuery = `SELECT pg_stat_statements_reset();`
 			break;			
