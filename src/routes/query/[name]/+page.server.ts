@@ -51,6 +51,7 @@ export const load: PageServerLoad = async (incoming) => {
 			SELECT *
 			FROM pg_indexes
 			WHERE tablename NOT LIKE 'pg%'
+			ORDER BY tablename
 			;`
 			break;
 		case 'reset_pgstatements':
