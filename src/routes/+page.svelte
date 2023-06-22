@@ -17,6 +17,7 @@
     <li><a href="query/locks/?output={data.output}">locks</a> - datatabase locks</li>
     <li><a href="query/pgcounts/?output={data.output}">pgcounts</a> - datatabase table record counts</li>
     <li><a href="query/pgstatements/?output={data.output}">pgcstatements</a> - stats -
+        <a href="query/pgstatements1/?output={data.output}">pgcstatements1</a> (all columns) -
        <a href="query/reset_pgstatements/?output=raw">RESET</a></li>
     <li><a href="query/pgrunning/?output={data.output}">pgrunning</a></li>
     <li><a href="query/pgrunning1/?output={data.output}">pgrunning1</a></li>
