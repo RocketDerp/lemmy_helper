@@ -23,6 +23,7 @@ export const load: PageServerLoad = async (incoming) => {
 	}
 
 	// this switch statement guards the parameter, only whitelist matching.
+	// ToDo: be more consistent about "pg_" prefix, but will break saved URLs
 	switch (incoming.params.name) {
 		case "test1":
 			sqlQuery = 'SELECT $1::text AS message';
