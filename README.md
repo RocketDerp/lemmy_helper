@@ -28,6 +28,13 @@ PGUSER and PGPASSWORD environment variables are utilized by the NodeJS pg librar
 
 `PGUSER=lemmy PGPASSWORD=mypassword pnpm run dev --host --port 9000`
 
+# Run via Docker Compose
+
+A `docker-compose.yml` is also included, and can be used to connect to dockerized Lemmy installations. Note that in order to do this, you'll either need to make sure that your PostgreSQL container either has the `5432` port exposed (preferably to only `127.0.0.1`), or both containers will need to be on the same docker network (this can be done by copying the `app` service to your Lemmy installation's `docker-compose.yml` file).
+
+Then, make sure to copy `.env.example` to `.env` and modify the new file to include your Lemmy installation's PostgreSQL credentials. Additionally, you'll need to make sure `PGHOST` is set properly, it should be either the IP/hostname of the system running the PostgreSQL database, or if connecting over the docker network it should be the name of your PostgreSQL container (by default this is `postgres`).
+
+After this, you should then be able to run `docker compose up` to bring the application online, and it will be available on port `9000`.
 
 # sample nginx.confg
 
