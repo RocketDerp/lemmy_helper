@@ -10,14 +10,17 @@ export const load: PageServerLoad = async (incoming) => {
 	let outRowsRaw = [];
 	let output = "all"
 
+	// This is experimental quick/dirty code, so some the workings are exposed ;)
 	console.log("--------- url")
 	console.log(incoming.url)
 
+	// Optonal parameter
+	// The HTML side of the page gets passed the output parameter, it isn't going into the SQL statements.
 	if (incoming.url.searchParams.get("output")) {
 		output = incoming.url.searchParams.get("output");
 	}
 
-	// this switch statement gurads the parameter, only whitelist matching.
+	// this switch statement guards the parameter, only whitelist matching.
 	switch (incoming.params.name) {
 		case "test1":
 			sqlQuery = 'SELECT $1::text AS message';
