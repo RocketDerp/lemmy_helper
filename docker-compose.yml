@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file: .env
+    command: ".pnpm/bin/pnpm run dev --host --port 9000"
+    ports:
+      - "127.0.0.1:9000:9000"
