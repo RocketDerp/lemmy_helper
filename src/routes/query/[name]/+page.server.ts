@@ -38,27 +38,27 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY query_start desc
 			;`
 			break;
-		case 'install_pgstatements':
-			sqlQuery = `CREATE EXTENSION IF NOT EXISTS pg_stat_statements;`;
-			break;
-		case 'pgstatements':
-			// PostgreSQL extension pg_stat_statements for performance troubleshooting.
-			// https://www.timescale.com/blog/identify-postgresql-performance-bottlenecks-with-pg_stat_statements/
-			// install extension:
-			//  https://pganalyze.com/docs/install/self_managed/02_enable_pg_stat_statements_deb
-			//  sudo -iu postgres psql -c "ALTER SYSTEM SET shared_preload_libraries = 'pg_stat_statements';"
-			sqlQuery = `
-			SELECT queryid, calls, rows, mean_exec_time, query
-		    FROM pg_stat_statements
-			ORDER BY calls DESC
-			;`
-			break;
 		case 'pg_indexes':
 			sqlQuery = `
 			SELECT *
 			FROM pg_indexes
 			WHERE tablename NOT LIKE 'pg%'
 			ORDER BY tablename, indexname
+			;`
+			break;
+		case 'install_pgstatements':
+			// PostgreSQL extension pg_stat_statements for performance troubleshooting.
+			// https://www.timescale.com/blog/identify-postgresql-performance-bottlenecks-with-pg_stat_statements/
+			// install extension:
+			//  https://pganalyze.com/docs/install/self_managed/02_enable_pg_stat_statements_deb
+			//  sudo -iu postgres psql -c "ALTER SYSTEM SET shared_preload_libraries = 'pg_stat_statements';"
+			sqlQuery = `CREATE EXTENSION IF NOT EXISTS pg_stat_statements;`;
+			break;
+		case 'pgstatements':
+			sqlQuery = `
+			SELECT queryid, calls, rows, mean_exec_time, query
+		    FROM pg_stat_statements
+			ORDER BY calls DESC
 			;`
 			break;
 		case 'reset_pgstatements':
@@ -72,6 +72,7 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 		case 'explain_posts':
+			// ToDo: I tried EXPLAIN here, but it didn't work, or maybe JSON won't output it?
 			sqlQuery = `EXPLAIN (ANALYZE, COSTS, VERBOSE, BUFFERS, FORMAT JSON)
 			 SELECT post.id, post.name, post.url, post.body, post.creator_id, post.community_id, post.removed, post.locked, post.published, post.updated, post.deleted, post.nsfw, post.embed_title, post.embed_description, post.embed_video_url, post.thumbnail_url, post.ap_id, post.local, post.language_id, post.featured_community, post.featured_local,
 			  person.id, person.name, person.display_name, person.avatar, person.banned, person.published, person.updated, person.actor_id, person.bio, person.local, person.banner, person.deleted, person.inbox_url, person.shared_inbox_url, person.matrix_user_id, person.admin, person.bot_account, person.ban_expires, person.instance_id,
