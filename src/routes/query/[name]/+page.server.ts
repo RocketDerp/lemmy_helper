@@ -1,7 +1,9 @@
 import type { PageServerLoad } from './$types'
 import { Client } from 'pg'
 
-
+/*
+ToDo: Whitespace in this file is a mess, this code looks messy. But it's safe to run.
+*/
 export const load: PageServerLoad = async (incoming) => {
 
 	let sqlQuery;
@@ -36,13 +38,15 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY query_start desc
 			;`
 			break;
+		case 'install_pgstatements':
+			sqlQuery = `CREATE EXTENSION IF NOT EXISTS pg_stat_statements;`;
+			break;
 		case 'pgstatements':
 			// PostgreSQL extension pg_stat_statements for performance troubleshooting.
 			// https://www.timescale.com/blog/identify-postgresql-performance-bottlenecks-with-pg_stat_statements/
 			// install extension:
 			//  https://pganalyze.com/docs/install/self_managed/02_enable_pg_stat_statements_deb
 			//  sudo -iu postgres psql -c "ALTER SYSTEM SET shared_preload_libraries = 'pg_stat_statements';"
-			sqlQuery = `CREATE EXTENSION IF NOT EXISTS pg_stat_statements;`;
 			sqlQuery = `
 			SELECT queryid, calls, rows, mean_exec_time, query
 		    FROM pg_stat_statements
