@@ -43,9 +43,13 @@
         <tr>
           {#each Object.values(row) as cell}
               {#if isObject(cell)}
+                  {#if cell.name}
+                    <td>{cell.id} {cell.creator_id} {cell.published} {cell.name}</td>
+                  {:else}
                   <td>
                     <ObjectList2 items={cell} />
                   </td>
+                  {/if}
               {:else}
                   <td>{cell}</td>
               {/if}

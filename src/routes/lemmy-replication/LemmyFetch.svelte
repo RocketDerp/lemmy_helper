@@ -1,5 +1,5 @@
 <script>
-	import ObjectList from "./ObjectList.svelte"
+	import LemmyPostsList from "./LemmyPostsList.svelte"
 	export let outServer
 
 	const rowCount = outServer.json.posts.length;
@@ -23,7 +23,7 @@ Database result row count: {rowCount}
 
 <hr />
 
-<ObjectList items={outServer.json.posts} />
+<LemmyPostsList items={outServer.json.posts} />
 
 {/if}
 <style>

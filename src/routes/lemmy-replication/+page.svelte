@@ -4,12 +4,16 @@
     export let data: PageData
 
     import LemmyFetch from './LemmyFetch.svelte';
+    import LemmyFetchCompare from './LemmyFetchCompare.svelte';
 </script>
 
 <h1>Lemmy-Helper replication comparison</h1>
 
-<LemmyFetch outServer={data.outServer0} />
+<LemmyFetchCompare outServers={data} />
+<br />
 
+<LemmyFetch outServer={data.outServer0} />
+<br />
 <LemmyFetch outServer={data.outServer1} />
 
 
