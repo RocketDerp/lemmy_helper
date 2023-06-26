@@ -486,7 +486,9 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			return {
 				queryName: "error, unrecognized query name, ER001",
 				outRows: { rows: [] },
-				outRowsRaw: []
+				outRowsRaw: [],
+				errorCode: 1,
+				errorMessage: "unrecognied query name, ER001"
 			}
 	}
 
@@ -510,7 +512,9 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			return {
 				queryName: "error, exception on query execution, ER002",
 				outRows: { rows: [] },
-				outRowsRaw: []
+				outRowsRaw: [],
+				errorCode: 2,
+				errorMessage: err.message
 			}
 		} finally {
 			await client.end()
@@ -524,7 +528,9 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 		timeQuery: timeQuery,
 		timeConnect: timeConnect,
 		output: output,
-		serverResultTime: (new Date().toISOString())
+		serverResultTime: (new Date().toISOString()),
+		errorCode: 0,
+		errorMessage: ""
 	}
 }
 

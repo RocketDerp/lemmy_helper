@@ -15,6 +15,11 @@ Database result row count: {rowCount}
  -- query time: {data.timeQuery}
 <br />
 
+{#if data.errorCode > 0}
+  Error code {data.errorCode} message: {data.errorMessage}
+  <br />
+{/if}
+
 {#if rowCount > 0}
 
 {#if data.output !== 'table'}
