@@ -6,13 +6,13 @@
     const rowCount = data.outRowsRaw.length;
 </script>
 
-<h1>Lemmy-Helper Query: {data.queryName}</h1>
+<h1><a href="../">Home</a>, you are on Lemmy-Helper Query: {data.queryName}</h1>
 
 Database result row count: {rowCount} -- output: {data.output}
 
-{#if rowCount > 0}
-
  -- connect time: {data.timeConnect} -- query time: {data.timeQuery}
+
+{#if rowCount > 0}
 
 {#if data.output !== 'table'}
 <pre>
@@ -50,6 +50,7 @@ Database result row count: {rowCount} -- output: {data.output}
   </tbody>
 </table>
 {/if}
+
 
 <style>
     table, th, td {
