@@ -34,6 +34,7 @@ export const load: PageServerLoad = async (incoming) => {
 			sqlQuery = "SELECT * FROM pg_locks;";
 			break;
 		case "create_locks1_view":
+			// ToDo: for the record, I don't know these queries actually work. Testing seems to generate nothing.
 			// discussion: https://stackoverflow.com/questions/26489244/how-to-detect-query-which-holds-the-lock-in-postgres
 			sqlQuery = `
 			CREATE VIEW lock_monitor AS (
@@ -57,6 +58,7 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 		case "create_locks2_view":
+			// ToDo: for the record, I don't know these queries actually work. Testing seems to generate nothing.
 			// remove all where causes in the name of getting some actual output on every page refresh
 			sqlQuery = `
 			CREATE VIEW lock_monitor2 AS (
