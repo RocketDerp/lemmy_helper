@@ -5,7 +5,7 @@ export function parseHrtimeToSeconds(hrtime) {
 
 
 export async function getLemmyPosts(params0, fetch) {
-	let result0 = {};
+	let result0 = { params0: params0 };
 	const startTime = process.hrtime();
 	let serverURL0 = params0.serverChoice0 + params0.serverAPI0;
 	let resp = await fetch(serverURL0);
