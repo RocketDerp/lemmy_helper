@@ -16,7 +16,7 @@ Database result row count: {rowCount}
 <br />
 
 {#if data.errorCode > 0}
-  Error code {data.errorCode} message: {data.errorMessage}
+  Error code {data.errorCode} -- message: <tt>{data.errorMessage}</tt>
   <br />
 {/if}
 

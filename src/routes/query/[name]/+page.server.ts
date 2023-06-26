@@ -10,7 +10,8 @@ export const load: PageServerLoad = async (incoming) => {
 	let sqlParams = [];
 	let outRows = {};
 	let outRowsRaw = [];
-	let output = "all"
+	let output = "all";
+	let sqlObjectBreak = false;
 
 	// This is experimental quick/dirty code, so some the workings are exposed ;)
 	console.log("--------- url")
@@ -44,9 +45,9 @@ export const load: PageServerLoad = async (incoming) => {
 				blockingl.mode as blocking_mode
 				FROM pg_catalog.pg_locks blockedl
 				JOIN pg_stat_activity blockeda ON blockedl.pid = blockeda.pid
-				JOIN pg_catalog.pg_locks blockingl ON(
-				( (blockingl.transactionid=blockedl.transactionid) OR
-				(blockingl.relation=blockedl.relation AND blockingl.locktype=blockedl.locktype)
+				JOIN pg_catalog.pg_locks blockingl ON (
+					( (blockingl.transactionid=blockedl.transactionid) OR
+					(blockingl.relation=blockedl.relation AND blockingl.locktype=blockedl.locktype)
 				) AND blockedl.pid != blockingl.pid)
 				JOIN pg_stat_activity blockinga ON blockingl.pid = blockinga.pid
 				AND blockinga.datid = blockeda.datid
@@ -67,9 +68,9 @@ export const load: PageServerLoad = async (incoming) => {
 				blockingl.mode as blocking_mode
 				FROM pg_catalog.pg_locks blockedl
 				JOIN pg_stat_activity blockeda ON blockedl.pid = blockeda.pid
-				JOIN pg_catalog.pg_locks blockingl ON(
-				( (blockingl.transactionid=blockedl.transactionid) OR
-				(blockingl.relation=blockedl.relation AND blockingl.locktype=blockedl.locktype)
+				JOIN pg_catalog.pg_locks blockingl ON (
+					( (blockingl.transactionid=blockedl.transactionid) OR
+					(blockingl.relation=blockedl.relation AND blockingl.locktype=blockedl.locktype)
 				) AND blockedl.pid != blockingl.pid)
 				JOIN pg_stat_activity blockinga ON blockingl.pid = blockinga.pid
 				AND blockinga.datid = blockeda.datid
@@ -83,6 +84,7 @@ export const load: PageServerLoad = async (incoming) => {
 		case "locks2":
 			// NOTE: requires the view to be created on server
 			sqlQuery = `SELECT * from lock_monitor2;`
+			sqlObjectBreak = true;
 			break;
 		case 'pgrunning':
 			sqlQuery = `SELECT pid, age(clock_timestamp(), query_start), usename, query 
@@ -506,7 +508,11 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			const res = await client.query(sqlQuery, sqlParams)
 			timeQuery = parseHrtimeToSeconds(process.hrtime(queryTimeStart))
 			// outRows = JSON.stringify(res.rows);
-			outRowsRaw = res.rows;
+			if (sqlObjectBreak) {
+				JSON.parse(JSON.stringify(res.rows))
+			} else {
+				outRowsRaw = res.rows;
+			}
 		} catch (err) {
 			console.error(err);
 			return {
@@ -534,7 +540,9 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 	}
 }
 
+
 function parseHrtimeToSeconds(hrtime) {
     var seconds = (hrtime[0] + (hrtime[1] / 1e9)).toFixed(3);
     return seconds;
 }
+
