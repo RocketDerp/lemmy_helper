@@ -53,6 +53,6 @@ If you want to add a password to restrict access, something like this should wor
 
 # Command line interface
 
-There is a command line interface for running crawling Lemmy servers. Experimenta, work in progress.
+There is a command line interface for running from a shell. Right now it has some primitive crawling of Lemmy servers. Experimental, work in progress.
 
 `node lemmyhelper_commandline.js posts`

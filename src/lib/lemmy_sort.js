@@ -32,9 +32,22 @@ export async function getLemmyPosts(params0, fetch) {
 
 
 export async function dualServerPostFetch(results) {
+    results.community = "community_name=asklemmy@lemmy.ml";
+    results.community = "community_name=fediverse@lemmy.ml";
+    results.community = "community_name=memes@lemmy.ml";
+    results.community = "community_name=technology@lemmy.ml";
+    results.community = "community_name=linux@lemmy.ml";
+    results.community = "community_name=reddit@lemmy.ml";
+    results.community = "community_name=worldnews@lemmy.ml";
+    results.community = "community_name=mlemapp@lemmy.ml";
+    results.community = "community_name=lemmyworld@lemmy.world";
+    results.community = "community_name=nostupidquestions@lemmy.world";
+
     if (1==1) {
-		results.server0params = { serverChoice0: "https://lemmy.world/",
-		    serverAPI0: "api/v3/post/list?sort=New&community_name=asklemmy@lemmy.ml&limit=50&page=1",
+		results.server0params = {
+            // serverChoice0: "https://lemmy.world/",
+            serverChoice0: "https://sh.itjust.works/",
+		    serverAPI0: "api/v3/post/list?sort=New&" + results.community + "&limit=50&page=1",
 		}
 		    //serverAPI0: "api/v3/post/list?sort=New&type_=Local&limit=40&page=1",
 			// Today I learned, til 16791
@@ -44,7 +57,7 @@ export async function dualServerPostFetch(results) {
 
 	if (1==1) {
 		results.server1params = { serverChoice0: "https://lemmy.ml/",
-		    serverAPI0: "api/v3/post/list?sort=New&community_name=asklemmy@lemmy.ml&limit=50&page=1",
+		    serverAPI0: "api/v3/post/list?sort=New&" + results.community + "&limit=50&page=1",
 		}
 		results.outServer1 = await getLemmyPosts(results.server1params, fetch);
 	};
