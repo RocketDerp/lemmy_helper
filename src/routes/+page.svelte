@@ -15,6 +15,9 @@
 
 <ul>
     <li><a href="query/locks/?output={data.output}">locks</a> - datatabase locks</li>
+    <li><a href="query/locks1/?output={data.output}">locks1</a> - datatabase locks complex,
+        <a href="query/create_locks1_view/?output={data.output}">create locks1 view</a> - install view first
+    </li>
     <li><a href="query/pgcounts/?output={data.output}">pgcounts</a> - datatabase table record counts</li>
     <li><a href="query/pg_indexes/?output={data.output}">pg_indexes</a> - datatabase INDEX list</li>
     <li><a href="query/pgstatements/?output={data.output}">pgcstatements</a> - stats -

@@ -32,6 +32,33 @@ export const load: PageServerLoad = async (incoming) => {
 		case "locks":
 			sqlQuery = "SELECT * FROM pg_locks;";
 			break;
+		case "create_locks1_view":
+			// discussion: https://stackoverflow.com/questions/26489244/how-to-detect-query-which-holds-the-lock-in-postgres
+			sqlQuery = `
+			CREATE VIEW lock_monitor AS(
+			SELECT
+			  COALESCE(blockingl.relation::regclass::text,blockingl.locktype) as locked_item,
+			  now() - blockeda.query_start AS waiting_duration, blockeda.pid AS blocked_pid,
+			  blockeda.query as blocked_query, blockedl.mode as blocked_mode,
+			  blockinga.pid AS blocking_pid, blockinga.query as blocking_query,
+			  blockingl.mode as blocking_mode
+			FROM pg_catalog.pg_locks blockedl
+			JOIN pg_stat_activity blockeda ON blockedl.pid = blockeda.pid
+			JOIN pg_catalog.pg_locks blockingl ON(
+			  ( (blockingl.transactionid=blockedl.transactionid) OR
+			  (blockingl.relation=blockedl.relation AND blockingl.locktype=blockedl.locktype)
+			  ) AND blockedl.pid != blockingl.pid)
+			JOIN pg_stat_activity blockinga ON blockingl.pid = blockinga.pid
+			  AND blockinga.datid = blockeda.datid
+			WHERE NOT blockedl.granted
+			AND blockinga.datname = current_database()
+			)
+			;`
+			break;
+		case "locks1":
+			// NOTE: requires the view to be created on server
+			sqlQuery = `SELECT * from lock_monitor;`
+			break;
 		case 'pgrunning':
 			sqlQuery = `SELECT pid, age(clock_timestamp(), query_start), usename, query 
 			FROM pg_stat_activity 
