@@ -498,7 +498,8 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 		outRowsRaw: outRowsRaw,
 		timeQuery: timeQuery,
 		timeConnect: timeConnect,
-		output: output
+		output: output,
+		serverResultTime: (new Date().toISOString())
 	}
 }
 

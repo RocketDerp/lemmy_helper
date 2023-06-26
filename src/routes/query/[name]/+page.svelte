@@ -8,7 +8,7 @@
 
 <h1><a href="../">Home</a>, you are on Lemmy-Helper Query: {data.queryName}</h1>
 
-Database result row count: {rowCount} -- output: {data.output}
+Database result row count: {rowCount} -- output: {data.output} -- now: {data.serverResultTime}
 
  -- connect time: {data.timeConnect} -- query time: {data.timeQuery}
 
