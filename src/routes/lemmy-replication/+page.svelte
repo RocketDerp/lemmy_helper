@@ -12,10 +12,11 @@
 <LemmyFetchCompare outServers={data} />
 <br />
 
+{#if 1==2}
 <LemmyFetch outServer={data.outServer0} />
 <br />
 <LemmyFetch outServer={data.outServer1} />
-
+{/if}
 
 <style>
     table, th, td {

@@ -35,5 +35,15 @@ export function matchPosts(posts0, posts1) {
         }
     }
 
+    if (posts0.length < posts1.length) {
+        const extraCount = posts1.length - posts0.length;
+        results.resultsA.push("extras" + extraCount)
+    }
+
+    if ((posts1.length - 1) > onJ) {
+        const extraCount = posts1.length - 1 - onJ
+        results.resultsA.push("extrasOnJ" + extraCount)
+    }
+
     return results;
 }
