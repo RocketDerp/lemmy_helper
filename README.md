@@ -49,3 +49,10 @@ A sample nginx.config file is here on this project root. It uses a different hos
 NOTE: there is no login or password on this site, it does mostly safe read-only queries, although resetting the pg_stats is one write-operation.
 
 If you want to add a password to restrict access, something like this should work: https://siddharthac6.medium.com/nginx-implementing-basic-authentication-ecc1100c3a3c
+
+
+# Command line interface
+
+There is a command line interface for running crawling Lemmy servers. Experimenta, work in progress.
+
+`node lemmyhelper_commandline.js posts`
