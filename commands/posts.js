@@ -16,7 +16,7 @@ export async function posts () {
 
     let matchResults = matchPosts(results.outServer0.json.posts, results.outServer1.json.posts);
 
-    console.log(matchResults.resultsA);
+    console.log(matchResults.resultsB);
     consolePosts(matchResults.unfoundA);
 
 }
@@ -25,6 +25,10 @@ export async function posts () {
 function consolePosts(postArray) {
     for (let i = 0; i < postArray.length; i++) {
         let post = postArray[i].post;
-        console.log("%d %s %s url %s", post.id, post.published, post.name, post.url);
+        if (post.url) {
+            console.log("%d %s %s url %s", post.id, post.published, post.name, post.url);
+        } else {
+            console.log("%d %s %s", post.id, post.published, post.name);
+        }
     }
 }

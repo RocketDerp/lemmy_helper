@@ -32,7 +32,6 @@ export async function getLemmyPosts(params0, fetch) {
 
 
 export async function dualServerPostFetch(results) {
-    results.community = "community_name=asklemmy@lemmy.ml";
     results.community = "community_name=fediverse@lemmy.ml";
     results.community = "community_name=memes@lemmy.ml";
     results.community = "community_name=technology@lemmy.ml";
@@ -42,6 +41,9 @@ export async function dualServerPostFetch(results) {
     results.community = "community_name=mlemapp@lemmy.ml";
     results.community = "community_name=lemmyworld@lemmy.world";
     results.community = "community_name=nostupidquestions@lemmy.world";
+    results.community = "community_name=selfhosted@lemmy.world";
+    results.community = "community_name=mildlyinfuriating@lemmy.world";
+    results.community = "community_name=asklemmy@lemmy.ml";
 
     if (1==1) {
 		results.server0params = {
@@ -70,6 +72,7 @@ export async function dualServerPostFetch(results) {
 export function matchPosts(posts0, posts1) {
     let results = {
         resultsA: [],
+        resultsB: [],   // exclude "same" matches, shorter list
         unfoundA: []
     };
 
@@ -85,6 +88,7 @@ export function matchPosts(posts0, posts1) {
                     foundMatch = true;
                     if (j != onJ + 1) {
                         results.resultsA.push(i + ":" + j + ":SKIP?" + onJ + "?");
+                        results.resultsB.push(i + ":" + j + ":SKIP?" + onJ + "?");
                         results.unfoundA.push(posts1[onJ + 1]);
                     }
                     onJ = j;
@@ -92,6 +96,7 @@ export function matchPosts(posts0, posts1) {
                     break;
                 } else {
                     results.resultsA.push(i + ":" + j + ":title");
+                    results.resultsB.push(i + ":" + j + ":title");
                 }
             } else {
                 // resultsA.push(i + ":time");
@@ -99,18 +104,21 @@ export function matchPosts(posts0, posts1) {
         }
         if (!foundMatch) {
             results.resultsA.push(i + "unfound");
+            results.resultsB.push(i + "unfound");
             results.unfoundA.push(posts0[i]);
         }
     }
 
     if (posts0.length < posts1.length) {
         const extraCount = posts1.length - posts0.length;
-        results.resultsA.push("extras" + extraCount)
+        results.resultsA.push("extras:" + extraCount)
+        results.resultsB.push("extras:" + extraCount)
     }
 
     if ((posts1.length - 1) > onJ) {
         const extraCount = posts1.length - 1 - onJ
-        results.resultsA.push("extrasOnJ" + extraCount)
+        results.resultsA.push("extrasOnJ:" + extraCount)
+        results.resultsB.push("extrasOnJ:" + extraCount)
     }
 
     return results;
