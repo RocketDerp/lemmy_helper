@@ -1,4 +1,4 @@
-import { dualServerPostFetch, matchPosts, checkPostsComments, getLemmyPosts, checkErrorsSingle }
+import { dualServerPostFetch, matchPosts, checkPostsComments, getLemmyPosts, checkErrorsSingle, dualServerPostCommentsFetch }
    from "../src/lib/lemmy_sort.js"
 import { convertToComments, convertToTree } from "../src/lib/lemmy_comments.js"
 
@@ -91,20 +91,18 @@ export async function testPost2() {
 
 
 export async function compareComments(server0, post0, server1, post1) {
-    console.log("compareComments function - comparing comments between servers for a post");
-    let errorCount = 0;
-    for (let i = 0; i < 1; i++) {
-        let postResults = await testPost(post0, server0);
-        await new Promise(r => setTimeout(r, 2000));
-        if (postResults.fetchErrors != 0) {
-            errorCount++;
-        }
-        if (i % 10 ==0) {
-            let tree = convertToTree(postResults.json.comments);
-            console.log("---============--- %d errorCount %d", i, errorCount);
-        }
-    }
-    console.log("end of loop, errorCount %d", errorCount);
+    let newParams = {
+       server0params: { serverChoice0: server0, postid: post0 },
+       server1params: { serverChoice0: server1, postid: post1 } 
+       };
+    newParams.server0params.serverAPI0 = "api/v3/comment/list?post_id=" + post0 + "&type_=All&limit=300&sort=New";
+
+    newParams = await dualServerPostCommentsFetch(newParams);
+
+    let tree0 = convertToTree(newParams.outServer0.json.comments);
+    console.log("----");
+    console.log("---- tree1:");
+    let tree1 = convertToTree(newParams.outServer1.json.comments);
 }
 
 

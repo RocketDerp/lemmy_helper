@@ -39,18 +39,28 @@ export async function getLemmyPost(params0, fetch) {
 
 
 export async function dualServerPostFetch(results) {
-
     results.page = 1;
 
-    if (1==1) {
-		results.server0params.serverAPI0 = "api/v3/post/list?sort=New&" + results.community + "&limit=50&page=" + results.page;
-		results.outServer0 = await getLemmyPosts(results.server0params, fetch);
-	};
+    results.server0params.serverAPI0 = "api/v3/post/list?sort=New&" + results.community + "&limit=50&page=" + results.page;
+    results.outServer0 = await getLemmyPosts(results.server0params, fetch);
 
-	if (1==1) {
-		results.server1params.serverAPI0 = "api/v3/post/list?sort=New&" + results.community + "&limit=50&page=" + results.page;
-		results.outServer1 = await getLemmyPosts(results.server1params, fetch);
-	};
+    results.server1params.serverAPI0 = "api/v3/post/list?sort=New&" + results.community + "&limit=50&page=" + results.page;
+    results.outServer1 = await getLemmyPosts(results.server1params, fetch);
+
+    results = checkErrorsDual(results);
+
+    return results;
+}
+
+
+export async function dualServerPostCommentsFetch(results) {
+    results.page = 1;
+
+    results.server0params.serverAPI0 = "api/v3/comment/list?post_id=" + results.server0params.postid + "&type_=All&limit=300&sort=New";
+    results.outServer0 = await getLemmyPosts(results.server0params, fetch);
+
+    results.server1params.serverAPI0 = "api/v3/comment/list?post_id=" + results.server1params.postid + "&type_=All&limit=300&sort=New";
+    results.outServer1 = await getLemmyPosts(results.server1params, fetch);
 
     results = checkErrorsDual(results);
 
@@ -78,10 +88,10 @@ export function checkErrorsDual(results) {
     if (results.outServer0.json.error) {
         results.fetchErrors += 2;
     }
-    if (results.outServer0.failureCode != -1) {
+    if (results.outServer1.failureCode != -1) {
         results.fetchErrors += 4;
     }
-    if (results.outServer0.json.error) {
+    if (results.outServer1.json.error) {
         results.fetchErrors += 8;
     }
     return results;
