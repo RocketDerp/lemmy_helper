@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 import { program } from "commander";
-import { posts, testPost } from "./commands/posts.js"
+import { posts, testPost, testPost2 } from "./commands/posts.js"
 
 
 program
@@ -17,6 +17,13 @@ program
     console.log('test command executed');
     console.log(JSON.stringify(options, null, 2));
     testPost();
+});
+
+program
+.command('testpost2')
+.option('-x, --x-option', 'command test option')
+.action((options) => {
+     testPost2();
 });
 
 

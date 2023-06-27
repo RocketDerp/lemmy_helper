@@ -58,6 +58,7 @@ export async function dualServerPostFetch(results) {
 		results.server0params = {
             // serverChoice0: "https://lemmy.world/",
             serverChoice0: "https://sh.itjust.works/",
+            // serverChoice0: "https://bulletintree.com/",
 		    serverAPI0: "api/v3/post/list?sort=New&" + results.community + "&limit=50&page=" + results.page,
 		}
 
@@ -111,17 +112,30 @@ export function checkErrorsDual(results) {
 }
 
 
-export async function checkPostsComments(results, fetch) {
-    let posts0 = results.outServer0.json.posts;
+function showPerf(results) {
+    console.log("timeConnect %d timeParse %d server %s", results.timeConnect, results.timeParse, results.params0.serverChoice0);
+}
 
-    // for (let i = 0; i < posts0.length; i++) {
-    for (let i = 0; i < 2; i++) {
+
+export async function checkPostsComments(results, fetch, posts0, serverChoice) {
+    // let posts0 = results.outServer0.json.posts;
+
+    for (let i = 0; i < posts0.length; i++) {
+    // for (let i = 0; i < 2; i++) {
         let newParams = {};
-        newParams.serverChoice0 = results.server0params.serverChoice0;
-        newParams.serverAPI0 = "api/v3/comment/list?post_id=" + posts0[i].post.id + "&limit=300&sort=New";
+        newParams.serverChoice0 = serverChoice;
+        newParams.serverAPI0 = "api/v3/comment/list?post_id=" + posts0[i].post.id + "&limit=300&type_=All&sort=New";
         console.log(newParams.serverAPI0);
         let postResults = await getLemmyPosts(newParams, fetch);
-        console.log(postResults);
+
+        postResults = checkErrorsSingle(postResults);
+        if (postResults.fetchErrors == 0) {
+            showPerf(postResults);
+            console.log("Comment count %d", postResults.json.comments.length);
+        } else {
+            console.error("fetchErrors ", postResults.fetchErrors);
+            console.log(postResults);
+        }
     }
 }
 
