@@ -39,40 +39,16 @@ export async function getLemmyPost(params0, fetch) {
 
 
 export async function dualServerPostFetch(results) {
-    results.community = "community_name=fediverse@lemmy.ml";
-    results.community = "community_name=memes@lemmy.ml";
-    results.community = "community_name=technology@lemmy.ml";
-    results.community = "community_name=linux@lemmy.ml";
-    results.community = "community_name=reddit@lemmy.ml";
-    results.community = "community_name=worldnews@lemmy.ml";
-    results.community = "community_name=mlemapp@lemmy.ml";
-    results.community = "community_name=lemmyworld@lemmy.world";
-    results.community = "community_name=nostupidquestions@lemmy.world";
-    results.community = "community_name=selfhosted@lemmy.world";
-    results.community = "community_name=mildlyinfuriating@lemmy.world";
-    results.community = "community_name=asklemmy@lemmy.ml";
 
     results.page = 1;
 
     if (1==1) {
-		results.server0params = {
-            // serverChoice0: "https://lemmy.world/",
-            serverChoice0: "https://sh.itjust.works/",
-            // serverChoice0: "https://bulletintree.com/",
-		    serverAPI0: "api/v3/post/list?sort=New&" + results.community + "&limit=50&page=" + results.page,
-		}
-
-        //results.server0params.serverChoice0 = "https://feddit.de/";
-		    //serverAPI0: "api/v3/post/list?sort=New&type_=Local&limit=40&page=1",
-			// Today I learned, til 16791
-		    //serverAPI0 = "api/v3/post/list?sort=New&community_id=16791&limit=50page=1"
+		results.server0params.serverAPI0 = "api/v3/post/list?sort=New&" + results.community + "&limit=50&page=" + results.page;
 		results.outServer0 = await getLemmyPosts(results.server0params, fetch);
 	};
 
 	if (1==1) {
-		results.server1params = { serverChoice0: "https://lemmy.ml/",
-		    serverAPI0: "api/v3/post/list?sort=New&" + results.community + "&limit=50&page=" + results.page,
-		}
+		results.server1params.serverAPI0 = "api/v3/post/list?sort=New&" + results.community + "&limit=50&page=" + results.page;
 		results.outServer1 = await getLemmyPosts(results.server1params, fetch);
 	};
 
@@ -118,10 +94,7 @@ function showPerf(results) {
 
 
 export async function checkPostsComments(results, fetch, posts0, serverChoice) {
-    // let posts0 = results.outServer0.json.posts;
-
     for (let i = 0; i < posts0.length; i++) {
-    // for (let i = 0; i < 2; i++) {
         let newParams = {};
         newParams.serverChoice0 = serverChoice;
         newParams.serverAPI0 = "api/v3/comment/list?post_id=" + posts0[i].post.id + "&limit=300&type_=All&sort=New";

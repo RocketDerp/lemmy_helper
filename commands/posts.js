@@ -1,5 +1,6 @@
 import { dualServerPostFetch, matchPosts, checkPostsComments, getLemmyPosts, checkErrorsSingle }
    from "../src/lib/lemmy_sort.js"
+import { convertToComments, convertToTree } from "../src/lib/lemmy_comments.js"
 
 
 function showPerf(results) {
@@ -7,9 +8,27 @@ function showPerf(results) {
 }
 
 
-export async function posts () {
+export async function posts (communityname, server0, server1) {
     console.log("posts");
-    let results = {};
+    let results = { community: "community_name=" + communityname,
+        page: 1,
+        server0params: { serverChoice0: server0 },
+        server1params: { serverChoice0: server1 }
+     };
+    /*
+    results.community = "community_name=fediverse@lemmy.ml";
+    results.community = "community_name=memes@lemmy.ml";
+    results.community = "community_name=technology@lemmy.ml";
+    results.community = "community_name=linux@lemmy.ml";
+    results.community = "community_name=reddit@lemmy.ml";
+    results.community = "community_name=worldnews@lemmy.ml";
+    results.community = "community_name=mlemapp@lemmy.ml";
+    results.community = "community_name=lemmyworld@lemmy.world";
+    results.community = "community_name=nostupidquestions@lemmy.world";
+    results.community = "community_name=selfhosted@lemmy.world";
+    results.community = "community_name=mildlyinfuriating@lemmy.world";
+    results.community = "community_name=asklemmy@lemmy.ml";
+    */
     results = await dualServerPostFetch(results);
 
     showPerf(results.outServer0);
@@ -29,13 +48,14 @@ export async function posts () {
 }
 
 
-export async function testPost() {
+export async function testPost(postID, serverChoice) {
     console.log("testPost function");
 
     let newParams = {};
     newParams.serverChoice0 = "https://sh.itjust.works/";
-    let postID = 123406;
-    postID = 372144;
+    if (serverChoice) {
+        newParams.serverChoice0 = serverChoice;
+    }
     newParams.serverAPI0 = "api/v3/comment/list?post_id=" + postID + "&type_=All&limit=300&sort=New";
     console.log(newParams.serverAPI0);
     let postResults = await getLemmyPosts(newParams, fetch);
@@ -47,31 +67,61 @@ export async function testPost() {
         console.error("fetchErrors ", postResults.fetchErrors);
         console.log(postResults);
     }
+    return postResults;
 }
 
 
 export async function testPost2() {
-    console.log("testPost2 function");
-
-    let newParams = {};
-    newParams.serverChoice0 = "https://sh.itjust.works/";
-    let postID = 123406;
-    postID = 372144;
-    newParams.serverAPI0 = "api/v3/post?id=" + postID + "&limit=300&sort=New";
-    // Rust API code is logging this for lemmy-ui 0.18.0 https://l.com/post/47267
-    // 'GET /api/v3/comment/list?max_depth=8&sort=Hot&type_=All&post_id=47267
-    newParams.serverAPI0 = "api/v3/comment/list?max_depth=8&post_id=" + postID + "&sort=New";
-    console.log(newParams.serverAPI0);
-    let postResults = await getLemmyPosts(newParams, fetch);
-    postResults = checkErrorsSingle(postResults);
-    if (postResults.fetchErrors == 0) {
-        showPerf(postResults);
-        console.log(postResults);
-        console.log("Comment count %d", postResults.json.comments.length);
-    } else {
-        console.error("fetchErrors");
-        console.log(postResults);
+    console.log("testPost2 function - testing comments for a post");
+    let errorCount = 0;
+    for (let i = 0; i < 1; i++) {
+        // let postResults = await testPost(1197481, "https://lemmy.ml/");
+        let postResults = await testPost(123406);
+        await new Promise(r => setTimeout(r, 2000));
+        if (postResults.fetchErrors != 0) {
+            errorCount++;
+        }
+        if (i % 10 ==0) {
+            let tree = convertToTree(postResults.json.comments);
+            console.log("---============--- %d errorCount %d", i, errorCount);
+        }
     }
+    console.log("end of loop, errorCount %d", errorCount);
+}
+
+
+export async function compareComments(server0, post0, server1, post1) {
+    console.log("compareComments function - comparing comments between servers for a post");
+    let errorCount = 0;
+    for (let i = 0; i < 1; i++) {
+        let postResults = await testPost(post0, server0);
+        await new Promise(r => setTimeout(r, 2000));
+        if (postResults.fetchErrors != 0) {
+            errorCount++;
+        }
+        if (i % 10 ==0) {
+            let tree = convertToTree(postResults.json.comments);
+            console.log("---============--- %d errorCount %d", i, errorCount);
+        }
+    }
+    console.log("end of loop, errorCount %d", errorCount);
+}
+
+
+export async function loopTest0() {
+    console.log("looptest0 function");
+    let errorCount = 0;
+    for (let i = 0; i < 1000; i++) {
+        let postResults = await testPost(6, "https://lemmy.ml/");
+        await new Promise(r => setTimeout(r, 2000));
+        if (postResults.fetchErrors != 0) {
+            errorCount++;
+        }
+        if (i % 10 ==0) {
+            console.log("---============--- %d errorCount %d", i, errorCount);
+        }
+    }
+    console.log("end of loop, errorCount %d", errorCount);
 }
 
 
