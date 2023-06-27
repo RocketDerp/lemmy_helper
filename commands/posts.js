@@ -1,6 +1,7 @@
 import { dualServerPostFetch, matchPosts, checkPostsComments, getLemmyPosts, checkErrorsSingle, dualServerPostCommentsFetch }
    from "../src/lib/lemmy_sort.js"
-import { convertToComments, convertToTree } from "../src/lib/lemmy_comments.js"
+import { compareCommentsPostsListID, compareTwoCommentsSamePost, convertToComments, convertToTree } 
+   from "../src/lib/lemmy_comments.js"
 
 
 function showPerf(results) {
@@ -42,6 +43,14 @@ export async function posts (communityname, server0, server1) {
         console.log(matchResults.resultsB);
         consolePosts(matchResults.unfoundA);
 
+        console.log("------------ comments of posts ==============");
+        console.log(matchResults.sameID);
+        compareCommentsPostsListID(matchResults.sameID);
+
+        for (let i = 0; i < 1; i++) {
+            console.log("--------------------- POSTING %d", i);
+            compareComments(server0, matchResults.sameID[i][0], server1, matchResults.sameID[i][1]);
+        }
         // await checkPostsComments(results, fetch, results.outServer0.json.posts, results.server0params.serverChoice0);
         // await checkPostsComments(results, fetch, results.outServer1.json.posts, results.server1params.serverChoice0);
     }
@@ -110,8 +119,12 @@ export async function compareComments(server0, post0, server1, post1) {
         console.log("Comment count %d", newParams.outServer1.json.comments.length);
     
         let tree1 = convertToTree(newParams.outServer1.json.comments);
+
+        console.log("--------------");
+        console.log("-------------------");
+        let diff0 = compareTwoCommentsSamePost(newParams.outServer0.json.comments, newParams.outServer1.json.comments);
     } else {
-        console.log("fetchErrors: %d", postResults.fetchErrors);
+        console.log("fetchErrors: %d", newParams.fetchErrors);
     }
 }
 

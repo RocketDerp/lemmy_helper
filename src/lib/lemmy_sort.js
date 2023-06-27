@@ -19,11 +19,13 @@ export async function getLemmyPosts(params0, fetch) {
 			result0.json = await resp.json();
 	    	// console.log(result0.json);
         } catch (e0) {
+            console.error("JSON parse failed ", serverURL0);
 			result0.failureCode = -1000;
 			result0.failureText = "JSON parse failure";
 		}
 		result0.timeParse = parseHrtimeToSeconds(process.hrtime(queryTimeStart))
 	} else {
+        console.error("fetch failed ", serverURL0);
 		result0.failureCode = resp.status;
 		result0.failureText = resp.statusText;
 	}
@@ -128,7 +130,8 @@ export function matchPosts(posts0, posts1) {
     let results = {
         resultsA: [],
         resultsB: [],   // exclude "same" matches, shorter list
-        unfoundA: []
+        unfoundA: [],
+        sameID: [],
     };
 
     let onJ = -1;
@@ -140,6 +143,7 @@ export function matchPosts(posts0, posts1) {
                 // timestamps match, now title?
                 if (posts0[i].post.name === posts1[j].post.name) {
                     results.resultsA.push(i + ":" + j + ":same");
+                    results.sameID.push([ posts0[i].post.id, posts1[j].post.id] );
                     foundMatch = true;
                     if (j != onJ + 1) {
                         results.resultsA.push(i + ":" + j + ":SKIP?" + onJ + "?");

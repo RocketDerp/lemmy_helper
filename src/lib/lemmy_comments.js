@@ -3,12 +3,7 @@
 // Apache license
 export function convertToTree(comments) {
     let commentTree = [];
-    let commentsSorted = comments.sort((a, b) => {
-        if (a.comment.path.length === b.comment.path.length) {
-            return a.comment.path.localeCompare(b.comment.path, undefined, { numeric: true });
-        }
-        return a.comment.path.length - b.comment.path.length;
-    });
+    let commentsSorted = comments.sort((a, b) => {return commentSort(a, b); });
 
     for (let i = 0; i < commentsSorted.length; i++) {
         let comment = commentsSorted[i];
@@ -33,6 +28,101 @@ export function convertToTree(comments) {
 
     consoleCommentTree(commentTree);
     return commentTree;
+}
+
+
+function commentSort (a, b) {
+    if (a.comment.path.length === b.comment.path.length) {
+        return a.comment.path.localeCompare(b.comment.path, undefined, { numeric: true });
+    }
+    return a.comment.path.length - b.comment.path.length;
+};
+
+
+export function compareTwoCommentsSamePost(comments, comments1) {
+    let commentTree = [];
+    let commentsSorted = comments.sort((a, b) => {return commentSort(a, b); });
+    let commentsSorted1 = comments1.sort((a, b) => {return commentSort(a, b); });
+    let commentMissing = [];
+    let commentUnequal = [];
+
+    const comments1length = comments1.length;
+
+    for (let i = 0; i < commentsSorted.length; i++) {
+        let comment = commentsSorted[i];
+        let path = comment.comment.path;
+        let pathSplit = path.split('.');
+        let root = commentTree;
+
+        let found = false;
+        let onJ = -1;
+        for (let j = 0; j < commentsSorted1.length; j++) {
+            if (comment.comment.published == commentsSorted1[j].comment.published) {
+                onJ = j;
+                found = true;
+                if (comment.comment.content !== commentsSorted1[j].comment.content) {
+                    commentUnequal.push(comment.comment);
+                }
+                // found match. exit loop.
+                break;
+            }
+        }
+
+        if (!found) {
+            // console.log(comment);
+            commentMissing.push(comment);
+        }
+
+        for (let j = 1; j < pathSplit.length; j++) {
+            let id = pathSplit[j];
+            let index = root.findIndex((c) => c.id == id);
+            if (index == -1) {
+                root.push({
+                    id: comment.comment.id,
+                    comment,
+                    children: []
+                });
+            } else {
+                root = root[index].children;
+            }
+        }
+    }
+
+    consoleCommentsNaked(commentMissing);
+    //console.log(commentMissing[0]);
+    console.log("commenttMissing %d unequal %d", commentMissing.length, commentUnequal.length)
+    return commentMissing;
+}
+
+
+// Parameter is an array of { x, y } numbers of PostID
+export function compareCommentsPostsListID(postsListID) {
+    for (let i = 0; i < postsListID.length; i++) {
+        let post0 = postsListID[i][0];
+        let post1 = postsListID[i][1];
+
+        console.log("%d other %d", post0, post1);
+    }
+}
+
+
+function consoleOneCommentNaked(c) {
+    const indentOut = "***".repeat(c.comment.path.split(".").length - 2);
+    console.log("%s%d %s vote %d %s %s children ?",
+        indentOut,
+        c.comment.id, c.comment.path, c.counts.score,
+        c.creator.actor_id, c.comment.published);
+    console.log("   %s", c.comment.content);
+}
+
+export function consoleCommentsNaked(comments) {
+    for (let i = 0; i < comments.length; i++) {
+        let c = comments[i];
+        if (i==0) {
+            //console.log(c);
+        }
+        consoleOneCommentNaked(c);
+    }
 }
 
 
