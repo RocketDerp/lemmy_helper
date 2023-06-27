@@ -98,11 +98,21 @@ export async function compareComments(server0, post0, server1, post1) {
     newParams.server0params.serverAPI0 = "api/v3/comment/list?post_id=" + post0 + "&type_=All&limit=300&sort=New";
 
     newParams = await dualServerPostCommentsFetch(newParams);
+    showPerf(newParams.outServer0);
+    showPerf(newParams.outServer1);
 
-    let tree0 = convertToTree(newParams.outServer0.json.comments);
-    console.log("----");
-    console.log("---- tree1:");
-    let tree1 = convertToTree(newParams.outServer1.json.comments);
+    if (newParams.fetchErrors == 0) {
+        console.log("Comment count %d", newParams.outServer0.json.comments.length);
+
+        let tree0 = convertToTree(newParams.outServer0.json.comments);
+        console.log("----");
+        console.log("---- tree1:");
+        console.log("Comment count %d", newParams.outServer1.json.comments.length);
+    
+        let tree1 = convertToTree(newParams.outServer1.json.comments);
+    } else {
+        console.log("fetchErrors: %d", postResults.fetchErrors);
+    }
 }
 
 

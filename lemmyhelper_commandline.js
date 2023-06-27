@@ -61,7 +61,7 @@ program
     const server1 = options.server1;
     const post0 = options.postid0;
     const post1 = options.postid1;
-    console.log('compare comments. server0 %s post %d server1 %s post %d', communityName, server0, post0, server1, post1);
+    console.log('compare comments. server0 %s post %d server1 %s post %d', server0, post0, server1, post1);
     console.log(JSON.stringify(options));
     compareComments(server0, post0, server1, post1);
 });
