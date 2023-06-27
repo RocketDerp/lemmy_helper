@@ -24,7 +24,7 @@ export async function posts () {
         consolePosts(matchResults.unfoundA);
 
         // await checkPostsComments(results, fetch, results.outServer0.json.posts, results.server0params.serverChoice0);
-        await checkPostsComments(results, fetch, results.outServer1.json.posts, results.server1params.serverChoice0);
+        // await checkPostsComments(results, fetch, results.outServer1.json.posts, results.server1params.serverChoice0);
     }
 }
 
@@ -78,10 +78,14 @@ export async function testPost2() {
 function consolePosts(postArray) {
     for (let i = 0; i < postArray.length; i++) {
         let post = postArray[i].post;
+        let updateOut = "";
+        if (post.published != post.updated) {
+            updateOut = " updated[" + post.updated + "]";
+        }
         if (post.url) {
-            console.log("%d %s %s url %s", post.id, post.published, post.name, post.url);
+            console.log("%d %s%s %s url %s %s", post.id, post.published, updateOut, post.name, post.url, post.ap_id);
         } else {
-            console.log("%d %s %s", post.id, post.published, post.name);
+            console.log("%d %s%s %s", post.id, post.published, updateOut, post.name, post.ap_id);
         }
     }
 }
