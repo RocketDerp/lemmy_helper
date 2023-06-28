@@ -9,8 +9,8 @@ export async function getLemmyPosts(params0, fetch) {
         failureText: "",
         json: {}
         };
-	const startTime = process.hrtime();
 	let serverURL0 = params0.serverChoice0 + params0.serverAPI0;
+	const startTime = process.hrtime();
 	let resp = await fetch(serverURL0);
 	result0.timeConnect = parseHrtimeToSeconds(process.hrtime(startTime));
 	if (resp.ok) {

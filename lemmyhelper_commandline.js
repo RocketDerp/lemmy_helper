@@ -1,7 +1,8 @@
 #! /usr/bin/env node
 
 import { program } from "commander";
-import { posts, testPost, testPost2, loopTest0, compareComments } from "./commands/posts.js"
+import { posts, testPost, testPost2, loopTest0, compareComments, rawPost } from "./commands/posts.js"
+import { testLemmyLogin, testVote } from "./commands/sessions.js";
 
 
 program
@@ -49,6 +50,17 @@ program
 });
 
 program
+.command('rawpost')
+.description('lemmy raw post JSON')
+.option('-p, --postid <number>', 'Lemmy post ID, localized to that specific server', 123406)
+.option('-s, --server <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://lemmy.ml/")
+.action((options) => {
+    const postID = options.postid;
+    const server = options.server;
+    rawPost(postID, server);
+});
+
+program
 .command('postcomments')
 .description('two servers comparison of comments for a post')
 .option('-p0, --postid0 <number>', 'Lemmy post ID, localized to that specific server0', 179199)
@@ -78,6 +90,25 @@ program
 .option('-x, --x-option', 'command test option')
 .action((options) => {
      loopTest0();
+});
+
+program
+.command('testlogin')
+.description('lemmy test login')
+.option('-u, --username <string>', 'Lemmy username', "testuser0")
+.option('-u, --password <string>', 'Lemmy password', "nevermatch000AZ#fm")
+.option('-s, --server <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://enterprise.lemmy.ml/")
+.action((options) => {
+    testLemmyLogin(options.server, options.username, options.password);
+});
+
+program
+.command('testvote')
+.description('lemmy test login')
+.option('-j, --jwt <string>', 'Lemmy server JWT authenticatio ntokent for session', "blahblahblahblah-this-is-test")
+.option('-s, --server <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://enterprise.lemmy.ml/")
+.action((options) => {
+    testVote(options.server, options.jwt);
 });
 
 

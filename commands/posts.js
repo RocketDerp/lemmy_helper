@@ -80,6 +80,24 @@ export async function testPost(postID, serverChoice) {
 }
 
 
+export async function rawPost(postID, serverChoice) {
+    let newParams = { serverChoice0: serverChoice };
+    newParams.serverAPI0 = "api/v3/comment/list?post_id=" + postID + "&type_=All&limit=300&sort=New";
+    console.log(newParams.serverAPI0);
+    let postResults = await getLemmyPosts(newParams, fetch);
+    postResults = checkErrorsSingle(postResults);
+    if (postResults.fetchErrors == 0) {
+        showPerf(postResults);
+        console.log("Comment count %d", postResults.json.comments.length);
+        console.log(postResults.json);
+    } else {
+        console.error("fetchErrors ", postResults.fetchErrors);
+        console.log(postResults);
+    }
+    return postResults;
+}
+
+
 export async function testPost2() {
     console.log("testPost2 function - testing comments for a post");
     let errorCount = 0;
