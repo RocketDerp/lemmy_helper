@@ -41,8 +41,10 @@ function commentSort (a, b) {
 
 export function compareTwoCommentsSamePost(comments, comments1) {
     let commentTree = [];
-    let commentsSorted = comments.sort((a, b) => {return commentSort(a, b); });
-    let commentsSorted1 = comments1.sort((a, b) => {return commentSort(a, b); });
+    //let commentsSorted = comments.sort((a, b) => {return commentSort(a, b); });
+    //let commentsSorted1 = comments1.sort((a, b) => {return commentSort(a, b); });
+    let commentsSorted = comments;
+    let commentsSorted1 = comments1;
     let results = {
         comments: comments,
         comments1: comments1,
@@ -50,16 +52,25 @@ export function compareTwoCommentsSamePost(comments, comments1) {
         commentUnequal: []
     }
 
+    let onJ = -1;
+
     for (let i = 0; i < commentsSorted.length; i++) {
         let comment = commentsSorted[i];
-        let path = comment.comment.path;
-        let pathSplit = path.split('.');
-        let root = commentTree;
+        //let path = comment.comment.path;
+        //let pathSplit = path.split('.');
+        //let root = commentTree;
 
         let found = false;
-        let onJ = -1;
         for (let j = 0; j < commentsSorted1.length; j++) {
             if (comment.comment.published == commentsSorted1[j].comment.published) {
+                let jJump = j - onJ;
+                if (jJump > 1) {
+                    // console.log("missing j %d jJump %d onJ %d", j, jJump, onJ);
+                    // some skips are detected.
+                    for (let m = 1; m < jJump; m++) {
+                        results.commentMissing.push(commentsSorted1[onJ + m]);
+                    }
+                }
                 onJ = j;
                 found = true;
                 if (comment.comment.content !== commentsSorted1[j].comment.content) {
@@ -75,8 +86,9 @@ export function compareTwoCommentsSamePost(comments, comments1) {
             results.commentMissing.push(comment);
         }
 
-        for (let j = 1; j < pathSplit.length; j++) {
-            let id = pathSplit[j];
+        /*
+        for (let k = 1; k < pathSplit.length; k++) {
+            let id = pathSplit[k];
             let index = root.findIndex((c) => c.id == id);
             if (index == -1) {
                 root.push({
@@ -86,6 +98,18 @@ export function compareTwoCommentsSamePost(comments, comments1) {
                 });
             } else {
                 root = root[index].children;
+            }
+        }
+        */
+    }
+
+    // this assumes they are sorted by published time. Should this code search the commentsSorted array?
+    if (commentsSorted1.length > commentsSorted.length) {
+        // console.log("missing trying to balance %d > %d onJ %d", commentsSorted1.length, commentsSorted.length, onJ);
+        let onJplus = onJ + 1;
+        if (onJplus < commentsSorted1.length) {
+            for (let j = onJplus; j < commentsSorted1.length; j++) {
+                results.commentMissing.push(commentsSorted1[j]);
             }
         }
     }

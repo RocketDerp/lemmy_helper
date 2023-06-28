@@ -122,20 +122,24 @@ export async function compareComments(server0, post0, server1, post1) {
 
         //console.log("--------------");
         //console.log("-------------------");
-        let d = compareTwoCommentsSamePost(newParams.outServer0.json.comments, newParams.outServer1.json.comments);
-        //console.log("commentMissing %d unequal %d server0 %d server1 %d %s %s  ", d.commentMissing.length,
-        //    d.commentUnequal.length, d.comments.length, d.comments1.length,
-        //    server0 + "post/" + post0, server1  + "post/" + post1
-        //)
+        if (newParams.outServer0.json.comments.length == 300) {
+            console.log("missing skip post with 300 comments");
+        } else {
+            let d = compareTwoCommentsSamePost(newParams.outServer0.json.comments, newParams.outServer1.json.comments);
+            //console.log("commentMissing %d unequal %d server0 %d server1 %d %s %s  ", d.commentMissing.length,
+            //    d.commentUnequal.length, d.comments.length, d.comments1.length,
+            //    server0 + "post/" + post0, server1  + "post/" + post1
+            //)
 
-        // markdown for GitHub and Lemmy
-        // [title](https://www.example.com)
-        console.log("missing %d unequal %d [%d on %s](%s) vs. [%d on %s](%s)  ",
-        d.commentMissing.length,
-        d.commentUnequal.length,
-        d.comments.length, server0, server0 + "post/" + post0,
-        d.comments1.length, server1, server1  + "post/" + post1
-        )
+            // markdown for GitHub and Lemmy
+            // [title](https://www.example.com)
+            console.log("missing %d unequal %d [%d on %s](%s) vs. [%d on %s](%s)  ",
+                d.commentMissing.length,
+                d.commentUnequal.length,
+                d.comments.length, server0, server0 + "post/" + post0,
+                d.comments1.length, server1, server1  + "post/" + post1
+            )
+        }
     } else {
         console.log("fetchErrors: %d", newParams.fetchErrors);
     }
