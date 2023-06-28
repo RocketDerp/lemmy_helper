@@ -132,6 +132,7 @@ export function matchPosts(posts0, posts1) {
         resultsB: [],   // exclude "same" matches, shorter list
         unfoundA: [],
         sameID: [],
+        sameA: [],      // array should have equal items to sameID
     };
 
     let onJ = -1;
@@ -144,6 +145,7 @@ export function matchPosts(posts0, posts1) {
                 if (posts0[i].post.name === posts1[j].post.name) {
                     results.resultsA.push(i + ":" + j + ":same");
                     results.sameID.push([ posts0[i].post.id, posts1[j].post.id] );
+                    results.sameA.push(posts0[i]);
                     foundMatch = true;
                     if (j != onJ + 1) {
                         results.resultsA.push(i + ":" + j + ":SKIP?" + onJ + "?");

@@ -41,15 +41,15 @@ export async function posts (communityname, server0, server1) {
         let matchResults = matchPosts(results.outServer0.json.posts, results.outServer1.json.posts);
 
         console.log(matchResults.resultsB);
-        consolePosts(matchResults.unfoundA);
+        //consolePosts(matchResults.unfoundA);
 
         console.log("------------ comments of posts ==============");
-        console.log(matchResults.sameID);
-        compareCommentsPostsListID(matchResults.sameID);
+        //console.log(matchResults.sameID);
+        // compareCommentsPostsListID(matchResults.sameID);
 
-        for (let i = 0; i < 1; i++) {
-            console.log("--------------------- POSTING %d", i);
-            compareComments(server0, matchResults.sameID[i][0], server1, matchResults.sameID[i][1]);
+        for (let i = 0; i < matchResults.sameID.length; i++) {
+            console.log("---- POSTS %d %s %s", i, matchResults.sameID[i], matchResults.sameA[i].post.name);
+            let commentsMatch = await compareComments(server0, matchResults.sameID[i][0], server1, matchResults.sameID[i][1]);
         }
         // await checkPostsComments(results, fetch, results.outServer0.json.posts, results.server0params.serverChoice0);
         // await checkPostsComments(results, fetch, results.outServer1.json.posts, results.server1params.serverChoice0);
@@ -111,21 +111,35 @@ export async function compareComments(server0, post0, server1, post1) {
     showPerf(newParams.outServer1);
 
     if (newParams.fetchErrors == 0) {
-        console.log("Comment count %d", newParams.outServer0.json.comments.length);
+        //console.log("tree0 Comment count %d", newParams.outServer0.json.comments.length);
 
-        let tree0 = convertToTree(newParams.outServer0.json.comments);
-        console.log("----");
-        console.log("---- tree1:");
-        console.log("Comment count %d", newParams.outServer1.json.comments.length);
+        //let tree0 = convertToTree(newParams.outServer0.json.comments);
+        //console.log("----");
+        //console.log("---- tree1:");
+        //console.log("tree1 Comment count %d", newParams.outServer1.json.comments.length);
     
-        let tree1 = convertToTree(newParams.outServer1.json.comments);
+        //let tree1 = convertToTree(newParams.outServer1.json.comments);
 
-        console.log("--------------");
-        console.log("-------------------");
-        let diff0 = compareTwoCommentsSamePost(newParams.outServer0.json.comments, newParams.outServer1.json.comments);
+        //console.log("--------------");
+        //console.log("-------------------");
+        let d = compareTwoCommentsSamePost(newParams.outServer0.json.comments, newParams.outServer1.json.comments);
+        //console.log("commentMissing %d unequal %d server0 %d server1 %d %s %s  ", d.commentMissing.length,
+        //    d.commentUnequal.length, d.comments.length, d.comments1.length,
+        //    server0 + "post/" + post0, server1  + "post/" + post1
+        //)
+
+        // markdown for GitHub and Lemmy
+        // [title](https://www.example.com)
+        console.log("missing %d unequal %d [%d on %s](%s) vs. [%d on %s](%s)  ",
+        d.commentMissing.length,
+        d.commentUnequal.length,
+        d.comments.length, server0, server0 + "post/" + post0,
+        d.comments1.length, server1, server1  + "post/" + post1
+        )
     } else {
         console.log("fetchErrors: %d", newParams.fetchErrors);
     }
+    return newParams;
 }
 
 

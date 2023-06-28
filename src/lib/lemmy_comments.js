@@ -43,10 +43,12 @@ export function compareTwoCommentsSamePost(comments, comments1) {
     let commentTree = [];
     let commentsSorted = comments.sort((a, b) => {return commentSort(a, b); });
     let commentsSorted1 = comments1.sort((a, b) => {return commentSort(a, b); });
-    let commentMissing = [];
-    let commentUnequal = [];
-
-    const comments1length = comments1.length;
+    let results = {
+        comments: comments,
+        comments1: comments1,
+        commentMissing: [],
+        commentUnequal: []
+    }
 
     for (let i = 0; i < commentsSorted.length; i++) {
         let comment = commentsSorted[i];
@@ -61,7 +63,7 @@ export function compareTwoCommentsSamePost(comments, comments1) {
                 onJ = j;
                 found = true;
                 if (comment.comment.content !== commentsSorted1[j].comment.content) {
-                    commentUnequal.push(comment.comment);
+                    results.commentUnequal.push(comment.comment);
                 }
                 // found match. exit loop.
                 break;
@@ -70,7 +72,7 @@ export function compareTwoCommentsSamePost(comments, comments1) {
 
         if (!found) {
             // console.log(comment);
-            commentMissing.push(comment);
+            results.commentMissing.push(comment);
         }
 
         for (let j = 1; j < pathSplit.length; j++) {
@@ -88,10 +90,12 @@ export function compareTwoCommentsSamePost(comments, comments1) {
         }
     }
 
-    consoleCommentsNaked(commentMissing);
+    // consoleCommentsNaked(commentMissing);
     //console.log(commentMissing[0]);
-    console.log("commenttMissing %d unequal %d", commentMissing.length, commentUnequal.length)
-    return commentMissing;
+    //console.log("commentMissing %d unequal %d server0 %d server1 %d", commentMissing.length,
+    //   commentUnequal.length, comments.length, comments1.length
+    //)
+    return results;
 }
 
 
