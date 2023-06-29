@@ -27,26 +27,46 @@ export async function serverFetchJSON0(params0, fetcha) {
 
 	const startTime = process.hrtime();
     try {
-        let resp = await fetch(serverURL0, {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: params0.bodyJSON0
-            });
+        let resp;
+        
+        if (params0.fetchMethod === "NOMATCH_GET") {
+            if (params0.bodyJSON0) {
+                resp = await fetch(serverURL0, {
+                    method: "GET",
+                    headers: { "content-type": "application/json" },
+                    body: params0.bodyJSON0
+                });
+            } else {
+                resp = await fetch(serverURL0);
+            }
+        } else {
+            if (params0.bodyJSON0) {
+                resp = await fetch(serverURL0, {
+                    method: "POST",
+                    headers: { "content-type": "application/json" },
+                    body: params0.bodyJSON0
+                });
+            } else {
+                // GET instead of POST
+                resp = await fetch(serverURL0);
+            }
+        }
         result0.timeConnect = parseHrtimeToSeconds(process.hrtime(startTime));
+
         if (resp.ok) {
             const queryTimeStart = process.hrtime();
             try {
                 result0.json = await resp.json();
                 // console.log(result0.json);
             } catch (e0) {
-                console.error("JSON parse failed ", serverURL0);
+                console.error("JSON parse exception ", serverURL0);
                 console.log(e0);
                 result0.failureCode = -1000;
                 result0.failureText = "JSON parse failure";
             }
             result0.timeParse = parseHrtimeToSeconds(process.hrtime(queryTimeStart))
         } else {
-            console.error("JSON exception ", serverURL0);
+            console.error("fetch was not OK ", serverURL0);
             result0.failureCode = resp.status;
             result0.failureText = resp.statusText;
         }

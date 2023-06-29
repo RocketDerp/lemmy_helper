@@ -1,5 +1,7 @@
 import { lemmyLogin, lemmyCommentLike } 
-   from "../src/lib/lemmy_session.js"
+    from "../src/lib/lemmy_session.js"
+import { consoleCommunityList, lemmyCommunities, searchCommunities }
+    from "../src/lib/lemmy_communities.js"
 
 
 export async function testLemmyLogin(server, username, password) {
@@ -53,4 +55,37 @@ export async function loopTestVote(params0) {
     console.log("end of loop, errorCount %d", errorCount);
 
     console.log(result);
+}
+
+
+export async function testCommunities(params0) {
+    let result = await lemmyCommunities( {
+        serverChoice0: params0.server,
+        jwt: params0.jwt
+    } );
+
+    if (result.failureCode == -1) {
+        console.log("communities %d", result.json.communities.length);
+        consoleCommunityList(result.json.communities);
+    } else {
+        console.log(result);
+    }
+
+    testSearchCommunity(params0);
+}
+
+
+export async function testSearchCommunity(params0) {
+    let result = await searchCommunities( {
+        serverChoice0: params0.server,
+        queryCommunityname: "asklemmy",
+        jwt: params0.jwt
+    } );
+
+    if (result.failureCode == -1) {
+        console.log("communities %d", result.json.communities.length);
+        consoleCommunityList(result.json.communities);
+    } else {
+        console.log(result);
+    }
 }

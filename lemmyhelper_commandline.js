@@ -2,7 +2,7 @@
 
 import { program } from "commander";
 import { posts, testPost, testPost2, loopTest0, compareComments, rawPost } from "./commands/posts.js"
-import { testLemmyLogin, testVote, loopTestVote } from "./commands/sessions.js";
+import { testLemmyLogin, testVote, loopTestVote, testCommunities } from "./commands/sessions.js";
 
 
 program
@@ -121,6 +121,28 @@ program
 .option('-lp, --looppause <number>', 'loop pause between iterations, in milliseconds', 15000)
 .action((options) => {
     loopTestVote(options);
+});
+
+program
+.command('communities')
+.description('lemmy communities list')
+.option('-j, --jwt <string>', 'Lemmy JWT authentication token for server session', "blahblahblahblah-this-is-test")
+.option('-s, --server <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://enterprise.lemmy.ml/")
+.option('-s, --search <string>', 'search for community', "asklemmy")
+.action((options) => {
+    testCommunities(options);
+});
+
+
+program
+.command('communitiestickle')
+.description('lemmy communities tickle between two servers')
+.option('-j, --jwt <string>', 'Lemmy JWT authentication token for server session', "blahblahblahblah-this-is-test")
+.option('-s0, --server0 <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://lemmy.ml/")
+.option('-s1, --server1 <string>', 'Lemmy server URL, https://sh.itjust.works/ format', "https://sh.itjust.works/")
+.option('-s, --search <string>', 'search for community', "asklemmy")
+.action((options) => {
+    testCommunities(options);
 });
 
 
