@@ -20,6 +20,7 @@ export async function getLemmyPosts(params0, fetch) {
 	    	// console.log(result0.json);
         } catch (e0) {
             console.error("JSON parse failed ", serverURL0);
+            console.log(e0);
 			result0.failureCode = -1000;
 			result0.failureText = "JSON parse failure";
 		}

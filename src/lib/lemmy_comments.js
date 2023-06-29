@@ -40,9 +40,6 @@ function commentSort (a, b) {
 
 
 export function compareTwoCommentsSamePost(comments, comments1) {
-    let commentTree = [];
-    //let commentsSorted = comments.sort((a, b) => {return commentSort(a, b); });
-    //let commentsSorted1 = comments1.sort((a, b) => {return commentSort(a, b); });
     let commentsSorted = comments;
     let commentsSorted1 = comments1;
     let results = {
@@ -56,11 +53,8 @@ export function compareTwoCommentsSamePost(comments, comments1) {
 
     for (let i = 0; i < commentsSorted.length; i++) {
         let comment = commentsSorted[i];
-        //let path = comment.comment.path;
-        //let pathSplit = path.split('.');
-        //let root = commentTree;
 
-        let found = false;
+        let foundOnBothServers = false;
         for (let j = 0; j < commentsSorted1.length; j++) {
             if (comment.comment.published == commentsSorted1[j].comment.published) {
                 let jJump = j - onJ;
@@ -72,7 +66,7 @@ export function compareTwoCommentsSamePost(comments, comments1) {
                     }
                 }
                 onJ = j;
-                found = true;
+                foundOnBothServers = true;
                 if (comment.comment.content !== commentsSorted1[j].comment.content) {
                     results.commentUnequal.push(comment.comment);
                 }
@@ -81,26 +75,9 @@ export function compareTwoCommentsSamePost(comments, comments1) {
             }
         }
 
-        if (!found) {
-            // console.log(comment);
+        if (!foundOnBothServers) {
             results.commentMissing.push(comment);
         }
-
-        /*
-        for (let k = 1; k < pathSplit.length; k++) {
-            let id = pathSplit[k];
-            let index = root.findIndex((c) => c.id == id);
-            if (index == -1) {
-                root.push({
-                    id: comment.comment.id,
-                    comment,
-                    children: []
-                });
-            } else {
-                root = root[index].children;
-            }
-        }
-        */
     }
 
     // this assumes they are sorted by published time. Should this code search the commentsSorted array?
@@ -120,6 +97,42 @@ export function compareTwoCommentsSamePost(comments, comments1) {
     //   commentUnequal.length, comments.length, comments1.length
     //)
     return results;
+}
+
+
+/*
+Build a short array of details about the source of the comment, notably the local server comment_id and the universal ap_id
+published is included, as it is useful to track down server to server replication failues and identify time periods of when servers are down or otherwise not replicating.
+*/
+export function buildArrayOfCommentIdentifiers(commentArray) {
+    let commentIdentities = [];
+
+    for (let i = 0; i < commentArray.length; i++) {
+        commentIdentities.push( {
+            comment_id: commentArray[i].comment.id,
+            ap_id: commentArray[i].comment.ap_id,
+            post_id: commentArray[i].comment.post_id,
+            published: commentArray[i].comment.published
+         } )
+    }
+
+    return commentIdentities;
+}
+
+
+export function formatAsMarkdownCommentIdentifiers(commentArray) {
+    let outMarkdown = "";
+
+    for (let i = 0; i < commentArray.length; i++) {
+        if (i > 0) {
+            outMarkdown += ", ";
+        }
+        outMarkdown += "[" + commentArray[i].ap_id + "]"
+            + "(" + commentArray[i].ap_id + ")"
+            ;
+    }
+
+    return outMarkdown;
 }
 
 

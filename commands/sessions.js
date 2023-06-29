@@ -23,3 +23,34 @@ export async function testVote(server, jwt) {
 
     console.log(result);
 }
+
+
+// options.server, options.jwt, parseInt(options.commentid)
+export async function loopTestVote(params0) {
+    let errorCount = 0;
+    for (let i = 0; i < 1000; i++) {
+        let result = await lemmyCommentLike( {
+            serverChoice0: params0.server,
+            jwt: params0.jwt,
+            vote: parseInt(params0.commentscore),
+            comment_id: parseInt(params0.commentid)
+        });
+
+        let outComment = "";
+        if (result.failureCode != -1) {
+            errorCount++;
+            outComment = " vote ERROR";
+            console.log(result);
+        } else {
+            outComment = " vote " + result.json.comment_view.my_vote;
+        }
+
+        console.log("%d timeConnect %d timeParse %d errorCount %s %s %s",
+          i, result.timeConnect, result.timeParse, errorCount, params0.server, outComment);
+
+        await new Promise(r => setTimeout(r, params0.looppause));
+    }
+    console.log("end of loop, errorCount %d", errorCount);
+
+    console.log(result);
+}

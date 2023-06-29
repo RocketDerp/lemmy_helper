@@ -2,7 +2,7 @@
 
 import { program } from "commander";
 import { posts, testPost, testPost2, loopTest0, compareComments, rawPost } from "./commands/posts.js"
-import { testLemmyLogin, testVote } from "./commands/sessions.js";
+import { testLemmyLogin, testVote, loopTestVote } from "./commands/sessions.js";
 
 
 program
@@ -105,10 +105,22 @@ program
 program
 .command('testvote')
 .description('lemmy test login')
-.option('-j, --jwt <string>', 'Lemmy server JWT authenticatio ntokent for session', "blahblahblahblah-this-is-test")
+.option('-j, --jwt <string>', 'Lemmy JWT authentication token for server session', "blahblahblahblah-this-is-test")
 .option('-s, --server <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://enterprise.lemmy.ml/")
 .action((options) => {
     testVote(options.server, options.jwt);
+});
+
+program
+.command('looptestvote')
+.description('lemmy test login')
+.option('-j, --jwt <string>', 'Lemmy JWT authentication token for server session', "blahblahblahblah-this-is-test")
+.option('-s, --server <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://enterprise.lemmy.ml/")
+.option('-c, --commentid <number>', 'Lemmy comment ID, localized to that specific server', 1016688)
+.option('-cs, --commentscore <number>', 'Lemmy vote score: 0, 1, -1', 1)
+.option('-lp, --looppause <number>', 'loop pause between iterations, in milliseconds', 15000)
+.action((options) => {
+    loopTestVote(options);
 });
 
 

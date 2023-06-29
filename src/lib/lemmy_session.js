@@ -67,32 +67,37 @@ export async function lemmyCommentLike(params0, fetcha) {
         };
 	let serverURL0 = params0.serverChoice0 + "api/v3/comment/like";
 	const startTime = process.hrtime();
-    let resp = await fetch(serverURL0, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify( {
-            comment_id: params0.comment_id,
-            score: 1,
-            auth: params0.jwt
-            } )
-        });
-	result0.timeConnect = parseHrtimeToSeconds(process.hrtime(startTime));
-	if (resp.ok) {
-		const queryTimeStart = process.hrtime();
-		try {
-			result0.json = await resp.json();
-	    	// console.log(result0.json);
-        } catch (e0) {
-            console.error("JSON parse failed ", serverURL0);
-			result0.failureCode = -1000;
-			result0.failureText = "JSON parse failure";
-		}
-		result0.timeParse = parseHrtimeToSeconds(process.hrtime(queryTimeStart))
-	} else {
-        console.error("fetch failed ", serverURL0);
-		result0.failureCode = resp.status;
-		result0.failureText = resp.statusText;
-	}
+    try {
+        let resp = await fetch(serverURL0, {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify( {
+                comment_id: params0.comment_id,
+                score: 1,
+                auth: params0.jwt
+                } )
+            });
+        result0.timeConnect = parseHrtimeToSeconds(process.hrtime(startTime));
+        if (resp.ok) {
+            const queryTimeStart = process.hrtime();
+            try {
+                result0.json = await resp.json();
+                // console.log(result0.json);
+            } catch (e0) {
+                console.error("JSON parse failed ", serverURL0);
+                result0.failureCode = -1000;
+                result0.failureText = "JSON parse failure";
+            }
+            result0.timeParse = parseHrtimeToSeconds(process.hrtime(queryTimeStart))
+        } else {
+            console.error("fetch failed ", serverURL0);
+            result0.failureCode = resp.status;
+            result0.failureText = resp.statusText;
+        }
+    } catch (err) {
+        result0.failureCode = -2000;
+        result0.failureText = err;
+    }
 
 	return result0;
 }

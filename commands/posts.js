@@ -1,6 +1,7 @@
 import { dualServerPostFetch, matchPosts, checkPostsComments, getLemmyPosts, checkErrorsSingle, dualServerPostCommentsFetch }
    from "../src/lib/lemmy_sort.js"
-import { compareCommentsPostsListID, compareTwoCommentsSamePost, convertToComments, convertToTree } 
+import { compareCommentsPostsListID, compareTwoCommentsSamePost, convertToComments, convertToTree,
+     buildArrayOfCommentIdentifiers, formatAsMarkdownCommentIdentifiers } 
    from "../src/lib/lemmy_comments.js"
 
 
@@ -149,6 +150,8 @@ export async function compareComments(server0, post0, server1, post1) {
             //    server0 + "post/" + post0, server1  + "post/" + post1
             //)
 
+            let missingCommentsIdentifiers = buildArrayOfCommentIdentifiers(d.commentMissing);
+
             // markdown for GitHub and Lemmy
             // [title](https://www.example.com)
             console.log("missing %d unequal %d [%d on %s](%s) vs. [%d on %s](%s)  ",
@@ -156,7 +159,12 @@ export async function compareComments(server0, post0, server1, post1) {
                 d.commentUnequal.length,
                 d.comments.length, server0, server0 + "post/" + post0,
                 d.comments1.length, server1, server1  + "post/" + post1
-            )
+                )
+
+            if (d.commentMissing.length > 0) {
+                let missingInMarkdown = formatAsMarkdownCommentIdentifiers(missingCommentsIdentifiers);
+                console.log("missing ap_id %s  ", missingInMarkdown);
+            }
         }
     } else {
         console.log("fetchErrors: %d", newParams.fetchErrors);
