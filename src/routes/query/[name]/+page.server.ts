@@ -586,6 +586,18 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			ORDER BY count DESC
 			;`
 			break;
+		case 'comments_ap_id_host_12hour':
+			// 2007 solution
+			//   https://www.postgresql.org/message-id/247444.36947.qm@web50311.mail.re2.yahoo.com
+			// ToDo: add interval picker to URL parameters
+			sqlQuery = `SELECT
+			SUBSTRING( ap_id FROM '.*://([^/]*)' ) AS hostname, count(substring( ap_id FROM '.*://([^/]*)' ))
+			FROM comment
+			WHERE published >= NOW() - INTERVAL '12 HOURS'
+			GROUP BY hostname
+			ORDER BY count DESC
+			;`
+			break;
 		case 'comments_ap_id_hostname3':
 			//   https://stackoverflow.com/questions/47528966/regex-for-postgresql-for-getting-domain-with-sub-domain-from-url-website
 			sqlQuery = `SELECT 
