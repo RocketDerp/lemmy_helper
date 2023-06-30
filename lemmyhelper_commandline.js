@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 import { program } from "commander";
-import { posts, testPost, testPost2, loopTest0, compareComments, rawPost } from "./commands/posts.js"
+import { posts, testPost, testPost2, loopTest0, compareComments, rawPost, loopPostList } from "./commands/posts.js"
 import { testLemmyLogin, testVote, loopTestVote, testCommunities,
     testResolveCommunity, testCommunitiesTickle } from "./commands/sessions.js";
 
@@ -86,8 +86,23 @@ program
 
 program
 .command('looptest0')
+.description('loop loading comments for a post')
 .action((options) => {
      loopTest0();
+});
+
+program
+.command('looppostlist')
+.description('loop post list')
+.option('-c, --communityname <string>', 'Lemmy community name', "")
+.option('-s, --server <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://lemm.ee/")
+.option('-lp, --looppause <number>', 'loop pause between iterations, in milliseconds', 12000)
+.option('-li, --loopiterations <number>', 'number of loop iterations', 100)
+.option('-ob, --orderby <string>', 'sort by', "New")
+.option('-li, --limit <number>', 'limit to list length', 12)
+.option('-p, --page <number>', 'page of list', 1)
+.action((options) => {
+    loopPostList(options);
 });
 
 program
@@ -131,7 +146,6 @@ program
     testCommunities(options);
 });
 
-
 program
 .command('resolvecommunity')
 .description('lemmy resolve remote community')
@@ -141,7 +155,6 @@ program
 .action((options) => {
     testResolveCommunity(options);
 });
-
 
 program
 .command('communitiestickle')

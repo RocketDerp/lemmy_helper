@@ -17,20 +17,7 @@ export async function posts (communityname, server0, server1) {
         server0params: { serverChoice0: server0 },
         server1params: { serverChoice0: server1 }
      };
-    /*
-    results.community = "community_name=fediverse@lemmy.ml";
-    results.community = "community_name=memes@lemmy.ml";
-    results.community = "community_name=technology@lemmy.ml";
-    results.community = "community_name=linux@lemmy.ml";
-    results.community = "community_name=reddit@lemmy.ml";
-    results.community = "community_name=worldnews@lemmy.ml";
-    results.community = "community_name=mlemapp@lemmy.ml";
-    results.community = "community_name=lemmyworld@lemmy.world";
-    results.community = "community_name=nostupidquestions@lemmy.world";
-    results.community = "community_name=selfhosted@lemmy.world";
-    results.community = "community_name=mildlyinfuriating@lemmy.world";
-    results.community = "community_name=asklemmy@lemmy.ml";
-    */
+
     results = await dualServerPostFetch(results);
 
     showPerf(results.outServer0);
@@ -58,9 +45,7 @@ export async function posts (communityname, server0, server1) {
 }
 
 
-export async function testPost(postID, serverChoice) {
-    console.log("testPost function");
-
+export async function testPost(postID, serverChoice) { 
     let newParams = {};
     newParams.serverChoice0 = "https://sh.itjust.works/";
     if (serverChoice) {
@@ -203,4 +188,70 @@ function consolePosts(postArray) {
             console.log("%d %s%s %s", post.id, post.published, updateOut, post.name, post.ap_id);
         }
     }
+}
+
+
+export async function loopPostList(options) {
+    let errorCount = 0;
+    let postID = -1;
+
+    for (let i = 0; i < options.loopiterations; i++) {
+        let paramCommunity = "";
+        if (options.communityname.length > 0) {
+            paramCommunity =  "&community_name=" + options.communityname;
+        }
+        let results = {
+            server0params: { serverChoice0: options.server },
+        };
+
+        results.server0params.serverAPI0 = "api/v3/post/list?"
+           + "sort=" + options.orderby
+           + paramCommunity
+           + "&limit=" + options.limit
+           + "&page=" + options.page
+           ;
+        results = await getLemmyPosts(results.server0params, fetch);
+
+        let outDetail0 = "";
+        if (results.failureCode != -1) {
+            errorCount++;
+            outDetail0 = " postlist ERROR";
+            console.log(results);
+        } else {
+            let posts =  results.json.posts;
+            outDetail0 = " posts " + posts.length;
+            if (posts.length > 0) {
+                let t = 0;
+                let post = posts[t];
+
+                // search the list of posts for the first one that is not featured, forced to top of New sort.
+                for (let p = 0; p < posts.length; p++) {
+                    if (!posts[p].post.featured_community) {
+                        if (!posts[p].post.featured_local) {
+                            t = p;
+                            post = posts[p];
+                            // exit loop
+                            break;
+                        }
+                    }
+                }
+
+                if (parseInt(post.post.id) > postID) {
+                    outDetail0 += " NEW";
+                    postID = parseInt(post.post.id);
+                }
+                outDetail0 += " " + post.post.published
+                  + " index " + t
+                  + " id " + post.post.id
+                  + " " + post.post.name
+            }
+        }
+
+        console.log("%d timeConnect %d timeParse %d errorCount %s %s%s",
+          i, results.timeConnect, results.timeParse, errorCount, options.server, outDetail0);
+
+        await new Promise(r => setTimeout(r, options.looppause));
+    }
+
+    console.log("end of loop, errorCount %d", errorCount);
 }
