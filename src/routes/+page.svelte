@@ -60,6 +60,10 @@ search:
 <a href="query/search_comments/?output={data.output}">comments</a>
 <br />
 
+comment instance:
+<a href="query/comments_ap_id_hostname1/?output={data.output}">comments_ap_id_hostname1</a>
+<br />
+
 curious query:
 <a href="query/curiousquery/?output={data.output}">curiousquery</a>
 
