@@ -28,28 +28,15 @@ export async function serverFetchJSON0(params0, fetcha) {
 	const startTime = process.hrtime();
     try {
         let resp;
-        
-        if (params0.fetchMethod === "NOMATCH_GET") {
-            if (params0.bodyJSON0) {
-                resp = await fetch(serverURL0, {
-                    method: "GET",
-                    headers: { "content-type": "application/json" },
-                    body: params0.bodyJSON0
-                });
-            } else {
-                resp = await fetch(serverURL0);
-            }
+        if (params0.bodyJSON0) {
+            resp = await fetch(serverURL0, {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: params0.bodyJSON0
+            });
         } else {
-            if (params0.bodyJSON0) {
-                resp = await fetch(serverURL0, {
-                    method: "POST",
-                    headers: { "content-type": "application/json" },
-                    body: params0.bodyJSON0
-                });
-            } else {
-                // GET instead of POST
-                resp = await fetch(serverURL0);
-            }
+            // GET method instead of POST
+            resp = await fetch(serverURL0);
         }
         result0.timeConnect = parseHrtimeToSeconds(process.hrtime(startTime));
 

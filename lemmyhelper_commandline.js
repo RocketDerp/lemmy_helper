@@ -2,7 +2,8 @@
 
 import { program } from "commander";
 import { posts, testPost, testPost2, loopTest0, compareComments, rawPost } from "./commands/posts.js"
-import { testLemmyLogin, testVote, loopTestVote, testCommunities, testResolveCommunity } from "./commands/sessions.js";
+import { testLemmyLogin, testVote, loopTestVote, testCommunities,
+    testResolveCommunity, testCommunitiesTickle } from "./commands/sessions.js";
 
 
 program
@@ -147,13 +148,13 @@ program
 
 program
 .command('communitiestickle')
-.description('lemmy communities tickle between two servers')
-.option('-j, --jwt <string>', 'Lemmy JWT authentication token for server session', "blahblahblahblah-this-is-test")
-.option('-s0, --server0 <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://lemmy.ml/")
-.option('-s1, --server1 <string>', 'Lemmy server URL, https://sh.itjust.works/ format', "https://sh.itjust.works/")
+.description('lemmy communities tickle between two servers, server0 is source, server1 is destination')
+.requiredOption('-j, --jwt <string>', 'Lemmy JWT authentication token for server session with server1')
+.option('-s0, --server0 <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://lemm.ee/")
+.option('-s1, --server1 <string>', 'Lemmy server URL, https://sh.itjust.works/ format', "https://bulletintree.com/")
 .option('-s, --search <string>', 'search for community', "asklemmy")
 .action((options) => {
-    testCommunities(options);
+    testCommunitiesTickle(options);
 });
 
 

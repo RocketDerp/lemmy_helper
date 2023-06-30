@@ -103,10 +103,60 @@ export async function testResolveCommunity(params0) {
 
     if (result.failureCode == -1) {
         console.log(result.json.community);
-        // console.log("communities %d", result.json.communities.length);
-        // consoleCommunityList(result.json.communities);
     } else {
         console.log(result);
     }
 }
 
+
+export function simplifyServerName(fullURL) {
+    var url = new URL(fullURL);
+    return url.hostname;
+}
+
+
+/*
+Find list of local communities on server0 and tickle server1 to discover them.
+Requires being logged-in to server1
+*/
+export async function testCommunitiesTickle(params0) {
+    // ToDo: loop pages
+    let result = await lemmyCommunities( {
+        serverChoice0: params0.server0,
+    } );
+
+    if (result.failureCode == -1) {
+        let communities = result.json.communities;
+        console.log("communities %d", communities.length);
+        consoleCommunityList(communities);
+
+        let hostname = simplifyServerName(params0.server0);
+        console.log("======= RESOLVING %d from @ %s on targer server %s", communities.length, hostname, params0.server1);
+        let errorCount = 0;
+        let errorPile = [];
+        for (let i = 0; i < communities.length; i++) {
+            let fullCommunityname = "!" + communities[i].community.name + "@" + hostname;
+            let resultResolve = await resolveCommunity( {
+                serverChoice0: params0.server1,
+                queryCommunityname: fullCommunityname,
+                jwt: params0.jwt
+            } );
+        
+            if (resultResolve.failureCode == -1) {
+                let rc = resultResolve.json.community;
+                console.log("resolve id %d name %s from %s errorCount %d", rc.community.id, rc.community.name, fullCommunityname, errorCount);
+            } else {
+                console.log(resultResolve);
+                errorCount++;
+                errorPile.push(fullCommunityname);
+                await new Promise(r => setTimeout(r, 3000));
+            }
+        }
+        console.log("finished, errorCount %d", errorCount);
+        if (errorCount > 0) {
+            console.log(errorPile);
+        }
+    } else {
+        console.log(result);
+    }
+}
