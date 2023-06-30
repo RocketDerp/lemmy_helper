@@ -445,7 +445,8 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 		case 'raw_comment_reply':
 			sqlQuery = `SELECT id, *
 			FROM comment_reply
-			LIMIT 10
+			ORDER BY PUBLISHED DESC
+			LIMIT 25
 			;`
 			break;
 		case 'raw_instance':

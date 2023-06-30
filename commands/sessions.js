@@ -117,6 +117,7 @@ export function simplifyServerName(fullURL) {
 /*
 Find list of local communities on server0 and tickle server1 to discover them.
 Requires being logged-in to server1
+Optional to follow the community on server1 after tickle to discover community.
 */
 export async function testCommunitiesTickle(params0) {
     let finalPage = false;
