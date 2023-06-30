@@ -1,8 +1,8 @@
 # lemmy-helper
 
-Lemmy social media, federated application
+For serfer opertors of Lemmy social media, federated application
 
-This is an attempt to create a SvelteKit webapp for server operators to work directly with the PostgreSQL database tables. Work in progress / unstable project. Quick and dirty, proof of concept.
+This is an attempt to create a SvelteKit webapp for server operators to work directly with the PostgreSQL database tables. Work in progress / unstable project. Quick and dirty, proof of concept. NEW: I added a command line interface for crawling and testing Lemmy servers.
 
 # Discussion
 
@@ -10,7 +10,7 @@ Lemmy social media community for this project: https://lemmy.ml/c/lemmy_helper
 
 # Intended to be safe way to operate a server
 
-It does read-only operations of the Lemmy database.
+It does read-only operations of the Lemmy database. WARNING: it does expose some raw data from your PostgreSQL database to the web. Out of the box, it won't be accessible from nginx or other proxy unless you set those up. And if you do open it to the public Internet, you can password protect the webapp.
 
 # Download code and build project
 
