@@ -56,3 +56,7 @@ If you want to add a password to restrict access, something like this should wor
 There is a command line interface for running from a shell. Right now it has some primitive crawling of Lemmy servers. Experimental, work in progress.
 
 `node lemmyhelper_commandline.js posts`
+
+# Project ToDo
+
+If someone wants to convert the .js to TypeScript files, fine with me. The CLI may then need to have a compile step added? It takes a lot of time to tweak the code and study how lemmy_server behaves, especially with the overloaded servers in the 0.18.0 era. So throwing code around with .js just works faster for me while I'm experimenting. Open an issue or post in the Lemmy community if you want to take tha ton so I know not to edit those files until converted. If you haven't noticed, I've been using GitHub to upload test code to my live Lemmy server, that is why there are so many commits. Thank you.
