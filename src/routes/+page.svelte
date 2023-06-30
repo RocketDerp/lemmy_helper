@@ -61,7 +61,9 @@ search:
 <br />
 
 comment instance:
-<a href="query/comments_ap_id_hostname1/?output={data.output}">comments_ap_id_hostname1</a>
+<a href="query/comments_ap_id_hostname0/?output={data.output}">comments_ap_id_hostname0</a>,
+<a href="query/comments_ap_id_hostname1/?output={data.output}">comments_ap_id_hostname1</a>,
+<a href="query/comments_ap_id_host_hour/?output={data.output}">comments_ap_id_host_hour</a>
 <br />
 
 curious query:

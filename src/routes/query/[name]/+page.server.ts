@@ -549,7 +549,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			// 2007 solution
 			//   https://www.postgresql.org/message-id/247444.36947.qm@web50311.mail.re2.yahoo.com
 			sqlQuery = `SELECT
-			substring( ap_id from '.*://([^/]*)' ) as hostname, count(substring( ap_id from '.*://([^/]*)' ))
+			SUBSTRING( ap_id FROM '.*://([^/]*)' ) AS hostname, count(substring( ap_id FROM '.*://([^/]*)' ))
 			FROM comment
 			GROUP BY hostname
 			ORDER BY count DESC
@@ -573,6 +573,17 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			FROM comment
 			ORDER BY published DESC
 			LIMIT 30
+			;`
+			break;
+		case 'comments_ap_id_host_hour':
+			// 2007 solution
+			//   https://www.postgresql.org/message-id/247444.36947.qm@web50311.mail.re2.yahoo.com
+			sqlQuery = `SELECT
+			SUBSTRING( ap_id FROM '.*://([^/]*)' ) AS hostname, count(substring( ap_id FROM '.*://([^/]*)' ))
+			FROM comment
+			GROUP BY hostname
+			WHERE published >= NOW() - INTERVAL '1 HOUR'
+			ORDER BY count DESC
 			;`
 			break;
 		case 'comments_ap_id_hostname3':
