@@ -1,8 +1,8 @@
 # lemmy-helper
 
-For serfer opertors of Lemmy social media, federated application
+For server operators of Lemmy social media, federated application
 
-This is an attempt to create a SvelteKit webapp for server operators to work directly with the PostgreSQL database tables. Work in progress / unstable project. Quick and dirty, proof of concept. NEW: I added a command line interface for crawling and testing Lemmy servers.
+This is an attempt to create a SvelteKit webapp for server operators to work directly with the PostgreSQL database tables. Work in progress / unstable project. Quick and dirty, proof of concept. NEW: command line interface (CLI) for crawling and testing Lemmy servers.
 
 # Discussion
 
