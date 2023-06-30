@@ -545,7 +545,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 		case 'comments_ap_id_hostname1':
 			//   https://stackoverflow.com/questions/47528966/regex-for-postgresql-for-getting-domain-with-sub-domain-from-url-website
 			sqlQuery = `SELECT 
-			id, post_id, published, ap_id
+			id, post_id, published, ap_id,
 			SUBSTRING (ap_id from '(?:.*://)?(?:www\.)?([^/?]*)') AS instance_domain     
 		  	FROM comments
 			ORDER BY published DESC
