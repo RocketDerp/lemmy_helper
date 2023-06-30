@@ -547,7 +547,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			sqlQuery = `SELECT 
 			id, post_id, published, ap_id,
 			SUBSTRING (ap_id from '(?:.*://)?(?:www\.)?([^/?]*)') AS instance_domain     
-		  	FROM comments
+		  	FROM comment
 			ORDER BY published DESC
 			LIMIT 20
 			;`
@@ -557,7 +557,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			sqlQuery = `SELECT 
 			id, post_id, published, ap_id,
 		    REGEXP_REPLACE (ap_id, '^(https?://)?(www\.)?', '') AS instance_domain     
-			FROM comments
+			FROM comment
 			ORDER BY published DESC
 			LIMIT 20
 			;`
@@ -565,9 +565,8 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 		case 'comments_ap_id_hostname3':
 			//   https://stackoverflow.com/questions/47528966/regex-for-postgresql-for-getting-domain-with-sub-domain-from-url-website
 			sqlQuery = `SELECT 
-			id, post_id, published, ap_id,
-			ap_id AS instance_domain     
-			FROM comments
+			id, creator_id, post_id, published, ap_id
+			FROM comment
 			ORDER BY published DESC
 			LIMIT 20
 			;`
