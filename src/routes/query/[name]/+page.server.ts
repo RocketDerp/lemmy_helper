@@ -353,6 +353,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				// 10 limit, 11 offset
 				40, 0
 			]
+			break;
 		case 'pgrunning1':
 			sqlQuery = `SELECT pid, query_start, usename, query 
 			FROM pg_stat_activity 
