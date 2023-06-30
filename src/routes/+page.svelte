@@ -56,7 +56,8 @@ explain:
 
 search:
 <a href="query/search_posts3/?output={data.output}">posts3</a>,
-<a href="query/search_person/?output={data.output}">person</a>
+<a href="query/search_person/?output={data.output}">person</a>,
+<a href="query/search_comments/?output={data.output}">comments</a>
 <br />
 
 curious query:

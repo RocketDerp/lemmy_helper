@@ -278,7 +278,8 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
  WHERE (((((((((("community"."hidden" = $9) OR ("community_follower"."person_id" = $10)) AND ("post"."community_id" = $11)) AND ("local_user_language"."language_id" IS NOT NULL)) AND ("community_block"."person_id" IS NULL)) AND ("person_block"."person_id" IS NULL)) AND ("post"."removed" = $12)) AND ("post"."deleted" = $13)) AND ("community"."removed" = $14)) AND ("community"."deleted" = $15))
  ORDER BY "post_aggregates"."featured_community" DESC , "post_aggregates"."published" DESC
  LIMIT $16
- OFFSET $17			;`
+ OFFSET $17
+ 			;`
 			sqlParams = [
 				// first 7 are person_id
 				2, 2, 2, 2, 2, 2, 2,
@@ -306,6 +307,52 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				true, false
 			]
 			break;
+		case 'search_comments':
+			// lemmy-ui "local", "comments", "active" picked at top of home page
+			sqlQuery = `SELECT "comment"."id", "comment"."creator_id", "comment"."post_id", "comment"."content", "comment"."removed", "comment"."published", "comment"."updated", "comment"."deleted", "comment"."ap_id", "comment"."local", "comment"."path", "comment"."distinguished", "comment"."language_id",
+			 "person"."id", "person"."name", "person"."display_name", "person"."avatar", "person"."banned", "person"."published", "person"."updated", "person"."actor_id", "person"."bio", "person"."local", "person"."private_key", "person"."public_key", "person"."last_refreshed_at", "person"."banner", "person"."deleted", "person"."inbox_url", "person"."shared_inbox_url", "person"."matrix_user_id", "person"."admin", "person"."bot_account", "person"."ban_expires", "person"."instance_id",
+			 "post"."id", "post"."name", "post"."url", "post"."body", "post"."creator_id", "post"."community_id", "post"."removed", "post"."locked", "post"."published", "post"."updated", "post"."deleted", "post"."nsfw", "post"."embed_title", "post"."embed_description", "post"."thumbnail_url", "post"."ap_id", "post"."local", "post"."embed_video_url", "post"."language_id", "post"."featured_community", "post"."featured_local",
+			 "community"."id", "community"."name", "community"."title", "community"."description", "community"."removed", "community"."published", "community"."updated", "community"."deleted", "community"."nsfw", "community"."actor_id", "community"."local", "community"."private_key", "community"."public_key", "community"."last_refreshed_at", "community"."icon", "community"."banner", "community"."followers_url", "community"."inbox_url", "community"."shared_inbox_url", "community"."hidden", "community"."posting_restricted_to_mods", "community"."instance_id", "community"."moderators_url", "community"."featured_url", "comment_aggregates"."id", "comment_aggregates"."comment_id",
+			 "comment_aggregates"."score", "comment_aggregates"."upvotes", "comment_aggregates"."downvotes", "comment_aggregates"."published", "comment_aggregates"."child_count", "comment_aggregates"."hot_rank",
+			 "community_person_ban"."id", "community_person_ban"."community_id", "community_person_ban"."person_id", "community_person_ban"."published", "community_person_ban"."expires",
+			 "community_follower"."id", "community_follower"."community_id", "community_follower"."person_id", "community_follower"."published", "community_follower"."pending",
+			 "comment_saved"."id", "comment_saved"."comment_id", "comment_saved"."person_id", "comment_saved"."published",
+			 "person_block"."id", "person_block"."person_id", "person_block"."target_id", "person_block"."published",
+			 "comment_like"."score"
+			 FROM ((((((((((("comment"
+			  INNER JOIN "person" ON ("comment"."creator_id" = "person"."id"))
+			  INNER JOIN "post" ON ("comment"."post_id" = "post"."id"))
+			  INNER JOIN "community" ON ("post"."community_id" = "community"."id"))
+			  INNER JOIN "comment_aggregates" ON ("comment_aggregates"."comment_id" = "comment"."id"))
+			  LEFT OUTER JOIN "community_person_ban" ON (("community"."id" = "community_person_ban"."community_id") AND ("community_person_ban"."person_id" = "comment"."creator_id")))
+			  LEFT OUTER JOIN "community_follower" ON (("post"."community_id" = "community_follower"."community_id") AND ("community_follower"."person_id" = $1)))
+			  LEFT OUTER JOIN "comment_saved" ON (("comment"."id" = "comment_saved"."comment_id") AND ("comment_saved"."person_id" = $2)))
+			  LEFT OUTER JOIN "person_block" ON (("comment"."creator_id" = "person_block"."target_id") AND ("person_block"."person_id" = $3)))
+			  LEFT OUTER JOIN "community_block" ON (("community"."id" = "community_block"."community_id") AND ("community_block"."person_id" = $4)))
+			  LEFT OUTER JOIN "comment_like" ON (("comment"."id" = "comment_like"."comment_id") AND ("comment_like"."person_id" = $5)))
+			  LEFT OUTER JOIN "local_user_language" ON (("comment"."language_id" = "local_user_language"."language_id") AND ("local_user_language"."local_user_id" = $6)))
+			   
+			  WHERE ((((("community"."local" = $7) AND (("community"."hidden" = $8) OR ("community_follower"."person_id" = $9)))
+			   AND ("local_user_language"."language_id" IS NOT NULL))
+			   AND ("community_block"."person_id" IS NULL)) AND ("person_block"."person_id" IS NULL))
+			   ORDER BY "comment_aggregates"."hot_rank" DESC
+			LIMIT $10
+			OFFSET $11
+			;`
+			sqlParams = [
+				// first 5 are person_id
+				2, 2, 2, 2, 2,
+				// 6 is local_user_id for language
+				2,
+				// 7 is local vs federated
+				true,
+				// 8 is hidden community
+				false,
+				// 9 is person_id
+				2,
+				// 10 limit, 11 offset
+				40, 0
+			]
 		case 'pgrunning1':
 			sqlQuery = `SELECT pid, query_start, usename, query 
 			FROM pg_stat_activity 
