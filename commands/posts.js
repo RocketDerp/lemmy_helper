@@ -241,17 +241,17 @@ export async function loopPostList(options) {
                     postID = parseInt(post.post.id);
                 }
                 outDetail0 += " " + post.post.published
-                  + " index " + t
+                  + " i " + t   // "i" for "index of post"
                   + " id " + post.post.id
                   + " " + post.post.name
             }
         }
 
-        console.log("%d timeConnect %d timeParse %d errorCount %s %s%s",
-          i, results.timeConnect, results.timeParse, errorCount, options.server, outDetail0);
+        console.log("%d took %d error %s%s",
+          i, results.timeConnect, errorCount, outDetail0);
 
         await new Promise(r => setTimeout(r, options.looppause));
     }
 
-    console.log("end of loop, errorCount %d", errorCount);
+    console.log("end of loop, errorCount %d server %s", errorCount, options.server);
 }

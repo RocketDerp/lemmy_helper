@@ -1,6 +1,6 @@
 import { lemmyLogin, lemmyCommentLike } 
     from "../src/lib/lemmy_session.js"
-import { consoleCommunityList, lemmyCommunities, resolveCommunity, searchCommunities }
+import { consoleCommunityList, followCommunity, lemmyCommunities, resolveCommunity, searchCommunities }
     from "../src/lib/lemmy_communities.js"
 
 
@@ -30,7 +30,7 @@ export async function testVote(server, jwt) {
 // options.server, options.jwt, parseInt(options.commentid)
 export async function loopTestVote(params0) {
     let errorCount = 0;
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < params0.loopiterations; i++) {
         let result = await lemmyCommentLike( {
             serverChoice0: params0.server,
             jwt: params0.jwt,
@@ -44,17 +44,16 @@ export async function loopTestVote(params0) {
             outComment = " vote ERROR";
             console.log(result);
         } else {
-            outComment = " vote " + result.json.comment_view.my_vote;
+            outComment = " vote " + result.json.comment_view.my_vote + " total " + result.json.comment_view.counts.score;
+            //console.log(result.json.comment_view);
         }
 
-        console.log("%d timeConnect %d timeParse %d errorCount %s %s %s",
-          i, result.timeConnect, result.timeParse, errorCount, params0.server, outComment);
+        console.log("%d timeConnect %d errorCount %s %s%s",
+          i, result.timeConnect, errorCount, params0.server, outComment);
 
         await new Promise(r => setTimeout(r, params0.looppause));
     }
-    console.log("end of loop, errorCount %d", errorCount);
-
-    console.log(result);
+    console.log("end of loop, errorCount %d server %s", errorCount, params0.server);
 }
 
 
@@ -123,6 +122,7 @@ export async function testCommunitiesTickle(params0) {
     let finalPage = false;
     let errorItemCount = 0;
     let errorPageCount = 0;
+    let errorFollowCount = 0;
     let errorPile = [];
     let onPage = 1;
 
@@ -157,8 +157,50 @@ export async function testCommunitiesTickle(params0) {
             
                 if (resultResolve.failureCode == -1) {
                     let rc = resultResolve.json.community;
-                    console.log("resolve id %d name %s from %s errorCount %d", rc.community.id, rc.community.name, fullCommunityname, errorItemCount);
-                } else {
+
+                    let outFollow = "";
+                    let doFollow = params0.follow;
+                    if (params0.fastfollow) {
+                        if (rc.subscribed === "Subscribed") {
+                            doFollow = false;
+                            if (params0.follow) {
+                                outFollow = " ALREADY_FOLLOWED"
+                            }
+                        } else if (rc.subscribed === "Pending") {
+                            doFollow = false;
+                            if (params0.follow) {
+                                outFollow = " ALREADY_PENDING"
+                            }
+                        }
+                    }
+
+                    if (doFollow) {
+                        // extra sleep for follow since two rapid transactions with server1
+                        await new Promise(r => setTimeout(r, 1000));
+
+                        let followResult = await followCommunity( {
+                            serverChoice0: params0.server1,
+                            community_id: rc.community.id,
+                            follow: true,
+                            jwt: params0.jwt
+                            } );
+    
+                        if (followResult.failureCode == -1) {
+                            outFollow = " followed";
+                            if (rc.subscribed !== "NotSubscribed") {
+                                outFollow += "(prev:" + rc.subscribed + ")"
+                            }
+                            outFollow += " subs " + followResult.json.community_view.counts.subscribers
+                            // console.log(followResult.json.community_view);
+                        } else {
+                            outFollow = " ERROR_IN_FOLLOW";
+                            errorFollowCount++;
+                            console.log("ERROR in follow");
+                            console.log(followResult);
+                        }
+                    }
+                    console.log("resolve id %d name %s from %s errorCount %d%s", rc.community.id, rc.community.name, fullCommunityname, errorItemCount, outFollow);
+                } else {0
                     console.log(resultResolve);
                     errorItemCount++;
                     errorPile.push(fullCommunityname);
@@ -184,7 +226,8 @@ export async function testCommunitiesTickle(params0) {
         onPage++;
     }
 
-    console.log("finished, onPage %d errorPageCount (skipped pages) %d errorCount %d", onPage, errorPageCount, errorItemCount);
+    console.log("finished, onPage %d errorPageCount (skipped pages) %d errorCount %d errorFollowCount %d",
+        onPage, errorPageCount, errorItemCount, errorFollowCount);
     if (errorItemCount > 0) {
         console.log(errorPile);
     }

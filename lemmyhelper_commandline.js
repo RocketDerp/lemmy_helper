@@ -129,9 +129,10 @@ program
 .description('lemmy vote for comment, loop, mostly for performance testing')
 .requiredOption('-j, --jwt <string>', 'Lemmy JWT authentication token for server session')
 .option('-s, --server <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://enterprise.lemmy.ml/")
-.option('-c, --commentid <number>', 'Lemmy comment ID, localized to that specific server', 1016688)
+.option('-c, --commentid <number>', 'Lemmy comment ID, localized to that specific server', 100)
 .option('-cs, --commentscore <number>', 'Lemmy vote score: 0, 1, -1', 1)
 .option('-lp, --looppause <number>', 'loop pause between iterations, in milliseconds', 15000)
+.option('-li, --loopiterations <number>', 'number of loop iterations', 100)
 .action((options) => {
     loopTestVote(options);
 });
@@ -163,6 +164,8 @@ program
 .option('-s0, --server0 <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://lemm.ee/")
 .option('-s1, --server1 <string>', 'Lemmy server URL, https://sh.itjust.works/ format', "https://bulletintree.com/")
 .option('-s, --search <string>', 'search for community', "asklemmy")
+.option('-f, --follow', 'after ResolveObject tickle, follow community')
+.option('-ff, --fastfollow', "requires follow, fastfollow checks if already subscribed before following")
 .action((options) => {
     testCommunitiesTickle(options);
 });

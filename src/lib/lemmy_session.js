@@ -24,6 +24,11 @@ export async function serverFetchJSON0(params0, fetcha) {
         json: {}
         };
 	let serverURL0 = params0.serverChoice0 + params0.serverURLpath0;
+    if (serverURL0.indexOf('?') > 0) {
+        serverURL0 += "&z0=lemmy_helper";
+    } else {
+        serverURL0 += "?z0=lemmy_helper";
+    }
 
 	const startTime = process.hrtime();
     try {

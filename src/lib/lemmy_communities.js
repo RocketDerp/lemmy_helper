@@ -56,7 +56,7 @@ export async function searchCommunities(params0, fetcha) {
 
 
 export async function resolveCommunity(params0, fetcha) {
-    params0.serverURLpath0 = "api/v3/resolve_object?q="  + params0.queryCommunityname
+    params0.serverURLpath0 = "api/v3/resolve_object?q=" + params0.queryCommunityname
         + "&auth=" + params0.jwt;
     /*
     params0.fetchMethod = "GET";
@@ -66,6 +66,27 @@ export async function resolveCommunity(params0, fetcha) {
       } );
       */
   
+    let result0 = serverFetchJSON0(params0, fetcha);
+    return result0;
+}
+
+
+export async function followCommunity(params0, fetcha) {
+    params0.serverURLpath0 = "api/v3/community/follow";
+    let a = ""
+        + "?community_id=" + params0.community_id
+        + "&follow=" + params0.follow
+        + "&auth=" + params0.jwt
+        ;
+    
+    params0.fetchMethod = "POST";
+    params0.bodyJSON0 = JSON.stringify( {
+        community_id: params0.community_id,
+        follow: params0.follow,
+        auth: params0.jwt
+    } );
+
+
     let result0 = serverFetchJSON0(params0, fetcha);
     return result0;
 }
