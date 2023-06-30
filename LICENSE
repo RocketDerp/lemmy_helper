@@ -1,5 +1,5 @@
 NOTE 1: This does use a function from https://github.com/ando818/lemmy-ui-svelte that is Apache 2.0 license.  
-NOTE 2: The code does not currently use the Javascript API library from the Lemmy project that is AGPL licensed.
+NOTE 2: The code does not currently use the lemmy-js-client from the Lemmy project that is AGPL licensed. If I end up using it, I will likely dual-license the code that I orginate/author.  
 NOTE 3: This project started with the SvelteKit template, which is MIT License. That is why I picked MIT.
 
 MIT License
