@@ -1,6 +1,6 @@
 import { lemmyLogin, lemmyCommentLike } 
     from "../src/lib/lemmy_session.js"
-import { consoleCommunityList, lemmyCommunities, searchCommunities }
+import { consoleCommunityList, lemmyCommunities, resolveCommunity, searchCommunities }
     from "../src/lib/lemmy_communities.js"
 
 
@@ -89,3 +89,24 @@ export async function testSearchCommunity(params0) {
         console.log(result);
     }
 }
+
+
+/*
+Requires being logged-in to server
+*/
+export async function testResolveCommunity(params0) {
+    let result = await resolveCommunity( {
+        serverChoice0: params0.server,
+        queryCommunityname: "!asklemmy@lemmy.ml",
+        jwt: params0.jwt
+    } );
+
+    if (result.failureCode == -1) {
+        console.log(result.json.community);
+        // console.log("communities %d", result.json.communities.length);
+        // consoleCommunityList(result.json.communities);
+    } else {
+        console.log(result);
+    }
+}
+

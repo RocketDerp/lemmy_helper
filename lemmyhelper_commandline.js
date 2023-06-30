@@ -2,7 +2,7 @@
 
 import { program } from "commander";
 import { posts, testPost, testPost2, loopTest0, compareComments, rawPost } from "./commands/posts.js"
-import { testLemmyLogin, testVote, loopTestVote, testCommunities } from "./commands/sessions.js";
+import { testLemmyLogin, testVote, loopTestVote, testCommunities, testResolveCommunity } from "./commands/sessions.js";
 
 
 program
@@ -131,6 +131,17 @@ program
 .option('-s, --search <string>', 'search for community', "asklemmy")
 .action((options) => {
     testCommunities(options);
+});
+
+
+program
+.command('resolvecommunity')
+.description('lemmy communities list')
+.requiredOption('-j, --jwt <string>', 'Lemmy JWT authentication token for server session')
+.option('-s, --server <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://enterprise.lemmy.ml/")
+.option('-s, --search <string>', 'search for community', "!asklemmy@lemmy.ml")
+.action((options) => {
+    testResolveCommunity(options);
 });
 
 
