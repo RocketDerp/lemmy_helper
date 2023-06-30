@@ -9,7 +9,7 @@ import { testLemmyLogin, testVote, loopTestVote, testCommunities,
 program
   .name('lemmy-helper-cli')
   .description('CLI to some of hte Lemmy-Helper code')
-  .version('0.1.0');
+  .version('0.1.1');
 
 program.command('split')
   .description('Split a string into substrings and display as an array')
@@ -20,7 +20,6 @@ program.command('split')
     const limit = options.first ? 1 : undefined;
     console.log(str.split(options.separator, limit));
   });
-
 
 program
 .command('posts')
@@ -81,14 +80,12 @@ program
 
 program
 .command('testpost2')
-.option('-x, --x-option', 'command test option')
 .action((options) => {
      testPost2();
 });
 
 program
 .command('looptest0')
-.option('-x, --x-option', 'command test option')
 .action((options) => {
      loopTest0();
 });
@@ -105,8 +102,8 @@ program
 
 program
 .command('testvote')
-.description('lemmy test login')
-.option('-j, --jwt <string>', 'Lemmy JWT authentication token for server session', "blahblahblahblah-this-is-test")
+.description('lemmy test vote on a comment')
+.requiredOption('-j, --jwt <string>', 'Lemmy JWT authentication token for server session')
 .option('-s, --server <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://enterprise.lemmy.ml/")
 .action((options) => {
     testVote(options.server, options.jwt);
@@ -114,8 +111,8 @@ program
 
 program
 .command('looptestvote')
-.description('lemmy test login')
-.option('-j, --jwt <string>', 'Lemmy JWT authentication token for server session', "blahblahblahblah-this-is-test")
+.description('lemmy vote for comment, loop, mostly for performance testing')
+.requiredOption('-j, --jwt <string>', 'Lemmy JWT authentication token for server session')
 .option('-s, --server <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://enterprise.lemmy.ml/")
 .option('-c, --commentid <number>', 'Lemmy comment ID, localized to that specific server', 1016688)
 .option('-cs, --commentscore <number>', 'Lemmy vote score: 0, 1, -1', 1)
@@ -137,7 +134,7 @@ program
 
 program
 .command('resolvecommunity')
-.description('lemmy communities list')
+.description('lemmy resolve remote community')
 .requiredOption('-j, --jwt <string>', 'Lemmy JWT authentication token for server session')
 .option('-s, --server <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://enterprise.lemmy.ml/")
 .option('-s, --search <string>', 'search for community', "!asklemmy@lemmy.ml")

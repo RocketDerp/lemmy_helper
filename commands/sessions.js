@@ -120,43 +120,72 @@ Find list of local communities on server0 and tickle server1 to discover them.
 Requires being logged-in to server1
 */
 export async function testCommunitiesTickle(params0) {
-    // ToDo: loop pages
-    let result = await lemmyCommunities( {
-        serverChoice0: params0.server0,
-    } );
+    let finalPage = false;
+    let errorItemCount = 0;
+    let errorPageCount = 0;
+    let errorPile = [];
+    let onPage = 1;
 
-    if (result.failureCode == -1) {
-        let communities = result.json.communities;
-        console.log("communities %d", communities.length);
-        consoleCommunityList(communities);
+    while (!finalPage) {
+        let result = await lemmyCommunities( {
+            serverChoice0: params0.server0,
+            page: onPage,
+            limit: 50
+        } );
 
-        let hostname = simplifyServerName(params0.server0);
-        console.log("======= RESOLVING %d from @ %s on targer server %s", communities.length, hostname, params0.server1);
-        let errorCount = 0;
-        let errorPile = [];
-        for (let i = 0; i < communities.length; i++) {
-            let fullCommunityname = "!" + communities[i].community.name + "@" + hostname;
-            let resultResolve = await resolveCommunity( {
-                serverChoice0: params0.server1,
-                queryCommunityname: fullCommunityname,
-                jwt: params0.jwt
-            } );
-        
-            if (resultResolve.failureCode == -1) {
-                let rc = resultResolve.json.community;
-                console.log("resolve id %d name %s from %s errorCount %d", rc.community.id, rc.community.name, fullCommunityname, errorCount);
-            } else {
-                console.log(resultResolve);
-                errorCount++;
-                errorPile.push(fullCommunityname);
-                await new Promise(r => setTimeout(r, 3000));
+        if (result.failureCode == -1) {
+            let communities = result.json.communities;
+            if (communities.length == 0) {
+                console.log("detected zero items on page %d", onPage);
+                finalPage = true;
+                // abort the loop, kind of defeats the purpose of a while loop, eh?
+                break;
             }
+            console.log("communities %d onPage %d", communities.length, onPage);
+            consoleCommunityList(communities);
+
+            let hostname = simplifyServerName(params0.server0);
+            console.log("======= RESOLVING %d from @ %s page %d on targer server %s", communities.length, hostname, onPage, params0.server1);
+
+            for (let i = 0; i < communities.length; i++) {
+                let fullCommunityname = "!" + communities[i].community.name + "@" + hostname;
+                let resultResolve = await resolveCommunity( {
+                    serverChoice0: params0.server1,
+                    queryCommunityname: fullCommunityname,
+                    jwt: params0.jwt
+                } );
+            
+                if (resultResolve.failureCode == -1) {
+                    let rc = resultResolve.json.community;
+                    console.log("resolve id %d name %s from %s errorCount %d", rc.community.id, rc.community.name, fullCommunityname, errorItemCount);
+                } else {
+                    console.log(resultResolve);
+                    errorItemCount++;
+                    errorPile.push(fullCommunityname);
+                    // Sleep to slow down loop for console operator
+                    await new Promise(r => setTimeout(r, 5000));
+                }
+
+                if (i % 10 == 9) {
+                    // Sleep to slow down loop for rate limit on local instance
+                    console.log("zzzzz 3000");
+                    await new Promise(r => setTimeout(r, 3000));
+                }
+            }
+        } else {
+            errorPageCount++;
+            console.error("failed to fetch page %d", onPage);
+            console.log(result);
         }
-        console.log("finished, errorCount %d", errorCount);
-        if (errorCount > 0) {
-            console.log(errorPile);
-        }
-    } else {
-        console.log(result);
+
+        // Sleep to slow down loop for rate limit on local instance
+        console.log("zzzzzz 10000 finished onPage %d", onPage);
+        await new Promise(r => setTimeout(r, 10000));
+        onPage++;
+    }
+
+    console.log("finished, onPage %d errorPageCount (skipped pages) %d errorCount %d", onPage, errorPageCount, errorItemCount);
+    if (errorItemCount > 0) {
+        console.log(errorPile);
     }
 }
