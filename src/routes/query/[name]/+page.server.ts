@@ -553,7 +553,6 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			FROM comment
 			GROUP BY hostname
 			ORDER BY count DESC
-			LIMIT 30
 			;`
 			break;
 		case 'comments_ap_id_hostname1':
