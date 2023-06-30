@@ -552,7 +552,17 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			LIMIT 20
 			;`
 			break;
-		default:
+		case 'comments_ap_id_hostname2':
+			//   https://stackoverflow.com/questions/47528966/regex-for-postgresql-for-getting-domain-with-sub-domain-from-url-website
+			sqlQuery = `SELECT 
+			id, post_id, published, ap_id,
+		    REGEXP_REPLACE(ap_id, '^(https?://)?(www\.)?', '') AS instance_domain     
+			FROM comments
+			ORDER BY published DESC
+			LIMIT 20
+			;`
+			break;
+			default:
 			console.error("/routes/query did not recognize params ER001");
 			console.log(incoming.params);
 			return {
