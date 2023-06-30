@@ -581,8 +581,8 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			sqlQuery = `SELECT
 			SUBSTRING( ap_id FROM '.*://([^/]*)' ) AS hostname, count(substring( ap_id FROM '.*://([^/]*)' ))
 			FROM comment
-			GROUP BY hostname
 			WHERE published >= NOW() - INTERVAL '1 HOUR'
+			GROUP BY hostname
 			ORDER BY count DESC
 			;`
 			break;
