@@ -538,28 +538,42 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			// 2007 solution
 			//   https://www.postgresql.org/message-id/247444.36947.qm@web50311.mail.re2.yahoo.com
 			sqlQuery = `SELECT
-			   substring( href from '.*://\([^/]*)' ) as hostname
-			   from url where id<10;
+			id, creator_id, post_id, published, ap_id,
+			substring ( ap_id from '.*://\([^/]*)' ) as hostname
+			from comment
+			ORDER BY published DESC
+			LIMIT 30
+			;`
+			break;
+		case 'comments_ap_id_hostname0':
+			// 2007 solution
+			//   https://www.postgresql.org/message-id/247444.36947.qm@web50311.mail.re2.yahoo.com
+			sqlQuery = `SELECT
+			substring( ap_id from '.*://([^/]*)' ) as hostname, count(substring( ap_id from '.*://([^/]*)' ))
+			FROM comment
+			GROUP BY hostname
+			ORDER BY count DESC
+			LIMIT 30
 			;`
 			break;
 		case 'comments_ap_id_hostname1':
 			//   https://stackoverflow.com/questions/47528966/regex-for-postgresql-for-getting-domain-with-sub-domain-from-url-website
 			sqlQuery = `SELECT 
-			id, post_id, published, ap_id,
+			id, creator_id, post_id, published, ap_id,
 			SUBSTRING (ap_id from '(?:.*://)?(?:www\.)?([^/?]*)') AS instance_domain     
 		  	FROM comment
 			ORDER BY published DESC
-			LIMIT 20
+			LIMIT 30
 			;`
 			break;
 		case 'comments_ap_id_hostname2':
 			//   https://stackoverflow.com/questions/47528966/regex-for-postgresql-for-getting-domain-with-sub-domain-from-url-website
 			sqlQuery = `SELECT 
-			id, post_id, published, ap_id,
+			id, creator_id, post_id, published, ap_id,
 		    REGEXP_REPLACE (ap_id, '^(https?://)?(www\.)?', '') AS instance_domain     
 			FROM comment
 			ORDER BY published DESC
-			LIMIT 20
+			LIMIT 30
 			;`
 			break;
 		case 'comments_ap_id_hostname3':
@@ -568,7 +582,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			id, creator_id, post_id, published, ap_id
 			FROM comment
 			ORDER BY published DESC
-			LIMIT 20
+			LIMIT 30
 			;`
 			break;
 		default:
