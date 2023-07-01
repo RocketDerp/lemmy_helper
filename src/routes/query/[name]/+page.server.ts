@@ -12,6 +12,7 @@ export const load: PageServerLoad = async (incoming) => {
 	let outRowsRaw = [];
 	let output = "all";
 	let timeperiod = 720;
+	let timeperiodmessage = "";
 	let sqlObjectBreak = false;
 
 	// This is experimental quick/dirty code, so some the workings are exposed ;)
@@ -617,6 +618,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			GROUP BY hostname
 			ORDER BY count DESC
 			;`
+			timeperiodmessage = "-- <b>timeperiod " + timeperiod + " min</b> ";
 			break;
 		case 'comments_ap_id_hostname3':
 			//   https://stackoverflow.com/questions/47528966/regex-for-postgresql-for-getting-domain-with-sub-domain-from-url-website
@@ -679,6 +681,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 		timeQuery: timeQuery,
 		timeConnect: timeConnect,
 		output: output,
+		timeperiod: timeperiod,
 		serverResultTime: (new Date().toISOString()),
 		errorCode: 0,
 		errorMessage: ""
