@@ -682,6 +682,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 		timeConnect: timeConnect,
 		output: output,
 		timeperiod: timeperiod,
+		timeperiodmessage: timeperiodmessage,
 		serverResultTime: (new Date().toISOString()),
 		errorCode: 0,
 		errorMessage: ""
