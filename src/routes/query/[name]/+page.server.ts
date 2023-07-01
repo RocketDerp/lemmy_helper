@@ -587,7 +587,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			//   https://www.postgresql.org/message-id/247444.36947.qm@web50311.mail.re2.yahoo.com
 			sqlQuery = `SELECT
 			SUBSTRING( ap_id FROM '.*://([^/]*)' ) AS hostname,
-			 COUNT(SUBSTRING( ap_id FROM '.*://([^/]*)' )) AS comment_count
+			 COUNT(SUBSTRING( ap_id FROM '.*://([^/]*)' ))
 			FROM comment
 			WHERE published >= NOW() - INTERVAL '1 HOUR'
 			GROUP BY hostname
@@ -600,7 +600,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			// ToDo: add interval picker to URL parameters
 			sqlQuery = `SELECT
 			SUBSTRING( ap_id FROM '.*://([^/]*)' ) AS hostname,
-			 COUNT(SUBSTRING( ap_id FROM '.*://([^/]*)' )) AS comment_count
+			 COUNT(SUBSTRING( ap_id FROM '.*://([^/]*)' ))
 			FROM comment
 			WHERE published >= NOW() - INTERVAL '12 HOURS'
 			GROUP BY hostname
@@ -612,7 +612,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			//   https://www.postgresql.org/message-id/247444.36947.qm@web50311.mail.re2.yahoo.com
 			sqlQuery = `SELECT
 			SUBSTRING( ap_id FROM '.*://([^/]*)' ) AS hostname,
-				COUNT(SUBSTRING( ap_id FROM '.*://([^/]*)' )) AS comment_count
+				COUNT(SUBSTRING( ap_id FROM '.*://([^/]*)' ))
 			FROM comment
 			WHERE published >= NOW() - INTERVAL '${timeperiod} MINUTES'
 			GROUP BY hostname
