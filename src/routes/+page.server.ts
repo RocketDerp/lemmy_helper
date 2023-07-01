@@ -2,7 +2,7 @@ import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async (incoming) => {
 
-	let output = "all"
+	let output = "table"
 	let timeperiod = 720;
 
 	console.log("--------- nenu url")

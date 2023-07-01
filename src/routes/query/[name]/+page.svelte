@@ -10,6 +10,7 @@
 
 Database result row count: {rowCount}
  -- output format: {data.output}
+ -- timeperiod {data.timeperiod} (not used by most queries)
  -- now: {data.serverResultTime}
  -- connect time: {data.timeConnect}
  -- query time: {data.timeQuery}
