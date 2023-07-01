@@ -11,6 +11,7 @@ export const load: PageServerLoad = async (incoming) => {
 	let outRows = {};
 	let outRowsRaw = [];
 	let output = "all";
+	let timeperiod = 720;
 	let sqlObjectBreak = false;
 
 	// This is experimental quick/dirty code, so some the workings are exposed ;)
@@ -21,6 +22,10 @@ export const load: PageServerLoad = async (incoming) => {
 	// The HTML side of the page gets passed the output parameter, it isn't going into the SQL statements.
 	if (incoming.url.searchParams.get("output")) {
 		output = incoming.url.searchParams.get("output");
+	}
+	if (incoming.url.searchParams.get("timeperiod")) {
+		// for safety, ONLY intger values
+		timeperiod = parseInt(incoming.url.searchParams.get("timeperiod"));
 	}
 
 	// this switch statement guards the parameter, only whitelist matching.
@@ -549,7 +554,8 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			// 2007 solution
 			//   https://www.postgresql.org/message-id/247444.36947.qm@web50311.mail.re2.yahoo.com
 			sqlQuery = `SELECT
-			SUBSTRING( ap_id FROM '.*://([^/]*)' ) AS hostname, count(substring( ap_id FROM '.*://([^/]*)' ))
+			SUBSTRING( ap_id FROM '.*://([^/]*)' ) AS hostname,
+			 COUNT(SUBSTRING( ap_id FROM '.*://([^/]*)' ))
 			FROM comment
 			GROUP BY hostname
 			ORDER BY count DESC
@@ -579,7 +585,8 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			// 2007 solution
 			//   https://www.postgresql.org/message-id/247444.36947.qm@web50311.mail.re2.yahoo.com
 			sqlQuery = `SELECT
-			SUBSTRING( ap_id FROM '.*://([^/]*)' ) AS hostname, count(substring( ap_id FROM '.*://([^/]*)' ))
+			SUBSTRING( ap_id FROM '.*://([^/]*)' ) AS hostname,
+			 COUNT(SUBSTRING( ap_id FROM '.*://([^/]*)' ))
 			FROM comment
 			WHERE published >= NOW() - INTERVAL '1 HOUR'
 			GROUP BY hostname
@@ -591,9 +598,22 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			//   https://www.postgresql.org/message-id/247444.36947.qm@web50311.mail.re2.yahoo.com
 			// ToDo: add interval picker to URL parameters
 			sqlQuery = `SELECT
-			SUBSTRING( ap_id FROM '.*://([^/]*)' ) AS hostname, count(substring( ap_id FROM '.*://([^/]*)' ))
+			SUBSTRING( ap_id FROM '.*://([^/]*)' ) AS hostname,
+			 COUNT(SUBSTRING( ap_id FROM '.*://([^/]*)' ))
 			FROM comment
 			WHERE published >= NOW() - INTERVAL '12 HOURS'
+			GROUP BY hostname
+			ORDER BY count DESC
+			;`
+			break;
+		case 'comments_ap_id_host_prev':    // prev = "previous", time period.
+			// 2007 solution
+			//   https://www.postgresql.org/message-id/247444.36947.qm@web50311.mail.re2.yahoo.com
+			sqlQuery = `SELECT
+			SUBSTRING( ap_id FROM '.*://([^/]*)' ) AS hostname,
+				COUNT(SUBSTRING( ap_id FROM '.*://([^/]*)' ))
+			FROM comment
+			WHERE published >= NOW() - INTERVAL '${timeperiod} MINUTES'
 			GROUP BY hostname
 			ORDER BY count DESC
 			;`

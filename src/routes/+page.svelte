@@ -13,6 +13,14 @@
     <a href="?output=rows">rows</a>
 </p>
 
+<p>Query time period: {data.timeperiod}, change: 
+    <a href="?timeperiod=15">15 minutes</a>,
+    <a href="?timeperiod=30">30 minutes</a>,
+    <a href="?timeperiod=60">60 minutes</a>,
+    <a href="?timeperiod=180">3 hours</a>,
+    <a href="?timeperiod=720">12 hours</a>
+</p>
+
 <ul>
     <li><a href="query/locks/?output={data.output}">locks</a> - datatabase locks</li>
     <li><a href="query/locks1/?output={data.output}">locks1</a> - datatabase locks complex,
@@ -64,7 +72,8 @@ comment instance:
 <a href="query/comments_ap_id_hostname0/?output={data.output}">comments_ap_id_hostname0</a>,
 <a href="query/comments_ap_id_hostname1/?output={data.output}">comments_ap_id_hostname1</a>,
 <a href="query/comments_ap_id_host_hour/?output={data.output}">comments_ap_id_host_hour</a>,
-<a href="query/comments_ap_id_host_12hour/?output={data.output}">comments_ap_id_host_12hour</a>
+<a href="query/comments_ap_id_host_12hour/?output={data.output}">comments_ap_id_host_12hour</a>,
+<a href="query/comments_ap_id_host_prev/?output={data.output}&timeperiod={data.timeperiod}">comments_ap_id_host_prev previous timeperiod</a>,
 <br />
 
 curious query:
