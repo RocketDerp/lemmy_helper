@@ -401,7 +401,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 		case 'federatedpostcount':
 			sqlQuery = `
-			SELECT a.community_id, c.name, a.post_count
+			SELECT a.community_id, c.name, a.post_count, c.actor_id, c.published
 			FROM (
 				SELECT
 					community_id,
