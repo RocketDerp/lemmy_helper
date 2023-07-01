@@ -8,17 +8,17 @@
 <p>Lemmy-Helper provides a web interface to query your Lemmy database, below the Lemmy API.</p>
 
 <p>Output format: {data.output}, change: 
-    <a href="?output=table">table</a>,
-    <a href="?output=json">JSON</a>,
-    <a href="?output=rows">rows</a>
+    <a href="?output=table&timeperiod={data.timeperiod}">table</a>,
+    <a href="?output=json&timeperiod={data.timeperiod}">JSON</a>,
+    <a href="?output=rows&timeperiod={data.timeperiod}">rows</a>
 </p>
 
 <p>Query time period: {data.timeperiod}, change: 
-    <a href="?timeperiod=15">15 minutes</a>,
-    <a href="?timeperiod=30">30 minutes</a>,
-    <a href="?timeperiod=60">60 minutes</a>,
-    <a href="?timeperiod=180">3 hours</a>,
-    <a href="?timeperiod=720">12 hours</a>
+    <a href="?timeperiod=15&output={data.output}">15 minutes</a>,
+    <a href="?timeperiod=30&output={data.output}">30 minutes</a>,
+    <a href="?timeperiod=60&output={data.output}">60 minutes</a>,
+    <a href="?timeperiod=180&output={data.output}">3 hours</a>,
+    <a href="?timeperiod=720&output={data.output}">12 hours</a>
 </p>
 
 <ul>
