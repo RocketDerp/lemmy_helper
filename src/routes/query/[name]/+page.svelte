@@ -10,7 +10,7 @@
 
 Database result row count: {rowCount}
  -- output format: {data.output}
- {data.timeperiodmessage}
+ {@html data.timeperiodmessage}
  -- now: {data.serverResultTime}
  -- connect time: {data.timeConnect}
  -- query time: {data.timeQuery}
