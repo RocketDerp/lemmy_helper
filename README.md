@@ -6,7 +6,8 @@ This is an attempt to create a SvelteKit webapp for server operators to work dir
 
 # Discussion
 
-Lemmy social media community for this project: https://lemmy.ml/c/lemmy_helper
+Lemmy social media community for this project: https://lemmy.ml/c/lemmy_helper  
+NOTE: July 1 I opened GitHub Discussions https://github.com/RocketDerp/lemmy_helper/discussions - because every major Lemmy server is unsable. I suggest server operators meet here to discuss emergency changes. Thank you.
 
 # Intended to be safe way to operate a server
 
