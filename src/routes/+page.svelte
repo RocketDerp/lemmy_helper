@@ -75,6 +75,12 @@ comments by Lemmy instance:
 <a href="query/comments_ap_id_host_prev/?output={data.output}&timeperiod={data.timeperiod}">comments_ap_id_host_prev previous timeperiod</a>,
 <br />
 
+
+comment_like:
+<a href="query/comment_like_person_prev/?output={data.output}&timeperiod={data.timeperiod}">comment_like_person_prev previous timeperiod</a>
+<br />
+
+
 posts by Lemmy instance:
 <a href="query/posts_ap_id_host_prev/?output={data.output}&timeperiod={data.timeperiod}">posts_ap_id_host_prev previous timeperiod</a>
 <br />

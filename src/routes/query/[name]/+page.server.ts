@@ -652,6 +652,17 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			LIMIT 30
 			;`
 			break;
+		case 'comment_like_person_prev':    // prev = "previous", time period.
+			sqlQuery = `SELECT person_id,
+				COUNT(*)
+			FROM comment_like
+			WHERE published >= NOW() - INTERVAL '${timeperiod} MINUTES'
+			GROUP BY person_id
+			ORDER BY count DESC
+			LIMIT 100
+			;`
+		timeperiodmessage = "-- <b>timeperiod " + timeperiod + " min</b> ";
+		break;
 		default:
 			console.error("/routes/query did not recognize params ER001");
 			console.log(incoming.params);
