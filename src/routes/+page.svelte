@@ -7,6 +7,7 @@
 
 <p>Lemmy-Helper provides a web interface to query your Lemmy database, below the Lemmy API.</p>
 
+<!-- ToDo: add a 3rd param and pass a single object of JSON to server instead of individual params -->
 <p>Output format: {data.output}, change: 
     <a href="?output=table&timeperiod={data.timeperiod}">table</a>,
     <a href="?output=json&timeperiod={data.timeperiod}">JSON</a>,
@@ -22,23 +23,16 @@
 </p>
 
 <ul>
-    <li><a href="query/locks/?output={data.output}">locks</a> - datatabase locks</li>
-    <li><a href="query/locks1/?output={data.output}">locks1</a> - datatabase locks complex,
-        <a href="query/create_locks1_view/?output={data.output}">create locks1 view</a> - install view first
-    </li>
-    <li><a href="query/locks2/?output={data.output}">locks2</a> - datatabase locks complex 2,
-        <a href="query/create_locks2_view/?output={data.output}">create locks2 view</a> - install view first
-    </li>
+    <li><a href="query/locks/?output={data.output}">locks</a> - PostgreSQL datatabase locks</li>
     <li><a href="query/pgcounts/?output={data.output}">pgcounts</a> - datatabase table record counts</li>
     <li><a href="query/pg_indexes/?output={data.output}">pg_indexes</a> - datatabase INDEX list</li>
     <li><a href="query/pgstatements/?output={data.output}">pgcstatements</a> - stats -
         <a href="query/pgstatements1/?output={data.output}">pgcstatements1</a> (all columns) -
        <a href="query/reset_pgstatements/?output=raw">RESET</a></li>
-    <li><a href="query/pgrunning/?output={data.output}">pgrunning</a></li>
-    <li><a href="query/pgrunning1/?output={data.output}">pgrunning1</a></li>
-    <li><a href="query/communitypending1/?output={data.output}">communitypending1</a> - community join/subscribe pending. <a href="query/communitypending/">communitypending</a></li>
-    <li><a href="query/posts/?output={data.output}">posts</a> - content, POSTINGS, most recent hour</li>
-    <li><a href="query/comments/?output={data.output}">comments</a> - content, COMMENTS, most recent hour</li>
+    <li><a href="query/pgrunning1/?output={data.output}">pgrunning1</a> database running</li>
+    <li><a href="query/communitypending1/?output={data.output}">communitypending1</a> - Lemmy community join/subscribe pending. <a href="query/communitypending/">communitypending</a></li>
+    <li><a href="query/posts/?output={data.output}">posts</a> - Lemmy POSTINGS, most recent hour</li>
+    <li><a href="query/comments/?output={data.output}">comments</a> - Lemmy COMMENTS, most recent hour</li>
     <li><a href="query/localusers/?output={data.output}">localusers</a> - local instance users, most recent hour</li>
     <li><a href="query/activitylocal/?output={data.output}">activitylocal</a> - table, local, most recent hour</li>
     <li><a href="query/activityremote/?output={data.output}">activityremote</a> - table, remote, most recent hour</li>
@@ -49,7 +43,8 @@
     </li>
 </ul>
 
-raw: <a href="query/activity/?output=all">activity</a>,
+
+raw tables: <a href="query/activity/?output=all">activity</a>,
      <a href="query/raw_comments/?output={data.output}">comments</a>,
      <a href="query/raw_posts/?output={data.output}">posts</a>,
      <a href="query/raw_person/?output={data.output}">person</a>,
@@ -68,7 +63,7 @@ search:
 <a href="query/search_comments/?output={data.output}">comments</a>
 <br />
 
-comment instance:
+comments by Lemmy instance:
 <a href="query/comments_ap_id_hostname0/?output={data.output}">comments_ap_id_hostname0</a>,
 <a href="query/comments_ap_id_hostname1/?output={data.output}">comments_ap_id_hostname1</a>,
 <a href="query/comments_ap_id_host_hour/?output={data.output}">comments_ap_id_host_hour</a>,
@@ -76,6 +71,25 @@ comment instance:
 <a href="query/comments_ap_id_host_prev/?output={data.output}&timeperiod={data.timeperiod}">comments_ap_id_host_prev previous timeperiod</a>,
 <br />
 
+posts by lemmy instance:
+<a href="query/posts_ap_id_host_prev/?output={data.output}&timeperiod={data.timeperiod}">posts_ap_id_host_prev previous timeperiod</a>
+<br />
+
 curious query:
 <a href="query/curiousquery/?output={data.output}">curiousquery</a>
+<br />
 
+<hr />
+Old stuff kept around for study/possible users
+<br />
+
+
+<ul>
+    <li><a href="query/locks1/?output={data.output}">locks1</a> - datatabase locks complex,
+        <a href="query/create_locks1_view/?output={data.output}">create locks1 view</a> - install view first
+    </li>
+    <li><a href="query/locks2/?output={data.output}">locks2</a> - datatabase locks complex 2,
+        <a href="query/create_locks2_view/?output={data.output}">create locks2 view</a> - install view first
+    </li>
+    <li><a href="query/pgrunning/?output={data.output}">pgrunning</a></li>
+</ul>

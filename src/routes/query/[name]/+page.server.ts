@@ -620,6 +620,17 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			;`
 			timeperiodmessage = "-- <b>timeperiod " + timeperiod + " min</b> ";
 			break;
+		case 'posts_ap_id_host_prev':    // prev = "previous", time period.
+			sqlQuery = `SELECT
+			SUBSTRING( ap_id FROM '.*://([^/]*)' ) AS hostname,
+				COUNT(SUBSTRING( ap_id FROM '.*://([^/]*)' ))
+			FROM post
+			WHERE published >= NOW() - INTERVAL '${timeperiod} MINUTES'
+			GROUP BY hostname
+			ORDER BY count DESC
+			;`
+			timeperiodmessage = "-- <b>timeperiod " + timeperiod + " min</b> ";
+			break;
 		case 'comments_ap_id_hostname3':
 			//   https://stackoverflow.com/questions/47528966/regex-for-postgresql-for-getting-domain-with-sub-domain-from-url-website
 			sqlQuery = `SELECT 
