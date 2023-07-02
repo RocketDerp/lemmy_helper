@@ -31,7 +31,7 @@
        <a href="query/reset_pgstatements/?output=raw">RESET</a></li>
     <li><a href="query/pgrunning1/?output={data.output}">pgrunning1</a> database running</li>
     <li><a href="query/communitypending1/?output={data.output}">communitypending1</a> - Lemmy community join/subscribe pending. <a href="query/communitypending/">communitypending</a></li>
-    <li><a href="query/posts/?output={data.output}">posts</a> - Lemmy POSTINGS, most recent hour</li>
+    <li><a href="query/posts/?output={data.output}">posts</a> - Lemmy POSTS, most recent hour</li>
     <li><a href="query/comments/?output={data.output}">comments</a> - Lemmy COMMENTS, most recent hour</li>
     <li><a href="query/localusers/?output={data.output}">localusers</a> - local instance users, most recent hour</li>
     <li><a href="query/activitylocal/?output={data.output}">activitylocal</a> - table, local, most recent hour</li>
@@ -71,7 +71,7 @@ comments by Lemmy instance:
 <a href="query/comments_ap_id_host_prev/?output={data.output}&timeperiod={data.timeperiod}">comments_ap_id_host_prev previous timeperiod</a>,
 <br />
 
-posts by lemmy instance:
+posts by Lemmy instance:
 <a href="query/posts_ap_id_host_prev/?output={data.output}&timeperiod={data.timeperiod}">posts_ap_id_host_prev previous timeperiod</a>
 <br />
 
@@ -80,7 +80,9 @@ curious query:
 <br />
 
 <hr />
-Old stuff kept around for study/possible users
+<br />
+
+Old stuff kept around for study/possible use
 <br />
 
 
