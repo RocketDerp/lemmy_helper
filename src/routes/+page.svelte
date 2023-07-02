@@ -52,7 +52,7 @@ raw tables: <a href="query/activity/?output=all">activity</a>,
      <a href="query/raw_person/?output={data.output}">person</a>,
      <a href="query/raw_comment_reply/?output={data.output}">coment_reply</a>,
      <a href="query/raw_comment_like/?output={data.output}">comment_like</a>,
-     <a href="query/raw_comment_aggregates/?output={data.output}">instance</a>,
+     <a href="query/raw_comment_aggregates/?output={data.output}">comment_aggregates</a>,
      <a href="query/raw_community/?output={data.output}">community</a>,
      <a href="query/raw_instance/?output={data.output}">instance</a>,
 <br />
