@@ -510,6 +510,18 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			LIMIT 10
 			;`
 			break;
+		case 'raw_comment_like':
+			sqlQuery = `SELECT id, * FROM comment_like LIMIT 40;`
+			break;
+		case 'raw_comment_aggregates':
+			sqlQuery = `SELECT id, * FROM comment_aggregates LIMIT 40;`
+			break;
+		case 'raw_post_like':
+			sqlQuery = `SELECT id, * FROM post_aggregates LIMIT 40;`
+			break;
+		case 'raw_post_aggregates':
+			sqlQuery = `SELECT id, * FROM post_aggregates LIMIT 40;`
+			break;
 		case 'localusers':
 			sqlQuery = `SELECT local_user.id, person_id, p.name AS username, email, email_verified, accepted_application, validator_time
 			FROM local_user
