@@ -4,10 +4,13 @@ For server operators of Lemmy social media, federated application
 
 This is an attempt to create a SvelteKit webapp for server operators to work directly with the PostgreSQL database tables. Work in progress / unstable project. Quick and dirty, proof of concept. NEW: command line interface (CLI) for crawling and testing Lemmy servers.
 
+ALTERNATE TOOLS for Lemmy Instance server operators: [OTHER_TOOLS](OTHER_TOOLS.md)
+
+
 # Discussion
 
 Lemmy social media community for this project: https://lemmy.ml/c/lemmy_helper  
-NOTE: July 1 I opened GitHub Discussions https://github.com/RocketDerp/lemmy_helper/discussions - because every major Lemmy server is unsable. I suggest server operators meet here to discuss emergency changes. Thank you.
+NOTE: July 1 I opened GitHub Discussions https://github.com/RocketDerp/lemmy_helper/discussions - because every major Lemmy server is unstable. I suggest server operators meet here to discuss emergency changes. Thank you. EDIT: July 5 GOOD NEWS! lemmy.world has found a major SQL performance problem and put into production a fix. They are running a lot better! 
 
 # Intended to be safe way to operate a server
 
