@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 import { program } from "commander";
-import { posts, testPost, compareComments, rawPost, loopPostList } from "./commands/posts.js"
+import { posts, posts_list_twoservers, testPost, compareComments, rawPost, loopPostList } from "./commands/posts.js"
 import { testLemmyLogin, testVote, loopTestVote, testCommunities,
     testResolveCommunity, testCommunitiesTickle } from "./commands/sessions.js";
 
@@ -31,6 +31,19 @@ program
     console.log('compare posts. Community name %s server0 %s server1 %s', options.communityname, options.server0, options.server1);
     posts(options);
 });
+
+
+program
+.command('postslisttwoservers')
+.description('two servers posts comparison for the same community')
+.option('-c, --communityname <string>', 'Lemmy community name', "asklemmy@lemmy.ml")
+.option('-s0, --server0 <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://lemmy.ml/")
+.option('-s1, --server1 <string>', 'Lemmy server URL, https://sh.itjust.works/ format', "https://sh.itjust.works/")
+.action((options) => {
+    console.log('compare posts. Community name %s server0 %s server1 %s', options.communityname, options.server0, options.server1);
+    posts_list_twoservers(options);
+});
+
 
 program
 .command('testpost')

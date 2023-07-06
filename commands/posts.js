@@ -1,4 +1,4 @@
-import { dualServerPostFetch, matchPosts, matchPostsBy_ap_id, checkPostsComments, getLemmyPosts, checkErrorsSingle, dualServerPostCommentsFetch }
+import { dualServerPostFetch, matchPostsBy_ap_id, checkPostsComments, getLemmyPosts, checkErrorsSingle, dualServerPostCommentsFetch }
    from "../src/lib/lemmy_sort.js"
 import { compareCommentsPostsListID, compareTwoCommentsSamePost, convertToComments, convertToTree,
      buildArrayOfCommentIdentifiers, formatAsMarkdownCommentIdentifiers } 
@@ -41,6 +41,69 @@ export async function posts (options) {
         }
         // await checkPostsComments(results, fetch, results.outServer0.json.posts, results.server0params.serverChoice0);
         // await checkPostsComments(results, fetch, results.outServer1.json.posts, results.server1params.serverChoice0);
+    }
+}
+
+
+export async function posts_list_twoservers (options) {
+    let results = { community: "community_name=" + options.communityname,
+        page: 1,
+        server0params: { serverChoice0: options.server0 },
+        server1params: { serverChoice0: options.server1 }
+     };
+
+    results = await dualServerPostFetch(results);
+
+    showPerf(results.outServer0);
+    showPerf(results.outServer1);
+
+    if (results.fetchErrors > 0) {
+        console.log("ERROR on fetch: ", results.fetchErrors);
+    } else {
+        let posts0 = results.outServer0.json.posts;
+        let posts1 = results.outServer1.json.posts;
+        let matchResults = matchPostsBy_ap_id(results.outServer0.json.posts, results.outServer1.json.posts);
+        let postsMerged = matchResults.mergedA;
+
+        console.log(matchResults.resultsB);
+        //consolePosts(matchResults.unfoundA);
+
+        console.log("server0 %s count %d server1 %s count %d", options.server0, posts0.length, options.server1, posts1.length)
+
+        let sameSkipOne = false;
+        let featuredCommunityCount = 0;
+        let featuredLocalCount = 0;
+
+        for (let i = 0; i < postsMerged.length; i++) {
+            if (postsMerged[i].post.featured_community) {
+                featuredCommunityCount++;
+            }
+            if (postsMerged[i].post.featured_local) {
+                featuredLocalCount++;
+            }
+
+            if (sameSkipOne) {
+                sameSkipOne = false;
+            } else {
+                if (i < (postsMerged.length - 1)) {
+                    let post0 = postsMerged[i];
+                    let post1 = postsMerged[i + 1];
+                    if (post0.post.ap_id === post1.post.ap_id) {
+                        sameSkipOne = true;
+                        console.log("SAME %s %s %s", post0.post.published, post0.post.ap_id, post0.post.name);
+                    } else {
+                        // given they are sorted by published, the post0 is newer than post1
+                        console.log("DIFF %s %s %s %s", post0.post.published, post0.post.ap_id, post1.post.ap_id, post1.post.published);
+                        console.log("     %s %s", post0.post.ap_id, post0.post.name);
+                        //console.log(post0.post);
+                    }
+                } else {
+                    console.log("last one, i %d length %d", i, postsMerged.length);
+                }
+            }
+        }
+
+        console.log("featured_community %d featured_local %d", featuredCommunityCount, featuredLocalCount);
     }
 }
 

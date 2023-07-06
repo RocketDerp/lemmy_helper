@@ -136,7 +136,45 @@ export function matchPostsBy_ap_id(posts0, posts1) {
         unfoundA: [],
         sameID: [],
         sameA: [],      // array should have equal items to sameID
+        mergedA: [],     // array will merge posts0/posts1 and try to match by published
     };
+
+    /*
+    let highestLength = posts0.length;
+    if (posts1.length > posts0.length) {
+        highestLength = posts1.length;
+    }
+
+    for (let i = 0; i < highestLength; i++) {
+        if (i > posts0.length) {
+            results.merged.push(posts1[i]);
+            break;
+        }
+        if (i > posts1.length) {
+            results.merged.push(posts0[i]);
+            break;
+        }
+
+        if (posts0[i].post.ap_id == posts1[i].post.ap_id) {
+            results.merged.push(posts0[i]);
+            results.merged.push(posts1[i]);
+        } else {
+            if (new Date(posts0[i].post.published) > new Date(posts1[i].post.published)) {
+                results.merged.push(posts0[i]);
+            } else {
+                results.merged.push(posts1[i]);
+            }
+        }
+    }
+    */
+
+    results.mergedA = posts0.concat(posts1);
+
+    results.mergedA.sort( (a,b) => {
+        if (new Date(a.post.published) < new Date(b.post.published)) return 1;
+        if (new Date(a.post.published) > new Date(b.post.published)) return -1;
+        return 0;
+    });
 
     let onJ = -1;
     for (let i = 0; i < posts0.length; i++) {

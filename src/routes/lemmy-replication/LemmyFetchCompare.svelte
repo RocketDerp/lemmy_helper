@@ -1,6 +1,6 @@
 <script>
 	import LemmyPostsList from "./LemmyPostsList.svelte"
-	import { matchPosts } from "../../lib/lemmy_sort.js"
+	import { matchPostsBy_ap_id } from "../../lib/lemmy_sort.js"
 	export let outServers
 
 	let errorCount = 0;
@@ -20,7 +20,7 @@
 		const posts0 = outServers.outServer0.json.posts;
 		const posts1 = outServers.outServer1.json.posts;
 
-		matchResults = matchPosts(posts0, posts1);
+		matchResults = matchPostsBy_ap_id(posts0, posts1);
 	}
 
 	function pilePostsA(inPile) {
