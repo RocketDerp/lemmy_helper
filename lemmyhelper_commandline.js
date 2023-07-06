@@ -23,17 +23,13 @@ program.command('split')
 
 program
 .command('posts')
-.description('two servers posts comparison')
+.description('two servers posts comparison for the same community, commuents on posts')
 .option('-c, --communityname <string>', 'Lemmy community name', "asklemmy@lemmy.ml")
 .option('-s0, --server0 <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://lemmy.ml/")
 .option('-s1, --server1 <string>', 'Lemmy server URL, https://sh.itjust.works/ format', "https://sh.itjust.works/")
 .action((options) => {
-    const communityName = options.communityname;
-    const server0 = options.server0;
-    const server1 = options.server1;
-    console.log('compare posts. Community name %s server0 %s server1 %s', communityName, server0, server1);
-    console.log(JSON.stringify(options));
-    posts(communityName, server0, server1);
+    console.log('compare posts. Community name %s server0 %s server1 %s', options.communityname, options.server0, options.server1);
+    posts(options);
 });
 
 program

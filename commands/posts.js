@@ -10,12 +10,12 @@ function showPerf(results) {
 }
 
 
-export async function posts (communityname, server0, server1) {
+export async function posts (options) {
     console.log("posts");
-    let results = { community: "community_name=" + communityname,
+    let results = { community: "community_name=" + options.communityname,
         page: 1,
-        server0params: { serverChoice0: server0 },
-        server1params: { serverChoice0: server1 }
+        server0params: { serverChoice0: options.server0 },
+        server1params: { serverChoice0: options.server1 }
      };
 
     results = await dualServerPostFetch(results);
@@ -37,7 +37,7 @@ export async function posts (communityname, server0, server1) {
 
         for (let i = 0; i < matchResults.sameID.length; i++) {
             console.log("---- POSTS %d %s %s", i, matchResults.sameID[i], matchResults.sameA[i].post.name);
-            let commentsMatch = await compareComments(server0, matchResults.sameID[i][0], server1, matchResults.sameID[i][1]);
+            let commentsMatch = await compareComments(options.server0, matchResults.sameID[i][0], options.server1, matchResults.sameID[i][1]);
         }
         // await checkPostsComments(results, fetch, results.outServer0.json.posts, results.server0params.serverChoice0);
         // await checkPostsComments(results, fetch, results.outServer1.json.posts, results.server1params.serverChoice0);
