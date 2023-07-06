@@ -139,7 +139,7 @@ export async function testPost(options) {
 
 export async function rawPost(postID, serverChoice) {
     let newParams = { serverChoice0: serverChoice };
-    newParams.serverAPI0 = "api/v3/comment/list?post_id=" + postID + "&type_=All&limit=300&sort=New";
+    newParams.serverAPI0 = "api/v3/comment/list?post_id=" + postID + "&type_=All&limit=50&sort=New";
     console.log(newParams.serverAPI0);
     let postResults = await getLemmyPosts(newParams, fetch);
     postResults = checkErrorsSingle(postResults);

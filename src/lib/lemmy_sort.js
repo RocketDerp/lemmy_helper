@@ -64,7 +64,7 @@ export async function dualServerPostCommentsFetch(results) {
     results.server0params.serverAPI0 = "api/v3/comment/list?post_id=" + results.server0params.postid + "&type_=All&limit=" + commentMax + "&sort=New";
     results.outServer0 = await getLemmyPosts(results.server0params, fetch);
 
-    results.server1params.serverAPI0 = "api/v3/comment/list?post_id=" + results.server1params.postid + "&type_=All&limi=" + commentMax + "&sort=New";
+    results.server1params.serverAPI0 = "api/v3/comment/list?post_id=" + results.server1params.postid + "&type_=All&limit=" + commentMax + "&sort=New";
     results.outServer1 = await getLemmyPosts(results.server1params, fetch);
 
     results = checkErrorsDual(results);
