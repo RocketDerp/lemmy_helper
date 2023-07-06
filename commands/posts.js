@@ -45,14 +45,18 @@ export async function posts (communityname, server0, server1) {
 }
 
 
-export async function testPost(postID, serverChoice) { 
-    let newParams = {};
-    newParams.serverChoice0 = "https://sh.itjust.works/";
-    if (serverChoice) {
-        newParams.serverChoice0 = serverChoice;
-    }
-    newParams.serverAPI0 = "api/v3/comment/list?post_id=" + postID + "&type_=All&limit=300&sort=New";
-    console.log(newParams.serverAPI0);
+export async function testPost(options) {
+    let newParams = {
+        serverChoice0: options.server
+    };
+    newParams.serverAPI0 = "api/v3/comment/list?"
+        + "post_id=" + options.postid
+        + "&type_=All"
+        + "&sort=" + options.orderby
+        + "&limit=" + options.limit
+        + "&page=" + options.page
+    ;
+    console.log(newParams);
     let postResults = await getLemmyPosts(newParams, fetch);
     postResults = checkErrorsSingle(postResults);
     if (postResults.fetchErrors == 0) {
@@ -84,25 +88,6 @@ export async function rawPost(postID, serverChoice) {
 }
 
 
-export async function testPost2() {
-    console.log("testPost2 function - testing comments for a post");
-    let errorCount = 0;
-    for (let i = 0; i < 1; i++) {
-        // let postResults = await testPost(1197481, "https://lemmy.ml/");
-        let postResults = await testPost(123406);
-        await new Promise(r => setTimeout(r, 2000));
-        if (postResults.fetchErrors != 0) {
-            errorCount++;
-        }
-        if (i % 10 ==0) {
-            let tree = convertToTree(postResults.json.comments);
-            console.log("---============--- %d errorCount %d", i, errorCount);
-        }
-    }
-    console.log("end of loop, errorCount %d", errorCount);
-}
-
-
 export async function compareComments(server0, post0, server1, post1) {
     let newParams = {
        server0params: { serverChoice0: server0, postid: post0 },
@@ -113,6 +98,7 @@ export async function compareComments(server0, post0, server1, post1) {
     newParams = await dualServerPostCommentsFetch(newParams);
     showPerf(newParams.outServer0);
     showPerf(newParams.outServer1);
+    let commentMax = 50;
 
     if (newParams.fetchErrors == 0) {
         //console.log("tree0 Comment count %d", newParams.outServer0.json.comments.length);
@@ -126,8 +112,8 @@ export async function compareComments(server0, post0, server1, post1) {
 
         //console.log("--------------");
         //console.log("-------------------");
-        if (newParams.outServer0.json.comments.length == 300) {
-            console.log("missing skip post with 300 comments");
+        if (newParams.outServer0.json.comments.length == commentMax) {
+            console.log("missing skip post with commentMax %d comments", commentMax);
         } else {
             let d = compareTwoCommentsSamePost(newParams.outServer0.json.comments, newParams.outServer1.json.comments);
             //console.log("commentMissing %d unequal %d server0 %d server1 %d %s %s  ", d.commentMissing.length,
@@ -155,23 +141,6 @@ export async function compareComments(server0, post0, server1, post1) {
         console.log("fetchErrors: %d", newParams.fetchErrors);
     }
     return newParams;
-}
-
-
-export async function loopTest0() {
-    console.log("looptest0 function");
-    let errorCount = 0;
-    for (let i = 0; i < 1000; i++) {
-        let postResults = await testPost(6, "https://lemmy.ml/");
-        await new Promise(r => setTimeout(r, 2000));
-        if (postResults.fetchErrors != 0) {
-            errorCount++;
-        }
-        if (i % 10 ==0) {
-            console.log("---============--- %d errorCount %d", i, errorCount);
-        }
-    }
-    console.log("end of loop, errorCount %d", errorCount);
 }
 
 

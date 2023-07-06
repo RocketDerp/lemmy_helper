@@ -26,7 +26,7 @@ export async function getLemmyPosts(params0, fetch) {
 		}
 		result0.timeParse = parseHrtimeToSeconds(process.hrtime(queryTimeStart))
 	} else {
-        console.error("fetch failed ", serverURL0);
+        console.error("fetch failed %s status %d %s", serverURL0, resp.status, resp.statusText);
 		result0.failureCode = resp.status;
 		result0.failureText = resp.statusText;
 	}
@@ -59,10 +59,12 @@ export async function dualServerPostFetch(results) {
 export async function dualServerPostCommentsFetch(results) {
     results.page = 1;
 
-    results.server0params.serverAPI0 = "api/v3/comment/list?post_id=" + results.server0params.postid + "&type_=All&limit=300&sort=New";
+    // so it seems lemmy.world has reduced limit of comment fetching to 50 from 300 on 2023-07-05 or past few days.
+    let commentMax = 50;
+    results.server0params.serverAPI0 = "api/v3/comment/list?post_id=" + results.server0params.postid + "&type_=All&limit=" + commentMax + "&sort=New";
     results.outServer0 = await getLemmyPosts(results.server0params, fetch);
 
-    results.server1params.serverAPI0 = "api/v3/comment/list?post_id=" + results.server1params.postid + "&type_=All&limit=300&sort=New";
+    results.server1params.serverAPI0 = "api/v3/comment/list?post_id=" + results.server1params.postid + "&type_=All&limi=" + commentMax + "&sort=New";
     results.outServer1 = await getLemmyPosts(results.server1params, fetch);
 
     results = checkErrorsDual(results);
@@ -110,7 +112,8 @@ export async function checkPostsComments(results, fetch, posts0, serverChoice) {
     for (let i = 0; i < posts0.length; i++) {
         let newParams = {};
         newParams.serverChoice0 = serverChoice;
-        newParams.serverAPI0 = "api/v3/comment/list?post_id=" + posts0[i].post.id + "&limit=300&type_=All&sort=New";
+        let commentMax = 50;
+        newParams.serverAPI0 = "api/v3/comment/list?post_id=" + posts0[i].post.id + "&limit=" + commentMax + "&type_=All&sort=New";
         console.log(newParams.serverAPI0);
         let postResults = await getLemmyPosts(newParams, fetch);
 

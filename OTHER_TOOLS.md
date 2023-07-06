@@ -5,3 +5,6 @@ Short and clean JavaScript code to subscribe a Lemmy instance to popular communi
 
 https://github.com/lflare/lemmy-subscriber-bot  
 Python tool to subscribe to communities.
+
+https://lemmy.ml/comment/1247803
+Python script for moving community subscribe list between servers

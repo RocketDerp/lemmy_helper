@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 import { program } from "commander";
-import { posts, testPost, testPost2, loopTest0, compareComments, rawPost, loopPostList } from "./commands/posts.js"
+import { posts, testPost, compareComments, rawPost, loopPostList } from "./commands/posts.js"
 import { testLemmyLogin, testVote, loopTestVote, testCommunities,
     testResolveCommunity, testCommunitiesTickle } from "./commands/sessions.js";
 
@@ -38,15 +38,14 @@ program
 
 program
 .command('testpost')
-.description('lemmy post parsing')
-.option('-p, --postid <number>', 'Lemmy post ID, localized to that specific server', 123406)
-.option('-s, --server <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://lemmy.ml/")
+.description('lemmy comment loading for a specific post')
+.option('-p, --postid <number>', 'Lemmy post ID, localized to that specific server', 290936)
+.option('-s, --server <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://lemm.ee/")
+.option('-li, --limit <number>', 'limit to comments', 25)
+.option('-p, --page <number>', 'page of comments list', 1)
+.option('-ob, --orderby <string>', 'sort by', "New")
 .action((options) => {
-    const postID = options.postid;
-    const server = options.server;
-    console.log('testpost command postID %d server %s', postID, server);
-    console.log(JSON.stringify(options));
-    testPost(postID, server);
+    testPost(options);
 });
 
 program
@@ -76,19 +75,6 @@ program
     console.log('compare comments. server0 %s post %d server1 %s post %d', server0, post0, server1, post1);
     console.log(JSON.stringify(options));
     compareComments(server0, post0, server1, post1);
-});
-
-program
-.command('testpost2')
-.action((options) => {
-     testPost2();
-});
-
-program
-.command('looptest0')
-.description('loop loading comments for a post')
-.action((options) => {
-     loopTest0();
 });
 
 program
