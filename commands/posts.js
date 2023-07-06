@@ -224,13 +224,15 @@ export async function compareCommentsMarkdownTable(server0, post0, server1, post
     //showPerf(newParams.outServer0);
     //showPerf(newParams.outServer1);
     let commentMax = 50;
+    const server0out = server0.replace("https://", "").replace("/", "");
+    const server1out = server1.replace("https://", "").replace("/", "");
 
     if (newParams.fetchErrors == 0) {
         // markdown row: | Python Hat        |   True   | 23.99 |  
         if (newParams.outServer0.json.comments.length == commentMax) {
-            console.log("| N/A | N/A | %s | %s | skip post with commentMax %d comments |",
-            server0 + "post/" + post0,
-            server1  + "post/" + post1,
+            console.log("| N/A | N/A | [%s](%s) | [%s](%s) | skip post with commentMax %d comments |",
+            server0out, server0 + "post/" + post0,
+            server1out, server1 + "post/" + post1,
             commentMax);
         } else {
             let d = compareTwoCommentsSamePost(newParams.outServer0.json.comments, newParams.outServer1.json.comments);
@@ -246,8 +248,8 @@ export async function compareCommentsMarkdownTable(server0, post0, server1, post
             console.log("| %d | %d | [%d on %s](%s) | [%d on %s](%s) | %s |",
                 d.commentMissing.length,
                 d.commentUnequal.length,
-                d.comments.length, server0, server0 + "post/" + post0,
-                d.comments1.length, server1, server1  + "post/" + post1,
+                d.comments.length, server0out, server0 + "post/" + post0,
+                d.comments1.length, server1out, server1  + "post/" + post1,
                 missingInMarkdown
                 )
         }

@@ -127,7 +127,8 @@ export function formatAsMarkdownCommentIdentifiers(commentArray) {
         if (i > 0) {
             outMarkdown += ", ";
         }
-        outMarkdown += "[" + commentArray[i].ap_id + "]"
+        outMarkdown += 
+              "[" + commentArray[i].ap_id.replace("https://", "").replace("/comment/", "") + "]"
             + "(" + commentArray[i].ap_id + ")"
             ;
     }
