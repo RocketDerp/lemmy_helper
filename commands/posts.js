@@ -1,4 +1,4 @@
-import { dualServerPostFetch, matchPosts, checkPostsComments, getLemmyPosts, checkErrorsSingle, dualServerPostCommentsFetch }
+import { dualServerPostFetch, matchPosts, matchPostsBy_ap_id, checkPostsComments, getLemmyPosts, checkErrorsSingle, dualServerPostCommentsFetch }
    from "../src/lib/lemmy_sort.js"
 import { compareCommentsPostsListID, compareTwoCommentsSamePost, convertToComments, convertToTree,
      buildArrayOfCommentIdentifiers, formatAsMarkdownCommentIdentifiers } 
@@ -26,7 +26,7 @@ export async function posts (options) {
     if (results.fetchErrors > 0) {
         console.log("ERROR on fetch: ", results.fetchErrors);
     } else {
-        let matchResults = matchPosts(results.outServer0.json.posts, results.outServer1.json.posts);
+        let matchResults = matchPostsBy_ap_id(results.outServer0.json.posts, results.outServer1.json.posts);
 
         console.log(matchResults.resultsB);
         //consolePosts(matchResults.unfoundA);
@@ -61,7 +61,11 @@ export async function testPost(options) {
     postResults = checkErrorsSingle(postResults);
     if (postResults.fetchErrors == 0) {
         showPerf(postResults);
-        console.log("Comment count %d", postResults.json.comments.length);
+        let comments = postResults.json.comments;
+        console.log("Comment count %d (limit was %d)", comments.length, options.limit);
+        if (comments.length > 0) {
+            console.log(comments[1]);
+        }
     } else {
         console.error("fetchErrors ", postResults.fetchErrors);
         console.log(postResults);

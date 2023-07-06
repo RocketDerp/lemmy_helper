@@ -56,7 +56,7 @@ export function compareTwoCommentsSamePost(comments, comments1) {
 
         let foundOnBothServers = false;
         for (let j = 0; j < commentsSorted1.length; j++) {
-            if (comment.comment.published == commentsSorted1[j].comment.published) {
+            if (comment.comment.ap_id == commentsSorted1[j].comment.ap_id) {
                 let jJump = j - onJ;
                 if (jJump > 1) {
                     // console.log("missing j %d jJump %d onJ %d", j, jJump, onJ);

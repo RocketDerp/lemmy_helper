@@ -129,8 +129,7 @@ export async function checkPostsComments(results, fetch, posts0, serverChoice) {
 }
 
 
-// both posts arrays should be sorted by published timestamp
-export function matchPosts(posts0, posts1) {
+export function matchPostsBy_ap_id(posts0, posts1) {
     let results = {
         resultsA: [],
         resultsB: [],   // exclude "same" matches, shorter list
@@ -144,8 +143,8 @@ export function matchPosts(posts0, posts1) {
         let foundMatch = false;
         // ToDo: start j value on onJ instead of 0?
         for (let j = 0; j < posts1.length; j++) {
-            if (posts0[i].post.published == posts1[j].post.published) {
-                // timestamps match, now title?
+            if (posts0[i].post.ap_id == posts1[j].post.ap_id) {
+                // ap_id match, now title?
                 if (posts0[i].post.name === posts1[j].post.name) {
                     results.resultsA.push(i + ":" + j + ":same");
                     results.sameID.push([ posts0[i].post.id, posts1[j].post.id] );
