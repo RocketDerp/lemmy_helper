@@ -109,6 +109,21 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY tablename, indexname
 			;`
 			break;
+		case 'pg_triggers':
+			sqlQuery = `
+			SELECT event_object_table AS table_name, trigger_name         
+			FROM information_schema.triggers  
+			GROUP BY table_name, trigger_name 
+			ORDER BY table_name, trigger_name 
+			;`
+			break;
+		case 'pg_triggers1':
+			sqlQuery = `
+			SELECT event_object_table AS table_name, trigger_name         
+			FROM information_schema.triggers  
+			ORDER BY table_name, trigger_name 
+			;`
+			break;
 		case 'install_pgstatements':
 			// PostgreSQL extension pg_stat_statements for performance troubleshooting.
 			// https://www.timescale.com/blog/identify-postgresql-performance-bottlenecks-with-pg_stat_statements/
