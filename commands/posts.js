@@ -14,7 +14,7 @@ export async function posts (options) {
     let pageLimit = 50;
     // ToDo: this loop needs restructured to actually fetch more than 1 page
     // Only run it with postpages = 1
-    for (let onPage = 1; onPage <= options.postpages; i++) {
+    for (let onPage = 1; onPage <= options.postpages; onPage++) {
         let results = { community: "community_name=" + options.communityname,
             page: onPage,
             server0params: { serverChoice0: options.server0 },
@@ -40,7 +40,7 @@ export async function posts (options) {
             //console.log(matchResults.sameID);
             // compareCommentsPostsListID(matchResults.sameID);
 
-            console.log("| missing | unmatch | server0 | server1 | specific missing |");
+            console.log("| missing | diff | server0 | server1 | specific missing comments |");
             console.log("| ------: | ------: | :------ | :-----  | ---------------: |");
             for (let i = 0; i < matchResults.sameID.length; i++) {
                 // console.log("---- POSTS %d %s %s", i, matchResults.sameID[i], matchResults.sameA[i].post.name);
@@ -226,7 +226,7 @@ export async function compareCommentsMarkdownTable(server0, post0, server1, post
     let commentMax = 50;
     let server0Comments = [];
     let server1Comments = [];
-    let fetchCommentPages = 1;
+    let fetchCommentPages = 10;
 
     let newParams = {
         server0params: { serverChoice0: server0, postid: post0 },
@@ -243,28 +243,19 @@ export async function compareCommentsMarkdownTable(server0, post0, server1, post
         if (newParams.fetchErrors == 0) {
             server0Comments = server0Comments.concat(newParams.outServer0.json.comments);
             server1Comments = server1Comments.concat(newParams.outServer1.json.comments);
-            console.log("DONKEYBALLS %d %d", server0Comments.length, server1Comments.length);
-            if (server0Comments.length == commentMax) {
-                console.log("| N/A | N/A | [%s](%s) | [%s](%s) | skip post with commentMax %d comments |",
-                server0out, server0 + "post/" + post0,
-                server1out, server1 + "post/" + post1,
-                commentMax);
-            } else {
-                let d = compareTwoCommentsSamePost(server0Comments, server1Comments);
-                let missingCommentsIdentifiers = buildArrayOfCommentIdentifiers(d.commentMissing);
 
-                let missingInMarkdown = "ALL GOOD";
-                if (d.commentMissing.length > 0) {
-                    missingInMarkdown = formatAsMarkdownCommentIdentifiers(missingCommentsIdentifiers);
-                }
+            let doAnotherPage = false;
+            if (newParams.outServer0.json.comments.length == commentPageLimit) {
+                doAnotherPage = true;
+            }
+            if (newParams.outServer1.json.comments.length == commentPageLimit) {
+                doAnotherPage = true;
+            }
 
-                console.log("| %d | %d | [%d on %s](%s) | [%d on %s](%s) | %s |",
-                    d.commentMissing.length,
-                    d.commentUnequal.length,
-                    server0Comments.length, server0out, server0 + "post/" + post0,
-                    server1Comments.length, server1out, server1  + "post/" + post1,
-                    missingInMarkdown
-                    )
+            if (!doAnotherPage) {
+                // console.log("Stopping comment fetch onPage %d because did not reach limit", onPage);
+                commentMax = commentPageLimit * onPage;
+                break;
             }
         } else {
             console.log("fetchErrors: %d", newParams.fetchErrors);
@@ -272,6 +263,40 @@ export async function compareCommentsMarkdownTable(server0, post0, server1, post
             return newParams;
         }
     }
+
+    if (1==1) {
+        let reachedMax = false;
+        if (server0Comments.length == commentMax) {
+            reachedMax = true;
+        }
+        if (server1Comments.length == commentMax) {
+            reachedMax = true;
+        }
+
+        if (reachedMax) {
+            console.log("| N/A | N/A | %d [%s](%s) | %d [%s](%s) | skip post with commentMax %d comments |",
+                server0Comments.length, server0out, server0 + "post/" + post0,
+                server1Comments.length, server1out, server1 + "post/" + post1,
+                commentMax);
+        } else {
+            let d = compareTwoCommentsSamePost(server0Comments, server1Comments);
+            let missingCommentsIdentifiers = buildArrayOfCommentIdentifiers(d.commentMissing);
+
+            let missingInMarkdown = "ALL GOOD";
+            if (d.commentMissing.length > 0) {
+                missingInMarkdown = formatAsMarkdownCommentIdentifiers(missingCommentsIdentifiers);
+            }
+
+            console.log("| %d | %d | [%d on %s](%s) | [%d on %s](%s) | %s |",
+                d.commentMissing.length,
+                d.commentUnequal.length,
+                server0Comments.length, server0out, server0 + "post/" + post0,
+                server1Comments.length, server1out, server1  + "post/" + post1,
+                missingInMarkdown
+                );
+        }
+    }
+
 
     return newParams;
 }
