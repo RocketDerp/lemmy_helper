@@ -10,12 +10,13 @@ function showPerf(results) {
 }
 
 
-export async function posts (options) {
-    let posts0 = [];
-    let posts1 = [];
-    let pageLimit = 50;
-    // ToDo: this loop needs restructured to actually fetch more than 1 page
-    // Only run it with postpages = 1
+export async function fetchMultiplePosts(options) {
+    let p = {
+        posts0: [],
+        posts1: [],
+        fetchErrors: 0
+    };
+
     // Lemmy is not very consistent on timing of pages, new items can push pages around
     //   fetch all the pages at once to try and get a consistent list to compare between servers.
     for (let onPage = 1; onPage <= options.postpages; onPage++) {
@@ -34,20 +35,28 @@ export async function posts (options) {
             console.log("ERROR on fetch: ", results.fetchErrors);
             console.error("aborting, error on fetch, page %d", onPage);
             // abort loop of pages
-            return;
+            p.fetchErrors = results.fetchErrors;
+            return p;
         } else {
-            posts0 = posts0.concat(results.outServer0.json.posts);
-            posts1 = posts1.concat(results.outServer1.json.posts);
+            p.posts0 = p.posts0.concat(results.outServer0.json.posts);
+            p.posts1 = p.posts1.concat(results.outServer1.json.posts);
         }
     }
 
-    if (1==1) {
-        let matchResults = matchPostsBy_ap_id(posts0, posts1);
+    return p;
+}
+
+
+export async function posts (options) {
+    let p = await fetchMultiplePosts(options);
+
+    if (p.fetchErrors == 0) {
+        let matchResults = matchPostsBy_ap_id(p.posts0, p.posts1);
 
         console.log(matchResults.resultsB);
         //consolePosts(matchResults.unfoundA);
 
-        console.log("------------ comments of posts server0 has %d server1 %d ==============", posts0.length, posts1.length);
+        console.log("------------ comments of posts server0 has %d server1 %d ==============", p.posts0.length, p.posts1.length);
         //console.log(matchResults.sameID);
         // compareCommentsPostsListID(matchResults.sameID);
 
@@ -64,29 +73,16 @@ export async function posts (options) {
 
 
 export async function posts_list_twoservers (options) {
-    let results = { community: "community_name=" + options.communityname,
-        page: 1,
-        server0params: { serverChoice0: options.server0 },
-        server1params: { serverChoice0: options.server1 }
-     };
+    let p = await fetchMultiplePosts(options);
 
-    results = await dualServerPostFetch(results);
-
-    showPerf(results.outServer0);
-    showPerf(results.outServer1);
-
-    if (results.fetchErrors > 0) {
-        console.log("ERROR on fetch: ", results.fetchErrors);
-    } else {
-        let posts0 = results.outServer0.json.posts;
-        let posts1 = results.outServer1.json.posts;
-        let matchResults = matchPostsBy_ap_id(results.outServer0.json.posts, results.outServer1.json.posts);
+    if (p.fetchErrors == 0) {
+        let matchResults = matchPostsBy_ap_id(p.posts0, p.posts1);
         let postsMerged = matchResults.mergedA;
 
         console.log(matchResults.resultsB);
         //consolePosts(matchResults.unfoundA);
 
-        console.log("server0 %s count %d server1 %s count %d", options.server0, posts0.length, options.server1, posts1.length)
+        console.log("server0 %s count %d server1 %s count %d", options.server0, p.posts0.length, options.server1, p.posts1.length)
 
         let sameSkipOne = false;
         let featuredCommunityCount = 0;

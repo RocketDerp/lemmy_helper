@@ -142,7 +142,7 @@ export function matchPostsBy_ap_id(posts0, posts1) {
         unfoundA: [],
         sameID: [],
         sameA: [],      // array should have equal items to sameID
-        mergedA: [],     // array will merge posts0/posts1 and try to match by published
+        mergedA: [],    // array will merge posts0/posts1 and try to match by published
     };
 
     /*
