@@ -42,7 +42,7 @@ export async function getLemmyPost(params0, fetch) {
 
 
 export async function dualServerPostFetch(results) {
-    results.page = 1;
+    // results.page = 1;
 
     results.server0params.serverAPI0 = "api/v3/post/list?sort=New&" + results.community + "&limit=50&page=" + results.page;
     results.outServer0 = await getLemmyPosts(results.server0params, fetch);

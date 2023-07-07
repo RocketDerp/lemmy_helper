@@ -11,38 +11,44 @@ function showPerf(results) {
 
 
 export async function posts (options) {
-    console.log("posts");
-    let results = { community: "community_name=" + options.communityname,
-        page: 1,
-        server0params: { serverChoice0: options.server0 },
-        server1params: { serverChoice0: options.server1 }
-     };
+    let pageLimit = 50;
+    // ToDo: this loop needs restructured to actually fetch more than 1 page
+    // Only run it with postpages = 1
+    for (let onPage = 1; onPage <= options.postpages; i++) {
+        let results = { community: "community_name=" + options.communityname,
+            page: onPage,
+            server0params: { serverChoice0: options.server0 },
+            server1params: { serverChoice0: options.server1 }
+        };
 
-    results = await dualServerPostFetch(results);
+        results = await dualServerPostFetch(results);
 
-    showPerf(results.outServer0);
-    showPerf(results.outServer1);
+        showPerf(results.outServer0);
+        showPerf(results.outServer1);
 
-    if (results.fetchErrors > 0) {
-        console.log("ERROR on fetch: ", results.fetchErrors);
-    } else {
-        let matchResults = matchPostsBy_ap_id(results.outServer0.json.posts, results.outServer1.json.posts);
+        if (results.fetchErrors > 0) {
+            console.log("ERROR on fetch: ", results.fetchErrors);
+            console.error("aborting, error on fetch, page %d", onPage);
+            // abort loop of pages
+        } else {
+            let matchResults = matchPostsBy_ap_id(results.outServer0.json.posts, results.outServer1.json.posts);
 
-        console.log(matchResults.resultsB);
-        //consolePosts(matchResults.unfoundA);
+            console.log(matchResults.resultsB);
+            //consolePosts(matchResults.unfoundA);
 
-        console.log("------------ comments of posts ==============");
-        //console.log(matchResults.sameID);
-        // compareCommentsPostsListID(matchResults.sameID);
+            console.log("------------ comments of posts ==============");
+            //console.log(matchResults.sameID);
+            // compareCommentsPostsListID(matchResults.sameID);
 
-        console.log("| missing | unmatch | server0 | server1 | specific missing |");
-        console.log("| ------: | ------: | :------ | :-----  | ---------------: |");
-        for (let i = 0; i < matchResults.sameID.length; i++) {
-            // console.log("---- POSTS %d %s %s", i, matchResults.sameID[i], matchResults.sameA[i].post.name);
-            let commentsMatch = await compareCommentsMarkdownTable(options.server0, matchResults.sameID[i][0], options.server1, matchResults.sameID[i][1]);
+            console.log("| missing | unmatch | server0 | server1 | specific missing |");
+            console.log("| ------: | ------: | :------ | :-----  | ---------------: |");
+            for (let i = 0; i < matchResults.sameID.length; i++) {
+                // console.log("---- POSTS %d %s %s", i, matchResults.sameID[i], matchResults.sameA[i].post.name);
+                let commentsMatch = await compareCommentsMarkdownTable(options.server0, matchResults.sameID[i][0], options.server1, matchResults.sameID[i][1]);
+            }
+            // await checkPostsComments(results, fetch, results.outServer0.json.posts, results.server0params.serverChoice0);
+            // await checkPostsComments(results, fetch, results.outServer1.json.posts, results.server1params.serverChoice0);
         }
-        // await checkPostsComments(results, fetch, results.outServer0.json.posts, results.server0params.serverChoice0);
-        // await checkPostsComments(results, fetch, results.outServer1.json.posts, results.server1params.serverChoice0);
     }
 }
 
@@ -214,28 +220,31 @@ export async function compareComments(server0, post0, server1, post1) {
 
 
 export async function compareCommentsMarkdownTable(server0, post0, server1, post1) {
+    let commentMax = 50;
     let newParams = {
        server0params: { serverChoice0: server0, postid: post0 },
-       server1params: { serverChoice0: server1, postid: post1 } 
+       server1params: { serverChoice0: server1, postid: post1 },
+       page: 1
        };
-    newParams.server0params.serverAPI0 = "api/v3/comment/list?post_id=" + post0 + "&type_=All&limit=300&sort=New";
 
+    let server0Comments = [];
+    let server1Comments = [];
     newParams = await dualServerPostCommentsFetch(newParams);
     //showPerf(newParams.outServer0);
     //showPerf(newParams.outServer1);
-    let commentMax = 50;
     const server0out = server0.replace("https://", "").replace("/", "");
     const server1out = server1.replace("https://", "").replace("/", "");
 
     if (newParams.fetchErrors == 0) {
-        // markdown row: | Python Hat        |   True   | 23.99 |  
-        if (newParams.outServer0.json.comments.length == commentMax) {
+        server0Comments = newParams.outServer0.json.comments;
+        server1Comments = newParams.outServer1.json.comments;
+        if (server0Comments.length == commentMax) {
             console.log("| N/A | N/A | [%s](%s) | [%s](%s) | skip post with commentMax %d comments |",
             server0out, server0 + "post/" + post0,
             server1out, server1 + "post/" + post1,
             commentMax);
         } else {
-            let d = compareTwoCommentsSamePost(newParams.outServer0.json.comments, newParams.outServer1.json.comments);
+            let d = compareTwoCommentsSamePost(server0Comments, server1Comments);
             let missingCommentsIdentifiers = buildArrayOfCommentIdentifiers(d.commentMissing);
 
             let missingInMarkdown = "ALL GOOD";
@@ -243,13 +252,11 @@ export async function compareCommentsMarkdownTable(server0, post0, server1, post
                 missingInMarkdown = formatAsMarkdownCommentIdentifiers(missingCommentsIdentifiers);
             }
 
-            // markdown for GitHub and Lemmy
-            // [title](https://www.example.com)
             console.log("| %d | %d | [%d on %s](%s) | [%d on %s](%s) | %s |",
                 d.commentMissing.length,
                 d.commentUnequal.length,
-                d.comments.length, server0out, server0 + "post/" + post0,
-                d.comments1.length, server1out, server1  + "post/" + post1,
+                server0Comments.length, server0out, server0 + "post/" + post0,
+                server1Comments.length, server1out, server1  + "post/" + post1,
                 missingInMarkdown
                 )
         }

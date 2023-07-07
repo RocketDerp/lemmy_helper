@@ -27,6 +27,7 @@ program
 .option('-c, --communityname <string>', 'Lemmy community name', "asklemmy@lemmy.ml")
 .option('-s0, --server0 <string>', 'Lemmy server URL, https://lemmy.ml/ format', "https://lemmy.ml/")
 .option('-s1, --server1 <string>', 'Lemmy server URL, https://sh.itjust.works/ format', "https://sh.itjust.works/")
+.option('-pp, --postpages <number>', 'Number of pages of posts to fetch', 1)
 .action((options) => {
     console.log('compare posts. Community name %s server0 %s server1 %s', options.communityname, options.server0, options.server1);
     posts(options);
