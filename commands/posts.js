@@ -220,49 +220,59 @@ export async function compareComments(server0, post0, server1, post1) {
 
 
 export async function compareCommentsMarkdownTable(server0, post0, server1, post1) {
-    let commentMax = 50;
-    let newParams = {
-       server0params: { serverChoice0: server0, postid: post0 },
-       server1params: { serverChoice0: server1, postid: post1 },
-       page: 1
-       };
-
-    let server0Comments = [];
-    let server1Comments = [];
-    newParams = await dualServerPostCommentsFetch(newParams);
-    //showPerf(newParams.outServer0);
-    //showPerf(newParams.outServer1);
     const server0out = server0.replace("https://", "").replace("/", "");
     const server1out = server1.replace("https://", "").replace("/", "");
+    let commentPageLimit = 50;
+    let commentMax = 50;
+    let server0Comments = [];
+    let server1Comments = [];
+    let fetchCommentPages = 1;
 
-    if (newParams.fetchErrors == 0) {
-        server0Comments = newParams.outServer0.json.comments;
-        server1Comments = newParams.outServer1.json.comments;
-        if (server0Comments.length == commentMax) {
-            console.log("| N/A | N/A | [%s](%s) | [%s](%s) | skip post with commentMax %d comments |",
-            server0out, server0 + "post/" + post0,
-            server1out, server1 + "post/" + post1,
-            commentMax);
-        } else {
-            let d = compareTwoCommentsSamePost(server0Comments, server1Comments);
-            let missingCommentsIdentifiers = buildArrayOfCommentIdentifiers(d.commentMissing);
+    let newParams = {
+        server0params: { serverChoice0: server0, postid: post0 },
+        server1params: { serverChoice0: server1, postid: post1 }
+    };
 
-            let missingInMarkdown = "ALL GOOD";
-            if (d.commentMissing.length > 0) {
-                missingInMarkdown = formatAsMarkdownCommentIdentifiers(missingCommentsIdentifiers);
+    for (let onPage = 1; onPage <= fetchCommentPages; onPage++) {
+        newParams.page = onPage;
+
+        newParams = await dualServerPostCommentsFetch(newParams);
+        //showPerf(newParams.outServer0);
+        //showPerf(newParams.outServer1);
+
+        if (newParams.fetchErrors == 0) {
+            server0Comments = server0Comments.concat(newParams.outServer0.json.comments);
+            server1Comments = server1Comments.concat(newParams.outServer1.json.comments);
+            console.log("DONKEYBALLS %d %d", server0Comments.length, server1Comments.length);
+            if (server0Comments.length == commentMax) {
+                console.log("| N/A | N/A | [%s](%s) | [%s](%s) | skip post with commentMax %d comments |",
+                server0out, server0 + "post/" + post0,
+                server1out, server1 + "post/" + post1,
+                commentMax);
+            } else {
+                let d = compareTwoCommentsSamePost(server0Comments, server1Comments);
+                let missingCommentsIdentifiers = buildArrayOfCommentIdentifiers(d.commentMissing);
+
+                let missingInMarkdown = "ALL GOOD";
+                if (d.commentMissing.length > 0) {
+                    missingInMarkdown = formatAsMarkdownCommentIdentifiers(missingCommentsIdentifiers);
+                }
+
+                console.log("| %d | %d | [%d on %s](%s) | [%d on %s](%s) | %s |",
+                    d.commentMissing.length,
+                    d.commentUnequal.length,
+                    server0Comments.length, server0out, server0 + "post/" + post0,
+                    server1Comments.length, server1out, server1  + "post/" + post1,
+                    missingInMarkdown
+                    )
             }
-
-            console.log("| %d | %d | [%d on %s](%s) | [%d on %s](%s) | %s |",
-                d.commentMissing.length,
-                d.commentUnequal.length,
-                server0Comments.length, server0out, server0 + "post/" + post0,
-                server1Comments.length, server1out, server1  + "post/" + post1,
-                missingInMarkdown
-                )
+        } else {
+            console.log("fetchErrors: %d", newParams.fetchErrors);
+            console.error("aborting comment fetch failed, page %d", onPage);
+            return newParams;
         }
-    } else {
-        console.log("fetchErrors: %d", newParams.fetchErrors);
     }
+
     return newParams;
 }
 
