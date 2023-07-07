@@ -283,6 +283,9 @@ export async function compareCommentsMarkdownTable(server0, post0, server1, post
             let missingCommentsIdentifiers = buildArrayOfCommentIdentifiers(d.commentMissing);
 
             let missingInMarkdown = "ALL GOOD";
+            if (d.commentUnequal.length > 0) {
+                missingInMarkdown = "SOME Comment EDITS DIFF";
+            }
             if (d.commentMissing.length > 0) {
                 missingInMarkdown = formatAsMarkdownCommentIdentifiers(missingCommentsIdentifiers);
             }
