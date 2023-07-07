@@ -11,9 +11,13 @@ function showPerf(results) {
 
 
 export async function posts (options) {
+    let posts0 = [];
+    let posts1 = [];
     let pageLimit = 50;
     // ToDo: this loop needs restructured to actually fetch more than 1 page
     // Only run it with postpages = 1
+    // Lemmy is not very consistent on timing of pages, new items can push pages around
+    //   fetch all the pages at once to try and get a consistent list to compare between servers.
     for (let onPage = 1; onPage <= options.postpages; onPage++) {
         let results = { community: "community_name=" + options.communityname,
             page: onPage,
@@ -30,25 +34,31 @@ export async function posts (options) {
             console.log("ERROR on fetch: ", results.fetchErrors);
             console.error("aborting, error on fetch, page %d", onPage);
             // abort loop of pages
+            return;
         } else {
-            let matchResults = matchPostsBy_ap_id(results.outServer0.json.posts, results.outServer1.json.posts);
-
-            console.log(matchResults.resultsB);
-            //consolePosts(matchResults.unfoundA);
-
-            console.log("------------ comments of posts ==============");
-            //console.log(matchResults.sameID);
-            // compareCommentsPostsListID(matchResults.sameID);
-
-            console.log("| missing | diff | server0 | server1 | specific missing comments |");
-            console.log("| ------: | ------: | :------ | :-----  | ---------------: |");
-            for (let i = 0; i < matchResults.sameID.length; i++) {
-                // console.log("---- POSTS %d %s %s", i, matchResults.sameID[i], matchResults.sameA[i].post.name);
-                let commentsMatch = await compareCommentsMarkdownTable(options.server0, matchResults.sameID[i][0], options.server1, matchResults.sameID[i][1]);
-            }
-            // await checkPostsComments(results, fetch, results.outServer0.json.posts, results.server0params.serverChoice0);
-            // await checkPostsComments(results, fetch, results.outServer1.json.posts, results.server1params.serverChoice0);
+            posts0 = posts0.concat(results.outServer0.json.posts);
+            posts1 = posts1.concat(results.outServer1.json.posts);
         }
+    }
+
+    if (1==1) {
+        let matchResults = matchPostsBy_ap_id(posts0, posts1);
+
+        console.log(matchResults.resultsB);
+        //consolePosts(matchResults.unfoundA);
+
+        console.log("------------ comments of posts server0 has %d server1 %d ==============", posts0.length, posts1.length);
+        //console.log(matchResults.sameID);
+        // compareCommentsPostsListID(matchResults.sameID);
+
+        console.log("| missing | diff | server0 | server1 | specific missing comments |");
+        console.log("| ------: | ------: | :------ | :-----  | ---------------: |");
+        for (let i = 0; i < matchResults.sameID.length; i++) {
+            // console.log("---- POSTS %d %s %s", i, matchResults.sameID[i], matchResults.sameA[i].post.name);
+            let commentsMatch = await compareCommentsMarkdownTable(options.server0, matchResults.sameID[i][0], options.server1, matchResults.sameID[i][1]);
+        }
+        // await checkPostsComments(results, fetch, results.outServer0.json.posts, results.server0params.serverChoice0);
+        // await checkPostsComments(results, fetch, results.outServer1.json.posts, results.server1params.serverChoice0);
     }
 }
 
