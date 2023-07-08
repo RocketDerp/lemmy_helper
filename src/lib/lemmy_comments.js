@@ -112,7 +112,8 @@ export function buildArrayOfCommentIdentifiers(commentArray) {
             comment_id: commentArray[i].comment.id,
             ap_id: commentArray[i].comment.ap_id,
             post_id: commentArray[i].comment.post_id,
-            published: commentArray[i].comment.published
+            published: commentArray[i].comment.published,
+            commentsource: commentArray[i].commentsource
          } )
     }
 
@@ -131,6 +132,10 @@ export function formatAsMarkdownCommentIdentifiers(commentArray) {
               "[" + commentArray[i].ap_id.replace("https://", "").replace("/comment/", "") + "]"
             + "(" + commentArray[i].ap_id + ")"
             ;
+        
+        if (commentArray[i].ap_id.indexOf(commentArray[i].commentsource) == -1) {
+            outMarkdown += " ++ [Source](" + commentArray[i].commentsource + "comment/" + commentArray[i].comment_id + ")";
+        }
     }
 
     return outMarkdown;

@@ -47,14 +47,28 @@ export async function fetchMultiplePosts(options) {
 }
 
 
+export function stampPostsWithSource(p, server0, server1) {
+    for (let i = 0; i < p.posts0.length; i++) {
+        p.posts0[i].postsource = server0;
+    }
+    for (let i = 0; i < p.posts1.length; i++) {
+        p.posts1[i].postsource = server1;
+    }
+    return p;
+}
+
+
 export async function posts (options) {
     let p = await fetchMultiplePosts(options);
 
     if (p.fetchErrors == 0) {
+        p = stampPostsWithSource(p, options.server0, options.server1);
         let matchResults = matchPostsBy_ap_id(p.posts0, p.posts1);
 
         console.log(matchResults.resultsB);
         //consolePosts(matchResults.unfoundA);
+
+        posts_list_twoservers_unique(matchResults);
 
         console.log("------------ comments of posts server0 has %d server1 %d ==============", p.posts0.length, p.posts1.length);
         //console.log(matchResults.sameID);
@@ -68,6 +82,44 @@ export async function posts (options) {
         }
         // await checkPostsComments(results, fetch, results.outServer0.json.posts, results.server0params.serverChoice0);
         // await checkPostsComments(results, fetch, results.outServer1.json.posts, results.server1params.serverChoice0);
+    }
+}
+
+
+export async function posts_list_twoservers_unique(matchResults) {
+    let postsMerged = matchResults.mergedA;
+    let sameSkipOne = false;
+    let featuredCommunityCount = 0;
+    let featuredLocalCount = 0;
+
+    for (let i = 0; i < postsMerged.length; i++) {
+        if (postsMerged[i].post.featured_community) {
+            featuredCommunityCount++;
+        }
+        if (postsMerged[i].post.featured_local) {
+            featuredLocalCount++;
+        }
+
+        if (sameSkipOne) {
+            sameSkipOne = false;
+        } else {
+            if (i < (postsMerged.length - 1)) {
+                let post0 = postsMerged[i];
+                let post1 = postsMerged[i + 1];
+                if (post0.post.ap_id === post1.post.ap_id) {
+                    sameSkipOne = true;
+                    console.log("SAME %s %s %s", post0.post.published, post0.post.ap_id, post0.post.name);
+                } else {
+                    // given they are sorted by published, the post0 is newer than post1
+                    let outLink = post0.postsource + "post/" + post0.post.id;
+                    console.log("DIFF %s %s", post0.post.published, post0.post.ap_id);
+                    console.log("     FROM: %s %s", outLink, post0.post.name);
+                    // console.log(post0);
+                }
+            } else {
+                console.log("last one, i %d length %d", i, postsMerged.length);
+            }
+        }
     }
 }
 
@@ -285,6 +337,13 @@ export async function compareCommentsMarkdownTable(server0, post0, server1, post
                 server1Comments.length, server1out, server1 + "post/" + post1,
                 commentMax);
         } else {
+            for (let i = 0; i < server0Comments.length; i++) {
+                server0Comments[i].commentsource = server0;
+            }
+            for (let i = 0; i < server1Comments.length; i++) {
+                server1Comments[i].commentsource = server1;
+            }
+
             let d = compareTwoCommentsSamePost(server0Comments, server1Comments);
             let missingCommentsIdentifiers = buildArrayOfCommentIdentifiers(d.commentMissing);
 
@@ -305,7 +364,6 @@ export async function compareCommentsMarkdownTable(server0, post0, server1, post
                 );
         }
     }
-
 
     return newParams;
 }
