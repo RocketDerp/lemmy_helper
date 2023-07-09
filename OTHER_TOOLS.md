@@ -9,5 +9,11 @@ Python tool to subscribe to communities.
 https://github.com/jheidecker/lemmony  
 Python tool to subscribe to communities.
 
+https://github.com/CMahaff/lasim  
+Rust, Lemmy Account Settings Instance Migrator
+
+https://github.com/wescode/lemmy_migrate  
+Python, Lemmy Migrate
+
 https://lemmy.ml/comment/1247803
 Python script for moving community subscribe list between servers
