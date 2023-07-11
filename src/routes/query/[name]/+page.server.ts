@@ -390,8 +390,8 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			;`
 			break;
 		case "posts_featured_community":
-			sqlQuery = `SELECT post.id, post.name, post.creator_id, post.community_id, post.published, post.updated,
-				post.ap_id, post.local, post.featured_local, post.featured_community, *
+			sqlQuery = `SELECT post.id, post.name, post.creator_id, post.community_id, community.name, post.published, post.updated,
+				post.ap_id, post.local, post.featured_local, post.featured_community, post.*
 			FROM post
 			INNER JOIN community c ON c.id = post.community_id
 			WHERE post.featured_community=true
