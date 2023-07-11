@@ -399,6 +399,14 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			LIMIT 100
 			;`
 			break;
+		case "posts_aggregates_featured_community":
+			sqlQuery = `SELECT *
+			FROM post_aggregates
+			WHERE featured_community=true
+			ORDER BY published DESC
+			LIMIT 100
+			;`
+			break;
 		case "posts_removed":
 			sqlQuery = `SELECT post.id, post.name, post.creator_id, post.community_id, c.name AS community_name, post.published, post.updated,
 				post.ap_id, post.local, post.featured_local, post.featured_community, post.*
@@ -507,6 +515,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 		case 'raw_post_aggregates':
 			sqlQuery = `SELECT *
 			FROM post_aggregates
+			ORDER BY published DESC
 			LIMIT 50
 			;`
 			break;
