@@ -393,6 +393,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			sqlQuery = `SELECT id, name, creator_id, community_id, published, updated,
 				ap_id, local, featured_local, featured_community, *
 			FROM post
+			INNER JOIN community ON community.id = post.community_id
 			WHERE featured_community=true
 			ORDER BY published DESC
 			LIMIT 100
