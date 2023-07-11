@@ -399,6 +399,16 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			LIMIT 100
 			;`
 			break;
+		case "posts_removed":
+			sqlQuery = `SELECT post.id, post.name, post.creator_id, post.community_id, c.name AS community_name, post.published, post.updated,
+				post.ap_id, post.local, post.featured_local, post.featured_community, post.*
+			FROM post
+			INNER JOIN community c ON c.id = post.community_id
+			WHERE removed=true
+			ORDER BY post.published DESC
+			LIMIT 100
+			;`
+			break;
 		case "pgcounts":
 			sqlQuery = `SELECT table_schema, table_name, 
 			(xpath('/row/cnt/text()', xml_count))[1]::text::int as row_count
