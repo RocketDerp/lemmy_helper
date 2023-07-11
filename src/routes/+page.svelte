@@ -50,6 +50,7 @@
 raw tables: <a href="query/activity/?output=all">activity</a>,
      <a href="query/raw_comments/?output={data.output}">comments</a>,
      <a href="query/raw_posts/?output={data.output}">posts</a>,
+     <a href="query/raw_post_aggregates/?output={data.output}">post_aggregates</a>,
      <a href="query/raw_post_like/?output={data.output}">post_like</a>,
      <a href="query/raw_post_aggregates/?output={data.output}">post_aggregates</a>,
      <a href="query/raw_person/?output={data.output}">person</a>,

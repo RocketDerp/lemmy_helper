@@ -501,7 +501,13 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			   ap_id, local, *
 			FROM post
 			ORDER BY published DESC
-			LIMIT 10
+			LIMIT 20
+			;`
+			break;
+		case 'raw_post_aggregates':
+			sqlQuery = `SELECT *
+			FROM post_aggregates
+			LIMIT 50
 			;`
 			break;
 		case 'raw_person':
