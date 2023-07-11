@@ -404,7 +404,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				post.ap_id, post.local, post.featured_local, post.featured_community, post.*
 			FROM post
 			INNER JOIN community c ON c.id = post.community_id
-			WHERE removed=true
+			WHERE post.removed=true
 			ORDER BY post.published DESC
 			LIMIT 100
 			;`
