@@ -538,10 +538,13 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			sqlQuery = `SELECT id, * FROM post_aggregates ORDER BY published DESC LIMIT 40;`
 			break;
 		case 'raw_mod_remove_post':
-			sqlQuery = `SELECT id, * FROM mod_remove_post LIMIT 60;`
+			sqlQuery = `SELECT id, * FROM mod_remove_post ORDER BY when_ DESC LIMIT 60;`
 			break;
 		case 'raw_mod_lock_post':
-			sqlQuery = `SELECT id, * FROM mod_lock_post LIMIT 60;`
+			sqlQuery = `SELECT id, * FROM mod_lock_post ORDER BY when_ DESC LIMIT 60;`
+			break;
+		case 'raw_mod_feature_post':
+			sqlQuery = `SELECT id, * FROM mod_feature_post LIMIT 60;`
 			break;
 		case 'localusers':
 			sqlQuery = `SELECT local_user.id, person_id, p.name AS username, email, email_verified, accepted_application, validator_time

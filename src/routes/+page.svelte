@@ -24,7 +24,7 @@
 
 <ul>
     <li><a href="query/locks/?output={data.output}">locks</a> - PostgreSQL datatabase locks</li>
-    <li><a href="query/pgcounts/?output={data.output}">pgcounts</a> - datatabase table record counts</li>
+    <li><a href="query/pgcounts/?output={data.output}">pgcounts</a> - datatabase table record counts, also a good way to view the table names</li>
     <li><a href="query/pg_indexes/?output={data.output}">pg_indexes</a> - datatabase INDEX list</li>
     <li><a href="query/pg_triggers/?output={data.output}">pg_triggers</a> - datatabase TRIGGER list <a href="query/pg_triggers1/?output={data.output}">pg_triggers1</a></li>
     <li><a href="query/pgstatements/?output={data.output}">pgcstatements</a> - stats -
@@ -58,6 +58,7 @@ raw tables: <a href="query/activity/?output=all">activity</a>,
      <a href="query/raw_instance/?output={data.output}">instance</a>,
      <a href="query/raw_mod_remove_post/?output={data.output}">mod_remove_post</a>,
      <a href="query/raw_mod_lock_post/?output={data.output}">mod_lock_post</a>,
+     <a href="query/raw_mod_feature_post/?output={data.output}">mod_feature_post</a>,
 <br />
 
 explain: 
