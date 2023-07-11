@@ -389,6 +389,15 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			 WHERE ("federation_blocklist"."id" IS NULL)
 			;`
 			break;
+		case "posts_featured_community":
+			sqlQuery = `SSELECT id, name, creator_id, community_id, published, updated,
+				ap_id, local, *
+		 	FROM post
+			WHERE featured_community=true
+			ORDER BY published
+			LIMIT 100
+			;`
+			break;
 		case "pgcounts":
 			sqlQuery = `SELECT table_schema, table_name, 
 			(xpath('/row/cnt/text()', xml_count))[1]::text::int as row_count

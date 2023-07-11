@@ -42,6 +42,7 @@
         <a href="query/federatedcommentcount/?output={data.output}">federatedcommentcount</a>,
         <a href="query/federatedcommentcount2/?output={data.output}">federatedcommentcount2</a>
     </li>
+    <li><a href="query/posts_featured_community/?output={data.output}">posts_featured_community</a></li>
 </ul>
 
 
