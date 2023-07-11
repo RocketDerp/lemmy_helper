@@ -56,6 +56,8 @@ raw tables: <a href="query/activity/?output=all">activity</a>,
      <a href="query/raw_comment_aggregates/?output={data.output}">comment_aggregates</a>,
      <a href="query/raw_community/?output={data.output}">community</a>,
      <a href="query/raw_instance/?output={data.output}">instance</a>,
+     <a href="query/raw_mod_remove_post/?output={data.output}">mod_remove_post</a>,
+     <a href="query/raw_mod_lock_post/?output={data.output}">mod_lock_post</a>,
 <br />
 
 explain: 
