@@ -512,13 +512,6 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			LIMIT 20
 			;`
 			break;
-		case 'raw_post_aggregates':
-			sqlQuery = `SELECT *
-			FROM post_aggregates
-			ORDER BY published DESC
-			LIMIT 50
-			;`
-			break;
 		case 'raw_person':
 			sqlQuery = `SELECT id, actor_id, name, display_name, published, local, instance_id, matrix_user_id, *
 			FROM person
