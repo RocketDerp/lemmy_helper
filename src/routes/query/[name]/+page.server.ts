@@ -574,6 +574,15 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 		case 'raw_mod_feature_post':
 			sqlQuery = `SELECT id, * FROM mod_feature_post ORDER BY when_ DESC LIMIT 60;`
 			break;
+		case 'raw_site_aggregates':
+			sqlQuery = `SELECT id, * FROM site_aggregates ORDER BY id LIMIT 2000;`
+			break;
+		case 'raw_site':
+			sqlQuery = `SELECT id, * FROM site ORDER BY id LIMIT 2000;`
+			break
+		case 'raw_local_site':   // only 1 row
+			sqlQuery = `SELECT id, * FROM local_site ORDER BY id LIMIT 2000;`
+			break
 		case 'localusers':
 			sqlQuery = `SELECT local_user.id, person_id, p.name AS username, email, email_verified, accepted_application, validator_time
 			FROM local_user

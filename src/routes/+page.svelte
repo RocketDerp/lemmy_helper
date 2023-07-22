@@ -62,6 +62,9 @@ raw tables: <a href="query/activity/?output=all">activity</a>,
      <a href="query/raw_mod_remove_post/?output={data.output}">mod_remove_post</a>,
      <a href="query/raw_mod_lock_post/?output={data.output}">mod_lock_post</a>,
      <a href="query/raw_mod_feature_post/?output={data.output}">mod_feature_post</a>,
+     <a href="query/raw_site_aggregates/?output={data.output}">site_aggregates</a>,
+     <a href="query/raw_site/?output={data.output}">site</a>,
+     <a href="query/raw_local_site/?output={data.output}">local_site</a>,
 <br />
 
 explain: 
