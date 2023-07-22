@@ -578,7 +578,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			sqlQuery = `SELECT id, * FROM site_aggregates ORDER BY id LIMIT 2000;`
 			break;
 		case 'raw_site':
-			sqlQuery = `SELECT id, * FROM site ORDER BY id LIMIT 2000;`
+			sqlQuery = `SELECT id, name, sidebar, published, updated, description FROM site ORDER BY id LIMIT 2000;`
 			break
 		case 'raw_local_site':   // only 1 row
 			sqlQuery = `SELECT id, * FROM local_site ORDER BY id LIMIT 2000;`
