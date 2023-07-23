@@ -66,7 +66,7 @@ raw tables: <a href="query/activity/?output=all">activity</a>,
      <a href="query/raw_site/?output={data.output}">site</a>,
      <a href="query/raw_local_site/?output={data.output}">local_site</a>,
      <a href="query/raw_community_aggregates/?output={data.output}">community_aggregates</a>,
-     <a href="query/person_community_aggregates/?output={data.output}">person_aggregates</a>,
+     <a href="query/raw_person_aggregates/?output={data.output}">person_aggregates</a>,
 <br />
 
 explain: 
