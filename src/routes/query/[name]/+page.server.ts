@@ -584,7 +584,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			sqlQuery = `SELECT id, * FROM local_site ORDER BY id LIMIT 2000;`
 			break
 		case 'raw_community_aggregates':
-			sqlQuery = `SELECT id, * FROM raw_community_aggregates ORDER BY id LIMIT 2000;`
+			sqlQuery = `SELECT id, * FROM community_aggregates ORDER BY id LIMIT 2000;`
 			break;
 		case 'localusers':
 			sqlQuery = `SELECT local_user.id, person_id, p.name AS username, email, email_verified, accepted_application, validator_time
