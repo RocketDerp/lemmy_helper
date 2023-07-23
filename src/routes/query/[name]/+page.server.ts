@@ -716,6 +716,18 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			LIMIT 30
 			;`
 			break;
+		case 'try_trigger_code0':
+			sqlQuery = `SELECT 
+			c.id,
+			count(distinct p.id) as posts,
+			count(distinct ct.id) as comments
+			from community c
+			left join post p on c.id = p.community_id
+			left join comment ct on p.id = ct.post_id
+			group by c.id
+			LIMIT 5000
+			;`
+			break;
 		case 'comment_like_person_prev':    // prev = "previous", time period.
 			sqlQuery = `SELECT person_id,
 				COUNT(*)
@@ -725,8 +737,8 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			ORDER BY count DESC
 			LIMIT 100
 			;`
-		timeperiodmessage = "-- <b>timeperiod " + timeperiod + " min</b> ";
-		break;
+			timeperiodmessage = "-- <b>timeperiod " + timeperiod + " min</b> ";
+			break;
 		default:
 			console.error("/routes/query did not recognize params ER001");
 			console.log(incoming.params);

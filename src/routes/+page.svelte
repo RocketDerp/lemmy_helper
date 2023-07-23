@@ -100,6 +100,10 @@ curious query:
 <a href="query/curiousquery/?output={data.output}">curiousquery</a>
 <br />
 
+Lemmy PostgreSql trigger/function study:
+<a href="query/try_trigger_code0/?output={data.output}">try_trigger_code0 community_aggregates subquery</a>
+<br />
+
 <hr />
 <br />
 
