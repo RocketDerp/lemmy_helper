@@ -577,6 +577,9 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 		case 'raw_site_aggregates':
 			sqlQuery = `SELECT id, * FROM site_aggregates ORDER BY id LIMIT 2000;`
 			break;
+		case 'raw_person_aggregates':
+			sqlQuery = `SELECT id, * FROM person_aggregates ORDER BY id LIMIT 2000;`
+			break;
 		case 'raw_site':
 			sqlQuery = `SELECT id, name, sidebar, published, updated, description FROM site ORDER BY id LIMIT 2000;`
 			break
@@ -725,7 +728,24 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			left join post p on c.id = p.community_id
 			left join comment ct on p.id = ct.post_id
 			group by c.id
-			LIMIT 5000
+			LIMIT 2000
+			;`
+			break;
+		case 'try_trigger_code1':
+			sqlQuery = `SELECT 
+			coalesce(cd.posts, 0), coalesce(cd.comments, 0)
+			FROM community_aggregates ca
+				from ( 
+				  select 
+				  c.id,
+				  count(distinct p.id) as posts,
+				  count(distinct ct.id) as comments
+				  from community c
+				  left join post p on c.id = p.community_id
+				  left join comment ct on p.id = ct.post_id
+				  group by c.id
+				) cd
+			where ca.community_id = 2;
 			;`
 			break;
 		case 'comment_like_person_prev':    // prev = "previous", time period.
