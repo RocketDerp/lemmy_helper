@@ -395,7 +395,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			  select c.creator_id from comment c
 			  inner join person u on c.creator_id = u.id
 			  inner join person pe on c.creator_id = pe.id
-			  where c.published > ('now'::timestamp - '12 HOURS') 
+			  where c.published > ('now'::timestamp - INTERVAL '12 HOURS') 
 			  and u.local = true
 			  and pe.bot_account = false
 			) a
@@ -406,7 +406,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			from (
 				select c.creator_id from comment c
 				inner join person u on c.creator_id = u.id
-				where c.published > ('now'::timestamp - '12 HOURS') 
+				where c.published > ('now'::timestamp - INTERVAL '12 HOURS') 
 				and u.local = true
 				and u.bot_account = false
 			) a
