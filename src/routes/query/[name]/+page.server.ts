@@ -389,6 +389,29 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			 WHERE ("federation_blocklist"."id" IS NULL)
 			;`
 			break;
+		case "curious_dualjoin1":
+			sqlQuery = `select count(*)
+			from (
+			  select c.creator_id from comment c
+			  inner join person u on c.creator_id = u.id
+			  inner join person pe on c.creator_id = pe.id
+			  where c.published > ('now'::timestamp - '12 HOURS') 
+			  and u.local = true
+			  and pe.bot_account = false
+			)
+			;`
+			break;
+		case "curious_no_dualjoin1":
+			sqlQuery = `select count(*)
+			from (
+				select c.creator_id from comment c
+				inner join person u on c.creator_id = u.id
+				where c.published > ('now'::timestamp - '12 HOURS') 
+				and u.local = true
+				and u.bot_account = false
+			)
+			;`
+			break;
 		case "posts_featured_community":
 			sqlQuery = `SELECT post.id, post.name, post.creator_id, post.community_id, c.name AS community_name, post.published, post.updated,
 				post.ap_id, post.local, post.featured_local, post.featured_community, post.*

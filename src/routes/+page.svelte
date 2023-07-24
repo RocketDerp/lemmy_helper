@@ -98,7 +98,9 @@ posts by Lemmy instance:
 <br />
 
 curious query:
-<a href="query/curiousquery/?output={data.output}">curiousquery</a>
+<a href="query/curiousquery/?output={data.output}">curiousquery</a>,
+<a href="query/curious_dualjoin1/?output={data.output}">dual join 1</a>,
+<a href="query/curious_no_dualjoin1/?output={data.output}">without dual join 1</a>,
 <br />
 
 Lemmy PostgreSql trigger/function study:
