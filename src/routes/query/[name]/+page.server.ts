@@ -398,7 +398,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			  where c.published > ('now'::timestamp - '12 HOURS') 
 			  and u.local = true
 			  and pe.bot_account = false
-			)
+			) a
 			;`
 			break;
 		case "curious_no_dualjoin1":
@@ -409,7 +409,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				where c.published > ('now'::timestamp - '12 HOURS') 
 				and u.local = true
 				and u.bot_account = false
-			)
+			) a
 			;`
 			break;
 		case "posts_featured_community":
