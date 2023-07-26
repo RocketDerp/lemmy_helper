@@ -104,7 +104,12 @@ curious query:
 <br />
 
 Lemmy PostgreSql trigger/function study:
-<a href="query/try_trigger_code0/?output={data.output}">try_trigger_code0 community_aggregates subquery</a>
+<a href="query/try_trigger_code0/?output={data.output}">try_trigger_code0 community_aggregates subquery</a>,
+<a href="query/try_person_aggregates_update_count0/?output={data.output}">try_person_aggregates_update_count0</a>,
+<a href="query/try_person_aggregates_update_score0/?output={data.output}">try_person_aggregates_update_score0</a>,
+<a href="query/try_person_aggregates_update_count1/?output={data.output}">try_person_aggregates_update_count1</a>,
+<a href="query/try_person_aggregates_update_score1/?output={data.output}">try_person_aggregates_update_score1</a>,
+
 <br />
 
 <hr />
