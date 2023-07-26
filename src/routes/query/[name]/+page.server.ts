@@ -785,7 +785,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 
 		case 'try_person_aggregates_update_count0':
 			// -- Recalculate proper comment count.
-			// ToDo: restrict run of this in lemmy_helper
+			// ToDo: restrict run of this in lemmy_helper, 2 seconds
 			sqlQuery = `UPDATE person_aggregates
 			SET comment_count = cnt.count
 			FROM (
@@ -799,7 +799,8 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 
 		case 'try_person_aggregates_update_score0':
 			// -- Recalculate proper comment score.
-			// ToDo: restrict run of this in lemmy_helper
+			// ToDo: restrict run of this in lemmy_helper, 30 seconds
+			break;
 			sqlQuery = `UPDATE person_aggregates ua
 			SET comment_score = cd.score
 			FROM (
@@ -816,7 +817,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 		case 'try_person_aggregates_update_count1':
 			// -- Recalculate proper post count.
-			// ToDo: restrict run of this in lemmy_helper
+			// ToDo: restrict run of this in lemmy_helper, 2 seconds
 			sqlQuery = `UPDATE person_aggregates
 			SET post_count = cnt.count
 			FROM (
@@ -829,7 +830,8 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 		case 'try_person_aggregates_update_score1':
 			// -- Recalculate proper post score.
-			// ToDo: restrict run of this in lemmy_helper
+			// ToDo: restrict run of this in lemmy_helper, 10 seconds
+			break;
 			sqlQuery = `UPDATE person_aggregates ua
 			SET post_score = pd.score
 			FROM (
