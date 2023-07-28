@@ -393,7 +393,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			// https://github.com/LemmyNet/lemmy/issues/3741
 			sqlQuery = `SELECT id, post_id, published, updated, ap_id, path, deleted, removed, *
 			FROM comment
-			WHERE path = "0"
+			WHERE path = '0'
 			ORDER BY published DESC
 			LIMIT 100
 			;`
