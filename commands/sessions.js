@@ -173,6 +173,7 @@ export async function testCommunitiesTickle(params0) {
                             if (params0.follow) {
                                 outFollow = " ALREADY_PENDING"
                                 unfollowFirst = true;
+                                doFollow = true;
                             }
                         }
                     }
