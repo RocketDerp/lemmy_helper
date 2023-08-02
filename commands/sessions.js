@@ -161,6 +161,7 @@ export async function testCommunitiesTickle(params0) {
 
                     let outFollow = "";
                     let doFollow = params0.follow;
+                    let unfollowFirst = false;
                     if (params0.fastfollow) {
                         if (rc.subscribed === "Subscribed") {
                             doFollow = false;
@@ -171,6 +172,7 @@ export async function testCommunitiesTickle(params0) {
                             doFollow = false;
                             if (params0.follow) {
                                 outFollow = " ALREADY_PENDING"
+                                unfollowFirst = true;
                             }
                         }
                     }
@@ -179,6 +181,16 @@ export async function testCommunitiesTickle(params0) {
                         // extra sleep for follow since two rapid transactions with server1
                         await new Promise(r => setTimeout(r, 1000));
 
+                        if (unfollowFirst) {
+                            console.log("unfollow first");
+                            let unfollowResult = await followCommunity( {
+                                serverChoice0: params0.server1,
+                                community_id: rc.community.id,
+                                follow: false,
+                                jwt: params0.jwt
+                                } );
+                                await new Promise(r => setTimeout(r, 1000));
+                        }
                         let followResult = await followCommunity( {
                             serverChoice0: params0.server1,
                             community_id: rc.community.id,
