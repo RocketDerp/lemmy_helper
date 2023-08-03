@@ -31,6 +31,7 @@
         <a href="query/pgstatements1/?output={data.output}">pgcstatements1</a> (all columns) -
        <a href="query/reset_pgstatements/?output=raw">RESET</a></li>
     <li><a href="query/pgrunning1/?output={data.output}">pgrunning1</a> database running</li>
+    <li><a href="query/pgactivity/?output={data.output}">pgactivity</a> database pg_stat_activity</li>
     <li><a href="query/communitypending1/?output={data.output}">communitypending1</a> - Lemmy community join/subscribe pending. <a href="query/communitypending/">communitypending</a></li>
     <li><a href="query/posts/?output={data.output}">posts</a> - Lemmy POSTS, most recent hour</li>
     <li><a href="query/comments/?output={data.output}">comments</a> - Lemmy COMMENTS, most recent hour</li>

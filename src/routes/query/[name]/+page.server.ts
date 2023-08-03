@@ -149,6 +149,12 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY calls DESC
 			;`
 			break;
+		case 'pgactivity':
+			sqlQuery = `
+			SELECT *
+			FROM pg_stat_activity
+			;`
+			break;
 		case 'explain_posts':
 			// ToDo: I tried EXPLAIN here, but it didn't work, or maybe JSON won't output it?
 			sqlQuery = `EXPLAIN (ANALYZE, COSTS, VERBOSE, BUFFERS, FORMAT JSON)
