@@ -226,7 +226,7 @@ export async function testCommunitiesTickle(params0) {
                     await new Promise(r => setTimeout(r, 5000));
                 }
 
-                if (i % 10 == 7) {
+                if (i % 10 == 5) {
                     // Sleep to slow down loop for rate limit on local instance
                     console.log("zzzzz 3000");
                     await new Promise(r => setTimeout(r, 3000));
