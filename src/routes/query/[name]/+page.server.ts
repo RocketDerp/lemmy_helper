@@ -151,7 +151,7 @@ export const load: PageServerLoad = async (incoming) => {
 			break;
 		case 'pgactivity':
 			sqlQuery = `
-			SELECT usename, query, wait_event, wait_event_type, query_start, stage_change, *
+			SELECT usename, query, wait_event, wait_event_type, query_start, state_change, *
 			FROM pg_stat_activity
 			;`
 			break;
