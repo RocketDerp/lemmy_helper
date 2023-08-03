@@ -159,6 +159,12 @@ export async function testCommunitiesTickle(params0) {
                     jwt: params0.jwt
                 } );
             
+                if (i > 5) {
+                    // Sleep to slow down loop for console operator\
+                    console.log("extra zzzzaaabbbcc sleep 750");
+                    await new Promise(r => setTimeout(r, 750));
+                }
+
                 if (resultResolve.failureCode == -1) {
                     let rc = resultResolve.json.community;
 
