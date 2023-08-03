@@ -153,7 +153,7 @@ export const load: PageServerLoad = async (incoming) => {
 			sqlQuery = `
 			SELECT usename, query, wait_event, wait_event_type, query_start, state_change, *
 			FROM pg_stat_activity
-			WHERE backend_type = "client backend"
+			WHERE backend_type = 'client backend'
 			ORDER BY query_start
 			;`
 			break;
