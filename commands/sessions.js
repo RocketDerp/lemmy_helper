@@ -118,6 +118,9 @@ export function simplifyServerName(fullURL) {
 Find list of local communities on server0 and tickle server1 to discover them.
 Requires being logged-in to server1
 Optional to follow the community on server1 after tickle to discover community.
+
+To optimize the flow lookup of target server status, could fetch the subscribed
+   communities for the user and serach that.
 */
 export async function testCommunitiesTickle(params0) {
     let finalPage = false;
@@ -183,14 +186,15 @@ export async function testCommunitiesTickle(params0) {
                         await new Promise(r => setTimeout(r, 1000));
 
                         if (unfollowFirst) {
-                            console.log("unfollow first");
+                            console.log("unfollow first since it is pending");
                             let unfollowResult = await followCommunity( {
                                 serverChoice0: params0.server1,
                                 community_id: rc.community.id,
                                 follow: false,
                                 jwt: params0.jwt
                                 } );
-                                await new Promise(r => setTimeout(r, 1000));
+                            // another sleep since that makes 3 transactions.
+                            await new Promise(r => setTimeout(r, 1200));
                         }
                         let followResult = await followCommunity( {
                             serverChoice0: params0.server1,
@@ -222,7 +226,7 @@ export async function testCommunitiesTickle(params0) {
                     await new Promise(r => setTimeout(r, 5000));
                 }
 
-                if (i % 10 == 9) {
+                if (i % 10 == 7) {
                     // Sleep to slow down loop for rate limit on local instance
                     console.log("zzzzz 3000");
                     await new Promise(r => setTimeout(r, 3000));
