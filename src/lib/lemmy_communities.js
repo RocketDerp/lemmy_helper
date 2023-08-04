@@ -4,8 +4,12 @@ import { serverFetchJSON0 } from "./lemmy_session.js";
 export async function lemmyCommunities(params0, fetcha) {
     // http://lemmy:8536/api/v3/community/list?type_=Local&sort=Hot&limit=6&auth
     // 50 is limit for fetch
-    params0.serverURLpath0 = "api/v3/community/list?type_=Local&sort=MostComments&limit="
-        + params0.limit
+    // Old to try and be stable with long-running paging
+    // MostComments is probably good for building up content
+    params0.serverURLpath0 = "api/v3/community/list"
+    +   "?type_=Local"
+    +   "&sort=Old"
+    + "&limit=" + params0.limit
         + "&page=" + params0.page
         + "&show_nsfw=true"
         ;
@@ -87,6 +91,12 @@ export async function followCommunity(params0, fetcha) {
     } );
 
 
+    let result0 = serverFetchJSON0(params0, fetcha);
+    return result0;
+}
+
+export async function getSite(params0, fetcha) {
+    params0.serverURLpath0 = "api/v3/site?auth=" + params0.jwt;
     let result0 = serverFetchJSON0(params0, fetcha);
     return result0;
 }
