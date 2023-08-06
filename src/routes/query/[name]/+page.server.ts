@@ -456,7 +456,15 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			ORDER BY published DESC
 			LIMIT 100
 			;`
-			break;	
+			break;
+		case "fix0_commentpath0":
+			// fix the one broken comment in my database
+			sqlQuery = `
+			UPDATE comment
+			SET path='0.264471'
+			WHERE id = 264471
+			;`
+			break;
 		case "curious_dualjoin1":
 			sqlQuery = `select count(*)
 			from (
