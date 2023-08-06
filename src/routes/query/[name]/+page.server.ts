@@ -527,6 +527,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 		case "mass_fix_comment_child_count":
 			// disable:
 			// break;
+			// this is taken from migrations in lemmy_server
 				sqlQuery = `
 				-- Update the child counts
 				UPDATE
@@ -565,6 +566,22 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 						AND c2.path != c.path
 				GROUP BY
 					c.id
+			;`
+			break;
+
+		case "test_mass_fix_comment_child_count1":
+			// disable:
+			// break;
+				sqlQuery = `
+					SELECT
+						c.id,
+						c.path,
+						c2.id
+					FROM
+						comment c
+					LEFT JOIN comment c2 ON c2.path <@ c.path
+						AND c2.path != c.path
+					LIMIT 5000
 			;`
 			break;
 
