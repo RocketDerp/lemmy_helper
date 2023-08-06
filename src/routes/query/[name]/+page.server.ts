@@ -597,14 +597,27 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 
 		case "play_comment_child_count1":
 			sqlQuery = `
+			-- If offset is negative, subpath starts that far from the end of the path
 			SELECT subpath(path, -1, 1), count(*) AS children
 			FROM   comment
 			WHERE  path <> ''
 			GROUP  BY 1
 			ORDER  BY 2 DESC
-			LIMIT  1000
-		;`
-		break;
+			LIMIT  2000
+			;`
+			break;
+		case "play_comment_child_count2":
+			// a trunk comment has itself only as path id
+			// 0.1549042
+			sqlQuery = `
+			SELECT subpath(path, -1, 1), count(*) AS children
+			FROM   comment
+			WHERE  nlevel(path) > 2
+			GROUP  BY 1
+			ORDER  BY 2 DESC
+			LIMIT  2000
+			;`
+			break;
 
 		case "mass_fix_comment_child_count1":
 			// disable:
