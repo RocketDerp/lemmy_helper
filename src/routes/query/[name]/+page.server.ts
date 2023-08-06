@@ -541,20 +541,37 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			;`
 			break;
 
-			case "mass_fix_comment_child_count1":
-				// disable:
-				// break;
-					sqlQuery = `
-					-- Update the child counts
-					UPDATE
-						comment_aggregates ca
-					SET
-						child_count = 999
-					WHERE
-						ca.id > 1359206
-						AND ca.child_count > 200
-				;`
-				break;
+		case "test_mass_fix_comment_child_count":
+			// disable:
+			// break;
+				sqlQuery = `
+					SELECT
+						c.id,
+						c.path,
+						count(c2.id) AS child_count
+					FROM
+						comment c
+					LEFT JOIN comment c2 ON c2.path <@ c.path
+						AND c2.path != c.path
+				GROUP BY
+					c.id
+			;`
+			break;
+
+		case "mass_fix_comment_child_count1":
+			// disable:
+			// break;
+				sqlQuery = `
+				-- Update the child counts
+				UPDATE
+					comment_aggregates ca
+				SET
+					child_count = 999
+				WHERE
+					ca.id > 1359206
+					AND ca.child_count > 200
+			;`
+			break;
 
 		case "curious_no_dualjoin1":
 			sqlQuery = `select count(*)
