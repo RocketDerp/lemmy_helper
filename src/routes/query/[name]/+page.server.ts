@@ -524,6 +524,16 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			;`
 			break;
 
+		case "comment_child_count1":
+			sqlQuery = `
+				SELECT id, comment_id, child_count, published
+				FROM comment_aggregates
+				WHERE child_count > 200
+				ORDER BY child_count DESC, published DESC
+				LIMIT 2000
+			;`
+			break;
+
 		case "mass_fix_comment_child_count":
 			// disable:
 			// break;
@@ -619,7 +629,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			sqlQuery = `
 			SELECT subpath(path, -2, 1), count(*) AS children
 			FROM   comment
-			-- up path level to proottype query
+			-- up path level to prototype query
 			WHERE  nlevel(path) > 5
 			GROUP  BY 1
 			ORDER  BY 2 DESC
