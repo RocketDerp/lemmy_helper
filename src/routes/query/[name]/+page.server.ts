@@ -619,7 +619,8 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			sqlQuery = `
 			SELECT subpath(path, -1, 1), count(*) AS children
 			FROM   comment
-			WHERE  nlevel(path) > 2
+			-- up path level to proottype query
+			WHERE  nlevel(path) > 5
 			GROUP  BY 1
 			ORDER  BY 2 DESC
 			LIMIT  2000
