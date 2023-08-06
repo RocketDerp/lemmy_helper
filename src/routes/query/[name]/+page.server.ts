@@ -564,6 +564,8 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 						comment c
 					LEFT JOIN comment c2 ON c2.path <@ c.path
 						AND c2.path != c.path
+						-- guard against some bug not yet discovered in Lemmy https://github.com/LemmyNet/lemmy/issues/3821
+						AND c.path <> "0"
 				GROUP BY
 					c.id
 			;`
@@ -581,7 +583,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 						comment c
 					LEFT JOIN comment c2 ON c2.path <@ c.path
 						AND c2.path != c.path
-						-- guard against some bug not yet discovered in Lemmy
+						-- guard against some bug not yet discovered in Lemmy https://github.com/LemmyNet/lemmy/issues/3821
 						AND c.path <> '0'
 					ORDER BY c.path
 					LIMIT 5000
