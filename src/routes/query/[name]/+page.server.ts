@@ -617,7 +617,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			// a trunk comment has itself only as path id
 			// 0.1549042
 			sqlQuery = `
-			SELECT subpath(path, -1, 1), count(*) AS children
+			SELECT subpath(path, -2, 1), count(*) AS children
 			FROM   comment
 			-- up path level to proottype query
 			WHERE  nlevel(path) > 5
