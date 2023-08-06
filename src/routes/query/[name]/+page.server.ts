@@ -478,7 +478,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			from (
 			   select c.id, c.path, count(c2.id) as child_count from comment c
 			   join comment c2 on c2.path <@ c.path and c2.path != c.path
-			   and c.path <@ '0.1479992'
+			   and c.path <@ '0.1359561'
 			   group by c.id
 			     ) as c
 			where ca.comment_id = c.id
@@ -488,7 +488,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			sqlQuery = `
 				select c.id, c.path, count(c2.id) as child_count from comment c
 				join comment c2 on c2.path <@ c.path and c2.path != c.path
-				and c.path <@ '0.1479992'
+				and c.path <@ '0.1359561'
 				group by c.id
 			;`
 			break;
@@ -496,7 +496,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			sqlQuery = `
 				select c.id, c.path from comment c
 				join comment c2 on c2.path <@ c.path and c2.path != c.path
-				and c.path <@ '0.1479992'
+				and c.path <@ '0.1359561'
 			;`
 			break;
 			
