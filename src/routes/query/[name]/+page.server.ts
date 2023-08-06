@@ -618,6 +618,15 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			LIMIT  2000
 			;`
 			break;
+		case "play_comment_child_count3":
+			sqlQuery = `
+			SELECT id, path
+			FROM   comment
+			WHERE  nlevel(path) > 2
+			LIMIT  2000
+			;`
+			break;
+
 
 		case "mass_fix_comment_child_count1":
 			// disable:
