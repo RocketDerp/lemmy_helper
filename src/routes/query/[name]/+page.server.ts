@@ -566,6 +566,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 						AND c2.path != c.path
 						-- guard against some bug not yet discovered in Lemmy https://github.com/LemmyNet/lemmy/issues/3821
 						AND c.path <> '0'
+						AND c.id > 1200000
 				GROUP BY
 					c.id
 			;`
