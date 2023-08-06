@@ -597,7 +597,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				sqlQuery = `
 				SELECT count(distinct subpath(path, 1, 1))
 				FROM comment
-				WHERE nlevel(path) > 2
+				WHERE nlevel(path) > 1
 			;`
 			break;
 
