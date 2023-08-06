@@ -25,7 +25,10 @@
 <ul>
     <li><a href="query/locks/?output={data.output}">locks</a> - PostgreSQL datatabase locks</li>
     <li><a href="query/pgcounts/?output={data.output}">pgcounts</a> - datatabase table record counts, also a good way to view the table names</li>
-    <li><a href="query/pg_indexes/?output={data.output}">pg_indexes</a> - datatabase INDEX list</li>
+    <li>
+        <a href="query/pg_indexes/?output={data.output}">pg_indexes</a> - datatabase INDEX list,
+        <a href="query/pg_indexes1/?output={data.output}">pg_indexes1</a> -index columns
+    </li>
     <li><a href="query/pg_triggers/?output={data.output}">pg_triggers</a> - datatabase TRIGGER list <a href="query/pg_triggers1/?output={data.output}">pg_triggers1</a></li>
     <li><a href="query/pgstatements/?output={data.output}">pgcstatements</a> - stats -
         <a href="query/pgstatements1/?output={data.output}">pgcstatements1</a> (all columns) -
