@@ -581,6 +581,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 						comment c
 					LEFT JOIN comment c2 ON c2.path <@ c.path
 						AND c2.path != c.path
+					ORDER BY c.path
 					LIMIT 5000
 			;`
 			break;
@@ -622,6 +623,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			sqlQuery = `
 			SELECT id, path
 			FROM   comment
+			-- exclude trunk comments
 			WHERE  nlevel(path) > 2
 			LIMIT  2000
 			;`
