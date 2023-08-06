@@ -471,6 +471,8 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 
 		case "curious_performance0":
+			// does it really need to go into the comment table, can't we hit fresher indexes on
+			//   comment_aggregates? can counts be summed from other aggregate rows?
 			sqlQuery = `
 			update comment_aggregates ca set child_count = c.child_count
 			from (
@@ -498,6 +500,14 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			;`
 			break;
 			
+		case "comment_child_count0":
+			sqlQuery = `
+				SELECT id, child_count
+				FROM comment_aggregates
+				WHERE child_count > 200
+			;`
+			break;
+
 		case "curious_no_dualjoin1":
 			sqlQuery = `select count(*)
 			from (
