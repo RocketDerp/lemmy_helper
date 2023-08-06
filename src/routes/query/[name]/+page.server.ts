@@ -572,10 +572,12 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 		case "test_mass_fix_comment_child_count1":
 			// disable:
 			// break;
+			// output of this query has null id
 				sqlQuery = `
 					SELECT
 						c.id,
 						c.path,
+						c2.path,
 						c2.id
 					FROM
 						comment c
