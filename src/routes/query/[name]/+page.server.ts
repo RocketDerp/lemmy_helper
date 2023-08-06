@@ -473,6 +473,10 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 		case "curious_performance0":
 			// does it really need to go into the comment table, can't we hit fresher indexes on
 			//   comment_aggregates? can counts be summed from other aggregate rows?
+			//   "<@" is "contains" in PostgreSQL
+			//   is it just a string match? what happens with:
+			//     '0.1359561'
+			//     '0.13595617' value?
 			sqlQuery = `
 			update comment_aggregates ca set child_count = c.child_count
 			from (
@@ -507,6 +511,29 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				WHERE child_count > 200
 				ORDER BY published DESC
 				LIMIT 1200
+			;`
+			break;
+
+		case "mass_fix_comment_child_count":
+				sqlQuery = `
+				-- Update the child counts
+				UPDATE
+					comment_aggregates ca
+				SET
+					child_count = c2.child_count
+				FROM (
+					SELECT
+						c.id,
+						c.path,
+						count(c2.id) AS child_count
+					FROM
+						comment c
+					LEFT JOIN comment c2 ON c2.path <@ c.path
+						AND c2.path != c.path
+				GROUP BY
+					c.id) AS c2
+				WHERE
+					ca.comment_id = c2.id;
 			;`
 			break;
 
