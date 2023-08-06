@@ -589,9 +589,22 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 		case "play_comment_child_count":
 				sqlQuery = `
 				SELECT count(distinct subpath(path, 1, 1))
-				FROM comment				
+				FROM comment
+				WHERE path <> ''
 			;`
 			break;
+
+
+		case "play_comment_child_count1":
+			sqlQuery = `
+			SELECT subpath(path, -1, 1), count(*) AS children
+			FROM   comment
+			WHERE  path <> ''
+			GROUP  BY 1
+			ORDER  BY 2 DESC
+			LIMIT  1000
+		;`
+		break;
 
 		case "mass_fix_comment_child_count1":
 			// disable:
