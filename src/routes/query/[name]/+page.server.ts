@@ -655,6 +655,58 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			;`
 			break;
 
+		case "track_change_log":
+			sqlQuery = `
+			SELECT id, tstamp, operation, statement, new_val
+			FROM   logging.t_history
+			ORDER BY tstamp DESC
+			LIMIT  1000
+			;`
+			break;
+
+		case "pg_trigger_track_change_install":
+			sqlQuery = `
+			CREATE SCHEMA logging;
+  
+			CREATE TABLE logging.t_history (
+					id              serial,
+					tstamp          timestamp       DEFAULT now(),
+					schemaname      text,
+					tabname         text,
+					operation       text,
+					statement       text,
+					who             text            DEFAULT current_user,
+					new_val         jsonb,
+					old_val         jsonb
+			);
+
+			CREATE OR REPLACE FUNCTION change_statement_trigger() RETURNS trigger AS $$
+			BEGIN
+				IF      TG_OP = 'INSERT'
+				THEN
+					INSERT INTO logging.t_history (tabname, schemaname, operation, statement, new_val)
+						VALUES (TG_RELNAME, TG_TABLE_SCHEMA, TG_OP, current_query(), row_to_json(NEW));
+						RETURN NEW;
+				ELSIF   TG_OP = 'UPDATE'
+				THEN
+					INSERT INTO logging.t_history (tabname, schemaname, operation, statement, new_val, old_val)
+						VALUES (TG_RELNAME, TG_TABLE_SCHEMA, TG_OP, current_query(),
+							row_to_json(NEW), row_to_json(OLD));
+					RETURN NEW;
+				ELSIF   TG_OP = 'DELETE'
+				THEN
+					INSERT INTO logging.t_history (tabname, schemaname, operation, statement, old_val)
+						VALUES (TG_RELNAME, TG_TABLE_SCHEMA, TG_OP, current_query(), row_to_json(OLD));
+					RETURN OLD;
+				END IF;
+			END;
+			$$ LANGUAGE 'plpgsql' SECURITY DEFINER;
+
+			CREATE OR REPLACE TRIGGER trackchange_statements0 
+			    AFTER UPDATE OF child_count ON comment_aggregates
+					FOR EACH STATEMENT EXECUTE PROCEDURE change_statement_trigger();
+			`
+			break;
 
 		case "mass_fix_comment_child_count1":
 			// disable:
