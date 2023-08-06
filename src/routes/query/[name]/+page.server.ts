@@ -576,9 +576,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				sqlQuery = `
 					SELECT
 						c.id,
-						c.path,
-						c2.path,
-						c2.id
+						c.path
 					FROM
 						comment c
 					LEFT JOIN comment c2 ON c2.path <@ c.path
