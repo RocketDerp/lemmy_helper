@@ -510,7 +510,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				FROM comment_aggregates
 				WHERE child_count > 200
 				ORDER BY published DESC
-				LIMIT 1200
+				LIMIT 2000
 			;`
 			break;
 
@@ -551,7 +551,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 					SET
 						child_count = 999
 					WHERE
-						ca.comment_id > 1359206
+						ca.id > 1359206
 						AND ca.child_count > 200
 				;`
 				break;
