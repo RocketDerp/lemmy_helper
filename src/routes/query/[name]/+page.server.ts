@@ -502,10 +502,10 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			
 		case "comment_child_count0":
 			sqlQuery = `
-				SELECT id, child_count, published, post_id
+				SELECT id, child_count, published
 				FROM comment_aggregates
 				WHERE child_count > 200
-				ORDER BY child_count DESC, published DESC
+				ORDER BY published DESC
 				LIMIT 1200
 			;`
 			break;
