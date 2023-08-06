@@ -503,6 +503,15 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				and c.path <@ '0.1359561'
 			;`
 			break;
+
+		case "curious_performance3":
+			sqlQuery = `
+				select c.id, c.path from comment c
+				join comment c2 on c2.path <@ c.path and c2.path != c.path
+				and c.path <@ '0'
+				LIMIT 2000
+			;`
+			break;
 			
 		case "comment_child_count0":
 			sqlQuery = `
