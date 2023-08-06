@@ -101,6 +101,13 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY query_start desc
 			;`
 			break;
+		case "pg_create_index0":
+			sqlQuery = `
+			CREATE INDEX
+			idx_post_aggregates_community_id
+			ON post_aggregates (community_id DESC)
+			;`
+			break;
 		case 'pg_indexes':
 			sqlQuery = `
 			SELECT *
@@ -110,6 +117,7 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 		case 'pg_indexes1':
+			// https://stackoverflow.com/questions/2204058/list-columns-with-indexes-in-postgresql
 			sqlQuery = `
 			select
 			t.relname as table_name,
