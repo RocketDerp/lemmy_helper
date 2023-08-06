@@ -515,6 +515,8 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 
 		case "mass_fix_comment_child_count":
+			// disable:
+			// break;
 				sqlQuery = `
 				-- Update the child counts
 				UPDATE
@@ -533,7 +535,8 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				GROUP BY
 					c.id) AS c2
 				WHERE
-					ca.comment_id = c2.id;
+					ca.comment_id = c2.id
+					AND ca.comment_id > 1000000
 			;`
 			break;
 
