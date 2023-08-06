@@ -566,7 +566,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				WHERE
 					ca.comment_id = c2.id
 					-- AND ca.id > 1359206
-					AND ca.child_count > 1000
+					AND ca.child_count = 999
 			;`
 			break;
 
