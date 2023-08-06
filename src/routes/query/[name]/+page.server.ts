@@ -101,11 +101,23 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY query_start desc
 			;`
 			break;
+		case "pg_drop_index0":
+			sqlQuery = `
+			DROP INDEX idx_post_aggregates_community_id
+			;`
+			break;
 		case "pg_create_index0":
 			sqlQuery = `
 			CREATE INDEX
-			idx_post_aggregates_community_id
+			idx_post_aggregates_community
 			ON post_aggregates (community_id DESC)
+			;`
+			break;
+		case "pg_create_index1":
+			sqlQuery = `
+			CREATE INDEX
+			idx_post_aggregates_creator
+			ON post_aggregates (creator_id DESC)
 			;`
 			break;
 		case 'pg_indexes':
