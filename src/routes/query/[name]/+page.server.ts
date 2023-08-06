@@ -505,11 +505,12 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 
 		case "curious_performance3":
+			// rust code: let top_parent = format!("0.{}", parent_id);
 			sqlQuery = `
-				select c.id, c.path from comment c
+				select c.id, c.comment_id, c.path from comment c
 				join comment c2 on c2.path <@ c.path and c2.path != c.path
-				and c.path <@ '0'
-				LIMIT 2000
+				and c.path <@ '0.'
+				LIMIT 2500
 			;`
 			break;
 			
