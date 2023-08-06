@@ -103,10 +103,15 @@ export const load: PageServerLoad = async (incoming) => {
 			break;
 		case "pg_drop_index0":
 			sqlQuery = `
-			DROP INDEX idx_post_aggregates_community_id
+			DROP INDEX idx_post_aggregates_community
 			;`
 			break;
-		case "pg_create_index0":
+		case "pg_drop_index1":
+			sqlQuery = `
+			DROP INDEX idx_post_aggregates_creator
+			;`
+			break;
+			case "pg_create_index0":
 			sqlQuery = `
 			CREATE INDEX
 			idx_post_aggregates_community
@@ -464,6 +469,35 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			) a
 			;`
 			break;
+
+		case "curious_performance0":
+			sqlQuery = `
+			update comment_aggregates ca set child_count = c.child_count
+			from (
+			   select c.id, c.path, count(c2.id) as child_count from comment c
+			   join comment c2 on c2.path <@ c.path and c2.path != c.path
+			   and c.path <@ '0.1479992'
+			   group by c.id
+			     ) as c
+			where ca.comment_id = c.id
+			;`
+			break;
+		case "curious_performance1":
+			sqlQuery = `
+				select c.id, c.path, count(c2.id) as child_count from comment c
+				join comment c2 on c2.path <@ c.path and c2.path != c.path
+				and c.path <@ '0.1479992'
+				group by c.id
+			;`
+			break;
+		case "curious_performance2":
+			sqlQuery = `
+				select c.id, c.path from comment c
+				join comment c2 on c2.path <@ c.path and c2.path != c.path
+				and c.path <@ '0.1479992'
+			;`
+			break;
+			
 		case "curious_no_dualjoin1":
 			sqlQuery = `select count(*)
 			from (
