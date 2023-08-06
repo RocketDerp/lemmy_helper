@@ -506,7 +506,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			
 		case "comment_child_count0":
 			sqlQuery = `
-				SELECT id, child_count, published
+				SELECT id, comment_id, child_count, published
 				FROM comment_aggregates
 				WHERE child_count > 200
 				ORDER BY published DESC
