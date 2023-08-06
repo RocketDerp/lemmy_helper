@@ -617,7 +617,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			// a trunk comment has itself only as path id
 			// 0.1549042
 			sqlQuery = `
-			SELECT subpath(path, -1, 1), count(*) AS children, path
+			SELECT subpath(path, -1, 1), count(*) AS children
 			FROM   comment
 			-- up path level to proottype query
 			WHERE  nlevel(path) > 5
@@ -628,10 +628,11 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 		case "play_comment_child_count3":
 			sqlQuery = `
-			SELECT id, path
+			SELECT id, path, subpath(path, -1, 1) AS subpath0
 			FROM   comment
 			-- exclude trunk comments
-			WHERE  nlevel(path) > 2
+			WHERE  nlevel(path) > 5
+			ORDER BY path
 			LIMIT  2000
 			;`
 			break;
