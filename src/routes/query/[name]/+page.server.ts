@@ -721,7 +721,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 	
 		case "pg_trigger_track_change_remove":
 			sqlQuery = `
-			DROP TRIGGER trackchange_statements0
+			DROP TRIGGER trackchange_statements0 ON comment_aggregates
 			;`
 			break;
 		
