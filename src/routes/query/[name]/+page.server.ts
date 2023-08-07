@@ -534,7 +534,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				   and c.path <@ '0.1571057'
 				   group by c.id
 				  ) as c
-				where ca.comment_id = c.id”,
+				where ca.comment_id = c.id”
 			;`
 			break;
 		case "curious_comment_child0out":
@@ -548,7 +548,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 					and c.path <@ '0.1571057'
 					group by c.id
 					) as c
-				where ca.comment_id = c.id”,
+				where ca.comment_id = c.id”
 			;`
 			break;
 
