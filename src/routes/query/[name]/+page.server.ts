@@ -664,6 +664,13 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			;`
 			break;
 
+		case "track_change_log_purge":
+			sqlQuery = `
+			DELETE
+			FROM   logging.t_history
+			;`
+			break;
+
 		case "pg_trigger_track_change_install":
 			sqlQuery = `
 			CREATE SCHEMA logging;
