@@ -754,6 +754,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				sqlQuery = `
 				DO
 				$$
+				RAISE NOTICE 'catzero begin';
 				DECLARE rec RECORD;
 				DECLARE comment RECORD;
 
