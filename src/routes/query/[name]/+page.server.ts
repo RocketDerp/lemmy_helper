@@ -765,7 +765,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 
 				LOOP 
 					-- comment = SELCT subpath(path, 0, 1) FROM comment WHERE id = rec.comment_id;
-					RAISE NOTICE '% %',
+					RAISE NOTICE 'catzero % %',
 					 rec.comment_id,
 					 rec.child_count
 					 ;
