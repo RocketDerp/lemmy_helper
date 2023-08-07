@@ -539,16 +539,13 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 		case "curious_comment_child0out":
 			sqlQuery = `
-			SELECT *
-		    FROM (
-					SELECT c.id, c.path, count(c2.id) as child_count
+				SELECT c.id, c.path, count(c2.id) as child_count
 					FROM comment c
 					join comment c2 on c2.path <@ c.path
 					and c2.path != c.path
 					and c.path <@ '0.1571057'
 					group by c.id
-					) as c
-				where ca.comment_id = c.id”
+					)
 			;`
 			break;
 
