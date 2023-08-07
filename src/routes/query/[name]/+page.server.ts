@@ -531,19 +531,21 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				   FROM comment c
 				   join comment c2 on c2.path <@ c.path
 				   and c2.path != c.path
-				   and c.path <@ '0.1571057'
+				   and c.path <@ '0.1624758'
 				   group by c.id
 				  ) as c
 				where ca.comment_id = c.id”
 			;`
 			break;
 		case "curious_comment_child0out":
+			// which new comment triggered this? does entire tree need to be hit?
+			// comment_aggregates set child_count comment_id 1630788 parent_id 1495576 top_parent 0.1495576 parent_path Ltree("0.1495576.1533116.1550665.1551301.1552433.1552634.1553721.1556462.1558492.1565954.1581787.1606263.1630787")
 			sqlQuery = `
 				SELECT c.id, c.path, count(c2.id) as child_count
 					FROM comment c
 					join comment c2 on c2.path <@ c.path
 					and c2.path != c.path
-					and c.path <@ '0.1571057'
+					and c.path <@ '0.1624758'
 					group by c.id
 			;`
 			break;
@@ -697,7 +699,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			;`
 			break;
 
-		case "pg_trigger_track_change_install":
+		case "pg_track_change_setup":
 			// https://www.cybertec-postgresql.com/en/tracking-changes-in-postgresql/
 			sqlQuery = `
 			CREATE SCHEMA logging;
@@ -735,13 +737,15 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				END IF;
 			END;
 			$$ LANGUAGE 'plpgsql' SECURITY DEFINER;
-
+			`
+			break;
+		case "pg_trigger_track_change_install0":
+			sqlQuery = `
 			CREATE OR REPLACE TRIGGER trackchange_statements0 
 			    AFTER UPDATE OF child_count ON comment_aggregates
 					FOR EACH STATEMENT EXECUTE PROCEDURE change_statement_trigger();
 			`
 			break;
-
 
 		case "pg_trigger_track_change_install1":
 			sqlQuery = `
