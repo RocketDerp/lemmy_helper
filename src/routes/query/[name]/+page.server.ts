@@ -755,6 +755,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				DO
 				$$
 				DECLARE rec RECORD;
+				DECLARE comment RECORD;
 
 				BEGIN
 				FOR rec IN SELECT comment_id, child_count
@@ -763,9 +764,10 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				LIMIT 2
 
 				LOOP 
-					RAISE NOTICE '% % %', rec.comment_id,
-					 rec.child_count,
-					 SELCT subpath(0, 1) FROM comment WHERE id = rec.comment_id
+					-- comment = SELCT subpath(path, 0, 1) FROM comment WHERE id = rec.comment_id;
+					RAISE NOTICE '% %',
+					 rec.comment_id,
+					 rec.child_count
 					 ;
 
 					--UPDATE comment_aggregates ca
@@ -773,7 +775,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 					--  FROM ( select c.id, c.path, count(c2.id) as child_count
 					--	FROM comment c join comment c2 on c2.path <@ c.path
 					--	  AND c2.path != c.path
-					--	  AND c.path <@ (SELCT subpath(0, 1) FROM comment WHERE id = rec.comment_id)
+					--	  AND c.path <@ (SELCT subpath(c.path, 0, 1) FROM comment WHERE id = rec.comment_id)
 					--	GROUP BY c.id ) as c
 					--	WHERE ca.comment_id = c.id
 				END LOOP;
