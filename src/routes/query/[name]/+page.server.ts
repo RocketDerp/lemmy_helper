@@ -521,7 +521,39 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				LIMIT 2500
 			;`
 			break;
-			
+
+
+		
+		case "curious_comment_child0":
+			sqlQuery = `
+			UPDATE comment_aggregates ca
+			 SET child_count = c.child_count
+			 FROM (
+			 	SELECT c.id, c.path, count(c2.id) as child_count
+				   FROM comment c
+				   join comment c2 on c2.path <@ c.path
+				   and c2.path != c.path
+				   and c.path <@ ‘0.1571057’
+				   group by c.id
+				  ) as c
+				where ca.comment_id = c.id”,
+			;`
+			break;
+		case "curious_comment_child0out":
+			sqlQuery = `
+			SELECT *
+		    FROM (
+					SELECT c.id, c.path, count(c2.id) as child_count
+					FROM comment c
+					join comment c2 on c2.path <@ c.path
+					and c2.path != c.path
+					and c.path <@ ‘0.1571057’
+					group by c.id
+					) as c
+				where ca.comment_id = c.id”,
+			;`
+			break;
+
 		case "comment_child_count0":
 			sqlQuery = `
 				SELECT id, comment_id, child_count, published
@@ -758,33 +790,32 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				DECLARE comment RECORD;
 
 				BEGIN
-				RAISE NOTICE 'catzero begin';
+					RAISE NOTICE 'catzero begin';
 
-				FOR rec IN SELECT comment_id, child_count
-				FROM comment_aggregates
-				WHERE child_count = 999
-				LIMIT 2
+					FOR rec IN SELECT comment_id, child_count
+					FROM comment_aggregates
+					WHERE child_count = 999
+					LIMIT 2
 
-				LOOP 
-					-- comment = SELCT subpath(path, 0, 1) FROM comment WHERE id = rec.comment_id;
-					RAISE NOTICE 'catzero % %',
-					 rec.comment_id,
-					 rec.child_count
-					 ;
+					LOOP 
+						-- comment = SELCT subpath(path, 0, 1) FROM comment WHERE id = rec.comment_id;
+						RAISE NOTICE 'catzero % %',
+						rec.comment_id,
+						rec.child_count
+						;
 
-					--UPDATE comment_aggregates ca
-					--SET child_count = c.child_count
-					--  FROM ( select c.id, c.path, count(c2.id) as child_count
-					--	FROM comment c join comment c2 on c2.path <@ c.path
-					--	  AND c2.path != c.path
-					--	  AND c.path <@ (SELCT subpath(c.path, 0, 1) FROM comment WHERE id = rec.comment_id)
-					--	GROUP BY c.id ) as c
-					--	WHERE ca.comment_id = c.id
-				END LOOP;
+						--UPDATE comment_aggregates ca
+						--SET child_count = c.child_count
+						--  FROM ( select c.id, c.path, count(c2.id) as child_count
+						--	FROM comment c join comment c2 on c2.path <@ c.path
+						--	  AND c2.path != c.path
+						--	  AND c.path <@ (SELCT subpath(c.path, 0, 1) FROM comment WHERE id = rec.comment_id)
+						--	GROUP BY c.id ) as c
+						--	WHERE ca.comment_id = c.id
+					END LOOP;
 
 				END;
 				$$
-
 			;`
 			break;
 
@@ -867,6 +898,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 					community_id
 			) a INNER JOIN community c on c.id = a.community_id
 			ORDER BY a.post_count DESC
+			LIMIT 2000
 			;`
 			break;
 		case 'federatedcommentcount':
