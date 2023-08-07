@@ -754,11 +754,12 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				sqlQuery = `
 				DO
 				$$
-				RAISE NOTICE 'catzero begin';
 				DECLARE rec RECORD;
 				DECLARE comment RECORD;
 
 				BEGIN
+				RAISE NOTICE 'catzero begin';
+
 				FOR rec IN SELECT comment_id, child_count
 				FROM comment_aggregates
 				WHERE child_count = 999
