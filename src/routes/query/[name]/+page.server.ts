@@ -672,6 +672,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 
 		case "pg_trigger_track_change_install":
+			// https://www.cybertec-postgresql.com/en/tracking-changes-in-postgresql/
 			sqlQuery = `
 			CREATE SCHEMA logging;
   
@@ -744,6 +745,42 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 				WHERE
 					ca.id > 1298263
 					AND ca.child_count > 200
+			;`
+			break;
+
+		case "mass_fix_comment_child_count2":
+			// disable:
+			// break;
+				sqlQuery = `
+				DO
+				$$
+				DECLARE rec RECORD;
+
+				BEGIN
+				FOR rec IN SELECT comment_id, child_count
+				FROM comment_aggregates
+				WHERE child_count = 999
+				LIMIT 2
+
+				LOOP 
+					RAISE NOTICE '% % %', rec.comment_id,
+					 rec.child_count,
+					 SELCT subpath(0, 1) FROM comment WHERE id = rec.comment_id
+					 ;
+
+					--UPDATE comment_aggregates ca
+					--SET child_count = c.child_count
+					--  FROM ( select c.id, c.path, count(c2.id) as child_count
+					--	FROM comment c join comment c2 on c2.path <@ c.path
+					--	  AND c2.path != c.path
+					--	  AND c.path <@ (SELCT subpath(0, 1) FROM comment WHERE id = rec.comment_id)
+					--	GROUP BY c.id ) as c
+					--	WHERE ca.comment_id = c.id
+				END LOOP;
+
+				END;
+				$$
+
 			;`
 			break;
 
