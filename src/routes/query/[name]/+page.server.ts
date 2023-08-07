@@ -708,6 +708,18 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			`
 			break;
 
+
+		case "pg_trigger_track_change_install1":
+			sqlQuery = `
+			CREATE OR REPLACE TRIGGER trackchange_statements1 
+				AFTER UPDATE OF child_count ON comment_aggregates
+					FOR EACH ROW
+					WHEN (OLD.child_count = 999)
+					EXECUTE PROCEDURE change_statement_trigger();
+			`
+			break;
+	
+
 		case "mass_fix_comment_child_count1":
 			// disable:
 			// break;
