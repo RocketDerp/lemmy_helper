@@ -545,7 +545,6 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 					and c2.path != c.path
 					and c.path <@ '0.1571057'
 					group by c.id
-					)
 			;`
 			break;
 
