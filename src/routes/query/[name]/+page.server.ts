@@ -719,7 +719,12 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			`
 			break;
 	
-
+		case "pg_trigger_track_change_remove":
+			sqlQuery = `
+			DROP TRIGGER trackchange_statements0
+			;`
+			break;
+		
 		case "mass_fix_comment_child_count1":
 			// disable:
 			// break;
