@@ -952,6 +952,15 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			LIMIT 20
 			;`
 			break;
+		case 'raw_posts1':
+			sqlQuery = `SELECT id, name, creator_id, community_id, published, updated,
+				ap_id, local, *
+			FROM post
+			ORDER BY id DESC
+			LIMIT 30
+			;`
+			break;
+
 		case 'raw_person':
 			sqlQuery = `SELECT id, actor_id, name, display_name, published, local, instance_id, matrix_user_id, *
 			FROM person
