@@ -111,7 +111,7 @@ export const load: PageServerLoad = async (incoming) => {
 			DROP INDEX idx_post_aggregates_creator
 			;`
 			break;
-			case "pg_create_index0":
+		case "pg_create_index0":
 			sqlQuery = `
 			CREATE INDEX
 			idx_post_aggregates_community
