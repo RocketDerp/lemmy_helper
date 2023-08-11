@@ -219,6 +219,32 @@ export const load: PageServerLoad = async (incoming) => {
 			ORDER BY query_start
 			;`
 			break;
+		case 'sleeptsest0':
+			sqlQuery = `
+			pg_sleep(2);
+
+			-- do a  query just to show output
+			SELECT id, name, creator_id, community_id, published, updated,
+				ap_id, local, *
+			FROM post
+			ORDER BY id DESC
+			LIMIT 10
+			;`
+			break;
+		case 'sleeptest1':
+			// run lemmy_helper app with different PostgreSQL login to see if triggers statement timeout.
+			sqlQuery = `
+			pg_sleep(45);
+			
+			-- do a  query just to show output
+			SELECT id, name, creator_id, community_id, published, updated,
+				ap_id, local, *
+			FROM post
+			ORDER BY id DESC
+			LIMIT 10
+			;`
+			break;
+	
 		case 'explain_posts':
 			// ToDo: I tried EXPLAIN here, but it didn't work, or maybe JSON won't output it?
 			sqlQuery = `EXPLAIN (ANALYZE, COSTS, VERBOSE, BUFFERS, FORMAT JSON)
