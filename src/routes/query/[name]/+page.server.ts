@@ -205,7 +205,7 @@ export const load: PageServerLoad = async (incoming) => {
 			SELECT usename, query, wait_event, wait_event_type, query_start, state_change, to_char(age(clock_timestamp(), query_start), 'HH24:MI:SS FF6') AS elapsed
 			FROM pg_stat_activity
 			WHERE usename = 'lemmy'
-			OR username = 'lemmy_read0'
+			   OR usename = 'lemmy_read0'
 			ORDER BY query_start
 			;`
 			break;
