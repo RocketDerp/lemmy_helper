@@ -224,7 +224,7 @@ export const load: PageServerLoad = async (incoming) => {
 			SELECT pg_sleep(2),
 			    id, name, creator_id, community_id, published, updated,
 				ap_id, local, *
-			FROM post
+			FROM public.post
 			ORDER BY id DESC
 			LIMIT 1
 			;`
@@ -235,7 +235,7 @@ export const load: PageServerLoad = async (incoming) => {
 			SELECT pg_sleep(12),
 			    id, name, creator_id, community_id, published, updated,
 				ap_id, local, *
-			FROM post
+			FROM public.post
 			ORDER BY id DESC
 			LIMIT 1
 			;`
@@ -246,7 +246,7 @@ export const load: PageServerLoad = async (incoming) => {
 			SELECT pg_sleep(45),
 			    id, name, creator_id, community_id, published, updated,
 				ap_id, local, *
-			FROM post
+			FROM public.post
 			ORDER BY id DESC
 			LIMIT 1
 			;`
