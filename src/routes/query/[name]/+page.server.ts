@@ -271,6 +271,13 @@ export const load: PageServerLoad = async (incoming) => {
 			WHERE state = 'active'
 			AND usename = 'lemmy_read0'
 			;`
+		case 'killall_user2':
+// restrict this
+// break;	
+			// testing in production ;)
+			sqlQuery = `
+			SELECT pg_terminate_backend(64257), pg_cancel_backend(64257)
+			;`
 			break;
 		case 'explain_posts':
 			// ToDo: I tried EXPLAIN here, but it didn't work, or maybe JSON won't output it?
