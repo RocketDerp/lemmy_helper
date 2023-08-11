@@ -221,10 +221,8 @@ export const load: PageServerLoad = async (incoming) => {
 			break;
 		case 'sleeptest0':
 			sqlQuery = `
-			SELECT pg_sleep(2);
-
-			-- do a  query just to show output
-			SELECT id, name, creator_id, community_id, published, updated,
+			SELECT pg_sleep(2),
+			    id, name, creator_id, community_id, published, updated,
 				ap_id, local, *
 			FROM post
 			ORDER BY id DESC
@@ -234,10 +232,8 @@ export const load: PageServerLoad = async (incoming) => {
 		case 'sleeptest1':
 			// run lemmy_helper app with different PostgreSQL login to see if triggers statement timeout.
 			sqlQuery = `
-			SELECT pg_sleep(45);
-			
-			-- do a  query just to show output
-			SELECT id, name, creator_id, community_id, published, updated,
+			SELECT pg_sleep(12),
+			    id, name, creator_id, community_id, published, updated,
 				ap_id, local, *
 			FROM post
 			ORDER BY id DESC
@@ -247,7 +243,7 @@ export const load: PageServerLoad = async (incoming) => {
 		case 'sleeptest2':
 			// run lemmy_helper app with different PostgreSQL login to see if triggers statement timeout.
 			sqlQuery = `
-			SELECT pg_sleep(5),
+			SELECT pg_sleep(45),
 			    id, name, creator_id, community_id, published, updated,
 				ap_id, local, *
 			FROM post
