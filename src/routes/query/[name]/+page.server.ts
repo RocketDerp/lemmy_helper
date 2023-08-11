@@ -252,6 +252,8 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 		case 'killall_user0':
+// restrict this
+// break;
 			sqlQuery = `
 			SELECT pg_cancel_backend(pid)
 			 FROM pg_stat_activity
@@ -260,6 +262,16 @@ export const load: PageServerLoad = async (incoming) => {
 			AND pid <> pg_backend_pid();
 			;`
 			break;
+		case 'killall_user1':
+// restrict this
+// break;
+			sqlQuery = `
+			SELECT pg_terminate_backend(pid)
+				FROM pg_stat_activity
+			WHERE state = 'active'
+			AND usename = 'lemmy_read0'
+			AND pid <> pg_backend_pid();
+			;`
 		case 'explain_posts':
 			// ToDo: I tried EXPLAIN here, but it didn't work, or maybe JSON won't output it?
 			sqlQuery = `EXPLAIN (ANALYZE, COSTS, VERBOSE, BUFFERS, FORMAT JSON)
