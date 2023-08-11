@@ -202,7 +202,7 @@ export const load: PageServerLoad = async (incoming) => {
 		case 'pgactivity':
 			// 			WHERE backend_type = 'client backend'
 			sqlQuery = `
-			SELECT usename, query, wait_event, wait_event_type, query_start, state_change, to_char(age(clock_timestamp(), query_start), 'HH24:MI:SS FF6') AS elapsed
+			SELECT usename, query, wait_event, wait_event_type, query_start, state, state_change, to_char(age(clock_timestamp(), query_start), 'HH24:MI:SS FF6') AS elapsed
 			FROM pg_stat_activity
 			WHERE usename = 'lemmy'
 			   OR usename = 'lemmy_read0'
