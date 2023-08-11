@@ -226,7 +226,7 @@ export const load: PageServerLoad = async (incoming) => {
 				ap_id, local, *
 			FROM post
 			ORDER BY id DESC
-			LIMIT 10
+			LIMIT 1
 			;`
 			break;
 		case 'sleeptest1':
@@ -237,7 +237,7 @@ export const load: PageServerLoad = async (incoming) => {
 				ap_id, local, *
 			FROM post
 			ORDER BY id DESC
-			LIMIT 10
+			LIMIT 1
 			;`
 			break;
 		case 'sleeptest2':
@@ -248,7 +248,7 @@ export const load: PageServerLoad = async (incoming) => {
 				ap_id, local, *
 			FROM post
 			ORDER BY id DESC
-			LIMIT 10
+			LIMIT 1
 			;`
 			break;
 
