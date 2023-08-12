@@ -252,6 +252,72 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 
+		case "benchmark_fill_comment_path0":
+			// attempt to fix path on newly bulk inserted comments
+			//   normally Lemmy does this in a SQL UPDATE after each INSERT
+			// ToDo: also ap_id http://changeme.invalid/620fbd982ef10ad479f2b560
+			restricted = true;
+			sqlQuery = `
+			UPDATE comment
+			SET path = text2ltree('0.'||subquery.id)
+			FROM (
+				SELECT id FROM comment
+				    WHERE path = '0'
+					AND local=true
+				) AS subquery
+			WHERE comment.id = subquery.id
+			;`
+			break;
+
+		case "benchmark_fill_comment_path1fix":
+			// this fixes earlier attempt where hard-coded value was set
+			//   normally Lemmy does this in a SQL UPDATE after each INSERT
+			// ToDo: also ap_id http://changeme.invalid/620fbd982ef10ad479f2b560
+			restricted = true;
+			sqlQuery = `
+			UPDATE comment
+			SET path = text2ltree('0.'||subquery.id)
+			FROM (
+				SELECT id FROM comment
+					WHERE path = '0.999899'
+					AND local=true
+				) AS subquery
+			WHERE comment.id = subquery.id
+			;`
+			break;
+			
+		case "benchmark_fill_comment_reply0":
+			// can this be done?
+			// can we query to get post_id and path out of a comment while inserting?
+			//   two columns from same subselect on INSERT INTO?
+			//   put zero as last element of path to then update again?
+			//   or -1 as first element of path?
+			restricted = true;
+			sqlQuery = `
+			INSERT INTO comment
+			( content, post_id, path, creator_id, local, published )
+			SELECT 
+				'ZipGen Stress-Test message in Huge Community\n\n REPLY comment ${now.toISOString()} c' || i || '\n\n all from the same random user',
+				-- NOT: source=source
+				-- just one single random post in community
+				(SELECT id FROM post
+					WHERE community_id = ${hugeCommunity_id}
+					AND local=true
+					ORDER BY random() LIMIT 1
+					),
+				-- ok, path is set to a level beyond
+				-- random person, but same person for all quantity
+				-- NOT: source=source
+				(SELECT id FROM person
+					WHERE local=true
+					ORDER BY random() LIMIT 1
+					),
+				true,
+				timezone('utc', NOW()) - ( random() * ( NOW() + '93 days' - NOW() ) )
+			FROM generate_series(1, 500) AS source(i)
+			;`
+			break;
+
 		case "test1":
 			sqlQuery = 'SELECT $1::text AS message';
 			sqlParams = ['Hello world!'];
