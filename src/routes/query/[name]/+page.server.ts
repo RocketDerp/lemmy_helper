@@ -35,6 +35,7 @@ export const load: PageServerLoad = async (incoming) => {
 	let postCreatorID0 = 2;
 	// let instanceName0 = "https://bulletintree.com/";
 	let instanceName0 = "http://lemmy-alpha:8541/";
+	let hugeCommunity_id = 19;
 	// this switch statement guards the parameter, only whitelist matching.
 	// ToDo: be more consistent about "pg_" prefix, but will break saved URLs
 	switch (incoming.params.name) {
@@ -65,16 +66,66 @@ export const load: PageServerLoad = async (incoming) => {
 					 WHERE source=source
 					 AND local=true
 					 AND name LIKE 'zzy_com_%'
-					 ORDER BY random() LIMIT 1),
+					 ORDER BY random() LIMIT 1
+					 ),
 				(SELECT id FROM person
 					WHERE source=source
 					AND local=true
-					ORDER BY random() LIMIT 1),
+					ORDER BY random() LIMIT 1
+					),
 				true,
 			    timezone('utc', NOW()) - ( random() * ( NOW() + '95 days' - NOW() ) )
 			FROM generate_series(1, 25000) AS source(i)
 			;`
 			break;
+
+		case "benchmark_fill_p2":
+			restricted = true;
+			// target the communities created by jest run of simulation.
+			sqlQuery = `
+			INSERT INTO post
+			( name, body, community_id, creator_id, local, published )
+			SELECT 'ZipGen Stress-Test Community post ${now.toISOString()} p' || i,
+				'post body ' || i,
+				(SELECT id FROM community
+						WHERE source=source
+						AND local=true
+						AND name LIKE 'zy_%'
+						ORDER BY random() LIMIT 1
+						),
+				(SELECT id FROM person
+					WHERE source=source
+					AND local=true
+					ORDER BY random() LIMIT 1
+					),
+				true,
+				timezone('utc', NOW()) - ( random() * ( NOW() + '95 days' - NOW() ) )
+			FROM generate_series(1, 25000) AS source(i)
+			;`
+			break;
+
+		case "benchmark_fill_p3":
+			restricted = true;
+			// target the communities created by jest run of simulation.
+			// specifically the testing community
+			// "Huge Community" focus, a ton in one community
+			sqlQuery = `
+			INSERT INTO post
+			( name, body, community_id, creator_id, local, published )
+			SELECT 'ZipGen Stress-Test Huge Community post ${now.toISOString()} p' || i,
+				'post body ' || i,
+				${hugeCommunity_id}, -- targeted testing community from simulation
+				(SELECT id FROM person
+					WHERE source=source
+					AND local=true
+					ORDER BY random() LIMIT 1
+					),
+				true,
+				timezone('utc', NOW()) - ( random() * ( NOW() + '128 days' - NOW() ) )
+			FROM generate_series(1, 25000) AS source(i)
+			;`
+			break;
+
 		case "benchmark_fill_c0":
 			restricted = true;
 			sqlQuery = `
@@ -90,6 +141,60 @@ export const load: PageServerLoad = async (incoming) => {
 			FROM generate_series(1, 1500) AS source(i)
 			;`
 			break;
+
+		case "benchmark_fill_comment0":
+			restricted = true;
+			sqlQuery = `
+			INSERT INTO comment
+			( content, post_id, creator_id, local, published )
+			SELECT 
+			    'ZipGen Stress-Test message in Huge Community\n\j comment ${now.toISOString()} c' || i,
+				(SELECT id FROM post
+					WHERE source=source
+					AND community_id = ${hugeCommunity_id} -- target big community
+					AND local=true
+					ORDER BY random() LIMIT 1
+					),
+				(SELECT id FROM person
+					WHERE source=source
+					AND local=true
+					ORDER BY random() LIMIT 1
+					),
+				true,
+				timezone('utc', NOW()) - ( random() * ( NOW() + '93 days' - NOW() ) )
+			FROM generate_series(1, 500) AS source(i)
+			;`
+			break;
+		case "benchmark_fill_comment1":
+			restricted = true;
+			sqlQuery = `
+			INSERT INTO comment
+			( content, post_id, creator_id, local, published )
+			SELECT 
+				'ZipGen Stress-Test message in spread of communities\n\j comment ${now.toISOString()} c' || i,
+				(SELECT id FROM post
+					WHERE source=source
+					AND community_id IN (
+						-- DO NOT put source=source, static query result is fine
+						SELECT id FROM community
+						WHERE local=true
+						AND id <> ${hugeCommunity_id}  -- exclude the big one to speed up inserts
+						AND name LIKE 'zy_%'
+						)
+					AND local=true
+					ORDER BY random() LIMIT 1
+					),
+				(SELECT id FROM person
+					WHERE source=source
+					AND local=true
+					ORDER BY random() LIMIT 1
+					),
+				true,
+				timezone('utc', NOW()) - ( random() * ( NOW() + '93 days' - NOW() ) )
+			FROM generate_series(1, 500) AS source(i)
+			;`
+			break;
+	
 		case "test1":
 			sqlQuery = 'SELECT $1::text AS message';
 			sqlParams = ['Hello world!'];
