@@ -1309,6 +1309,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			;`
 			break;
 		case 'try_trigger_code0':
+			restricted = true;
 			sqlQuery = `SELECT 
 			c.id,
 			count(distinct p.id) as posts,
@@ -1321,6 +1322,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			;`
 			break;
 		case 'try_trigger_code1':
+			restricted = true;
 			sqlQuery = `SELECT 
 			coalesce(cd.posts, 0), coalesce(cd.comments, 0)
 			FROM community_aggregates ca
@@ -1368,7 +1370,6 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			restricted = true;
 			// -- Recalculate proper comment score.
 			// ToDo: restrict run of this in lemmy_helper, 30 seconds
-			break;
 			sqlQuery = `UPDATE person_aggregates ua
 			SET comment_score = cd.score
 			FROM (
@@ -1398,9 +1399,9 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			;`
 			break;
 		case 'try_person_aggregates_update_score1':
+			restricted = true;
 			// -- Recalculate proper post score.
 			// ToDo: restrict run of this in lemmy_helper, 10 seconds
-			restricted = true;
 			sqlQuery = `UPDATE person_aggregates ua
 			SET post_score = pd.score
 			FROM (
@@ -1427,9 +1428,6 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			}
 	}
 
-	let timeConnect = 0.0;
-	let timeQuery = 0.0;
-
 	if (restricted) {
 		let passphrase = incoming.url.searchParams.get("pass");
 		if (passphrase) {
@@ -1453,6 +1451,9 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			errorMessage: "RESTRICTED SQL"
 		}
 	}
+
+	let timeConnect = 0.0;
+	let timeQuery = 0.0;
 
     if (sqlQuery) {
 		const client = new Client()
