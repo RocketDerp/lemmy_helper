@@ -1,5 +1,6 @@
 import type { PageServerLoad } from './$types'
 import { Client } from 'pg'
+import { LEMMY_HELPER_PASS0 } from '$env/static/private';
 
 /*
 ToDo: Whitespace in this file is a mess, this code looks messy. But it's safe to run.
@@ -29,9 +30,66 @@ export const load: PageServerLoad = async (incoming) => {
 		timeperiod = parseInt(incoming.url.searchParams.get("timeperiod"));
 	}
 
+	let restricted = false;
+	let now = new Date();
+	let postCreatorID0 = 2;
+	// let instanceName0 = "https://bulletintree.com/";
+	let instanceName0 = "http://lemmy-alpha:8541/";
 	// this switch statement guards the parameter, only whitelist matching.
 	// ToDo: be more consistent about "pg_" prefix, but will break saved URLs
 	switch (incoming.params.name) {
+		case "benchmark_fill_p0":
+			restricted = true;
+			sqlQuery = `
+		 INSERT INTO post
+			( name, body, community_id, creator_id, local )
+		 SELECT 'post title ' || i, 'post body ' || i,
+		     2,
+			${postCreatorID0},
+			true
+		 FROM generate_series(1, 2500) AS source(i)
+			;`
+			break;
+		case "benchmark_fill_p1":
+			restricted = true;
+			// https://stackoverflow.com/questions/63945489/generate-table-with-random-values-from-other-tables-in-postgresql
+			// https://stackoverflow.com/questions/22964272/postgresql-get-a-random-datetime-timestamp-between-two-datetime-timestamp
+			// 	-- (SELECT NOW() + (random() * (interval '90 days')) - '90 days')
+			//	-- (SELECT NOW() - (random() * (NOW()+'90 days' - NOW())))
+			sqlQuery = `
+			INSERT INTO post
+			( name, body, community_id, creator_id, local, published )
+			SELECT 'ZipGen post title ${now.toISOString()} p' || i,
+			    'post body ' || i,
+			    (SELECT id FROM community
+					 WHERE source=source
+					 AND local=true
+					 AND name LIKE 'zzy_com_%'
+					 ORDER BY random() LIMIT 1),
+				(SELECT id FROM person
+					WHERE source=source
+					AND local=true
+					ORDER BY random() LIMIT 1),
+				true,
+			    timezone('utc', NOW()) - ( random() * ( NOW() + '95 days' - NOW() ) )
+			FROM generate_series(1, 25000) AS source(i)
+			;`
+			break;
+		case "benchmark_fill_c0":
+			restricted = true;
+			sqlQuery = `
+			INSERT INTO community
+			( name, title, description, instance_id, local, public_key, actor_id )
+			SELECT 'zzy_com_' || i,
+			   'ZipGen Community ' || i,
+			   'description goes here, run ${now.toISOString()} c' || i,
+			   1,
+			   true,
+			   'NEED_PUBLIC_KEY',
+			   '${instanceName0}c/zzy_com_' || i
+			FROM generate_series(1, 1500) AS source(i)
+			;`
+			break;
 		case "test1":
 			sqlQuery = 'SELECT $1::text AS message';
 			sqlParams = ['Hello world!'];
@@ -40,6 +98,7 @@ export const load: PageServerLoad = async (incoming) => {
 			sqlQuery = "SELECT * FROM pg_locks;";
 			break;
 		case "create_locks1_view":
+			restricted = true;
 			// ToDo: for the record, I don't know these queries actually work. Testing seems to generate nothing.
 			// discussion: https://stackoverflow.com/questions/26489244/how-to-detect-query-which-holds-the-lock-in-postgres
 			sqlQuery = `
@@ -64,6 +123,7 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 		case "create_locks2_view":
+			restricted = true;
 			// ToDo: for the record, I don't know these queries actually work. Testing seems to generate nothing.
 			// remove all where causes in the name of getting some actual output on every page refresh
 			sqlQuery = `
@@ -102,16 +162,19 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 		case "pg_drop_index0":
+			restricted = true;
 			sqlQuery = `
 			DROP INDEX idx_post_aggregates_community
 			;`
 			break;
 		case "pg_drop_index1":
+			restricted = true;
 			sqlQuery = `
 			DROP INDEX idx_post_aggregates_creator
 			;`
 			break;
 		case "pg_create_index0":
+			restricted = true;
 			sqlQuery = `
 			CREATE INDEX
 			idx_post_aggregates_community
@@ -119,6 +182,7 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 		case "pg_create_index1":
+			restricted = true;
 			sqlQuery = `
 			CREATE INDEX
 			idx_post_aggregates_creator
@@ -230,6 +294,7 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 		case 'sleeptest1':
+			restricted = true;
 			// run lemmy_helper app with different PostgreSQL login to see if triggers statement timeout.
 			sqlQuery = `
 			SELECT pg_sleep(12),
@@ -241,6 +306,7 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 		case 'sleeptest2':
+			restricted = true;
 			// run lemmy_helper app with different PostgreSQL login to see if triggers statement timeout.
 			sqlQuery = `
 			SELECT pg_sleep(45),
@@ -252,8 +318,7 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 		case 'killall_user0':
-// restrict this
-// break;
+			restricted = true;
 			sqlQuery = `
 			SELECT pg_cancel_backend(pid)
 			 FROM pg_stat_activity
@@ -263,8 +328,7 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 		case 'killall_user1':
-// restrict this
-// break;
+			restricted = true;
 			sqlQuery = `
 			SELECT pg_terminate_backend(pid)
 				FROM pg_stat_activity
@@ -272,14 +336,14 @@ export const load: PageServerLoad = async (incoming) => {
 			AND usename = 'lemmy_read0'
 			;`
 		case 'killall_user2':
-// restrict this
-// break;	
+			restricted = true;
 			// testing in production ;)
 			sqlQuery = `
 			SELECT pg_terminate_backend(64257), pg_cancel_backend(64257)
 			;`
 			break;
 		case 'explain_posts':
+			restricted = true;
 			// ToDo: I tried EXPLAIN here, but it didn't work, or maybe JSON won't output it?
 			sqlQuery = `EXPLAIN (ANALYZE, COSTS, VERBOSE, BUFFERS, FORMAT JSON)
 			 SELECT post.id, post.name, post.url, post.body, post.creator_id, post.community_id, post.removed, post.locked, post.published, post.updated, post.deleted, post.nsfw, post.embed_title, post.embed_description, post.embed_video_url, post.thumbnail_url, post.ap_id, post.local, post.language_id, post.featured_community, post.featured_local,
@@ -529,6 +593,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			;`
 			break;
 		case "fix0_commentpath0":
+			restricted = true;
 			// fix the one broken comment in my database
 			sqlQuery = `
 			UPDATE comment
@@ -594,6 +659,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 
 		case "curious_comment_child0":
+			restricted = true;
 			sqlQuery = `
 			UPDATE comment_aggregates ca
 			 SET child_count = c.child_count
@@ -642,8 +708,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 
 		case "mass_fix_comment_child_count":
-			// disable:
-			// break;
+			restricted = true;
 			// this is taken from migrations in lemmy_server
 				sqlQuery = `
 				-- Update the child counts
@@ -764,6 +829,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 
 		case "track_change_log_purge":
+			restricted = true;
 			sqlQuery = `
 			DELETE
 			FROM   logging.t_history
@@ -771,6 +837,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 
 		case "pg_track_change_setup":
+			restricted = true;
 			// https://www.cybertec-postgresql.com/en/tracking-changes-in-postgresql/
 			sqlQuery = `
 			CREATE SCHEMA logging;
@@ -811,6 +878,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			`
 			break;
 		case "pg_trigger_track_change_install0":
+			restricted = true;
 			sqlQuery = `
 			CREATE OR REPLACE TRIGGER trackchange_statements0 
 			    AFTER UPDATE OF child_count ON comment_aggregates
@@ -819,6 +887,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 
 		case "pg_trigger_track_change_install1":
+			restricted = true;
 			sqlQuery = `
 			CREATE OR REPLACE TRIGGER trackchange_statements1 
 				AFTER UPDATE OF child_count ON comment_aggregates
@@ -829,14 +898,14 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 	
 		case "pg_trigger_track_change_remove":
+			restricted = true;
 			sqlQuery = `
 			DROP TRIGGER trackchange_statements0 ON comment_aggregates
 			;`
 			break;
 		
 		case "mass_fix_comment_child_count1":
-			// disable:
-			// break;
+			restricted = true;
 				sqlQuery = `
 				-- Update the child counts
 				UPDATE
@@ -850,8 +919,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 
 		case "mass_fix_comment_child_count2":
-			// disable:
-			// break;
+			restricted = true;
 				sqlQuery = `
 				DO
 				$$
@@ -1040,7 +1108,8 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			;`
 			break;
 		case 'raw_community':
-			sqlQuery = `SELECT id, name, title, published, local, description, *
+			// has private key, don't expose column
+			sqlQuery = `SELECT id, name, title, published, local, description, public_key, last_refreshed_at, banner, icon, hidden, instance_id, actor_id, nsfw, removed, deleted
 			FROM community
 			ORDER BY published DESC
 			LIMIT 100
@@ -1281,6 +1350,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 
 		case 'try_person_aggregates_update_count0':
+			restricted = true;
 			// -- Recalculate proper comment count.
 			// ToDo: restrict run of this in lemmy_helper, 2 seconds
 			sqlQuery = `UPDATE person_aggregates
@@ -1295,6 +1365,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			break;
 
 		case 'try_person_aggregates_update_score0':
+			restricted = true;
 			// -- Recalculate proper comment score.
 			// ToDo: restrict run of this in lemmy_helper, 30 seconds
 			break;
@@ -1313,6 +1384,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			;`
 			break;
 		case 'try_person_aggregates_update_count1':
+			restricted = true;
 			// -- Recalculate proper post count.
 			// ToDo: restrict run of this in lemmy_helper, 2 seconds
 			sqlQuery = `UPDATE person_aggregates
@@ -1328,7 +1400,7 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 		case 'try_person_aggregates_update_score1':
 			// -- Recalculate proper post score.
 			// ToDo: restrict run of this in lemmy_helper, 10 seconds
-			break;
+			restricted = true;
 			sqlQuery = `UPDATE person_aggregates ua
 			SET post_score = pd.score
 			FROM (
@@ -1357,6 +1429,30 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 
 	let timeConnect = 0.0;
 	let timeQuery = 0.0;
+
+	if (restricted) {
+		let passphrase = incoming.url.searchParams.get("pass");
+		if (passphrase) {
+			if (passphrase.length > 3) {
+				if (passphrase === LEMMY_HELPER_PASS0)
+				{
+					console.log("passphrase matched");
+					restricted = false;
+				}
+			}
+		}
+	}
+
+	if (restricted) {
+		console.error("Restricted from accessing this query");
+		return {
+			queryName: "error, RESTRICTED SQL, ER010",
+			outRows: { rows: [] },
+			outRowsRaw: [],
+			errorCode: 10,
+			errorMessage: "RESTRICTED SQL"
+		}
+	}
 
     if (sqlQuery) {
 		const client = new Client()
