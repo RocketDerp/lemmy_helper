@@ -148,7 +148,7 @@ export const load: PageServerLoad = async (incoming) => {
 			INSERT INTO comment
 			( content, post_id, creator_id, local, published )
 			SELECT 
-			    'ZipGen Stress-Test message in Huge Community\n\j comment ${now.toISOString()} c' || i,
+			    'ZipGen Stress-Test message in Huge Community\n\n comment ${now.toISOString()} c' || i,
 				(SELECT id FROM post
 					WHERE source=source
 					AND community_id = ${hugeCommunity_id} -- target big community
@@ -171,7 +171,7 @@ export const load: PageServerLoad = async (incoming) => {
 			INSERT INTO comment
 			( content, post_id, creator_id, local, published )
 			SELECT 
-				'ZipGen Stress-Test message in spread of communities\n\j comment ${now.toISOString()} c' || i,
+				'ZipGen Stress-Test message in spread of communities\n\n comment ${now.toISOString()} c' || i,
 				(SELECT id FROM post
 					WHERE source=source
 					AND community_id IN (
@@ -195,6 +195,63 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 	
+		case "benchmark_fill_comment2":
+			// this was created to have a baseline for how long
+			//  comment insertion takes, without any tricky logic.
+			restricted = true;
+			sqlQuery = `
+			INSERT INTO comment
+			( content, post_id, creator_id, local, published )
+			SELECT 
+				'ZipGen Stress-Test message in Huge Community\n\n comment ${now.toISOString()} c' || i || '\n\n all from the same random user',
+				(SELECT id FROM post
+					WHERE source=source
+					AND community_id = ${hugeCommunity_id}
+					AND local=true
+					ORDER BY random() LIMIT 1
+					),
+			    -- random person, but same person for all quantity
+				-- NOT: source=source
+				(SELECT id FROM person
+					WHERE local=true
+					ORDER BY random() LIMIT 1
+					),
+				true,
+				timezone('utc', NOW()) - ( random() * ( NOW() + '93 days' - NOW() ) )
+			FROM generate_series(1, 500) AS source(i)
+			;`
+			break;
+
+		case "benchmark_fill_comment3":
+			// STILL not fast enough, how about all on one single post?
+			// THIS SOLVED IT, even up to 1500 quantity
+			// this was created to have a baseline for how long
+			//  comment insertion takes, without any tricky logic.
+			restricted = true;
+			sqlQuery = `
+			INSERT INTO comment
+			( content, post_id, creator_id, local, published )
+			SELECT 
+				'ZipGen Stress-Test message in Huge Community\n\n comment ${now.toISOString()} c' || i || '\n\n all from the same random user',
+				-- NOT: source=source
+				-- just one single random post in community
+				(SELECT id FROM post
+					WHERE community_id = ${hugeCommunity_id}
+					AND local=true
+					ORDER BY random() LIMIT 1
+					),
+				-- random person, but same person for all quantity
+				-- NOT: source=source
+				(SELECT id FROM person
+					WHERE local=true
+					ORDER BY random() LIMIT 1
+					),
+				true,
+				timezone('utc', NOW()) - ( random() * ( NOW() + '93 days' - NOW() ) )
+			FROM generate_series(1, 1500) AS source(i)
+			;`
+			break;
+
 		case "test1":
 			sqlQuery = 'SELECT $1::text AS message';
 			sqlParams = ['Hello world!'];
