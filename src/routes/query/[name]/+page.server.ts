@@ -180,7 +180,7 @@ export const load: PageServerLoad = async (incoming) => {
 			SELECT
 				nextval(pg_get_serial_sequence('comment', 'id')),
 				text2ltree('0.' || currval( pg_get_serial_sequence('comment', 'id')) ),
-				'${instanceName0}' || currval( pg_get_serial_sequence('comment', 'id') ),
+				'${instanceName0}comment/' || currval( pg_get_serial_sequence('comment', 'id') ),
 				'ZipGen Stress-Test message in spread of communities\n\n comment ${now.toISOString()} c' || i
 				    || ' PostgreSQL comment id ' || currval( pg_get_serial_sequence('comment', 'id') ),
 				(SELECT id FROM post
@@ -216,7 +216,7 @@ export const load: PageServerLoad = async (incoming) => {
 			SELECT
 				nextval(pg_get_serial_sequence('comment', 'id')),
 				text2ltree('0.' || currval(pg_get_serial_sequence('comment', 'id')) ),
-				'${instanceName0}' || currval( pg_get_serial_sequence('comment', 'id') ),
+				'${instanceName0}comment/' || currval( pg_get_serial_sequence('comment', 'id') ),
 				'ZipGen Stress-Test message in Huge Community\n\n comment ${now.toISOString()} c' || i || '\n\n all from the same random user.'
 					|| ' PostgreSQL comment id ' || currval( pg_get_serial_sequence('comment', 'id') ),
 				(SELECT id FROM post
@@ -246,10 +246,10 @@ export const load: PageServerLoad = async (incoming) => {
 			sqlQuery = `
 			INSERT INTO comment
 			( id, path, ap_id, content, post_id, creator_id, local, published )
-			SELECT 
+			SELECT
 				nextval(pg_get_serial_sequence('comment', 'id')),
-    			text2ltree('0.' || currval(pg_get_serial_sequence('comment', 'id')) ),
-				'${instanceName0}' || currval( pg_get_serial_sequence('comment', 'id') ),
+				text2ltree('0.' || currval(pg_get_serial_sequence('comment', 'id')) ),
+				'${instanceName0}comment/' || currval( pg_get_serial_sequence('comment', 'id') ),
 				'ZipGen Stress-Test message in Huge Community\n\n comment ${now.toISOString()} c' || i || '\n\n all from the same random user.'
 					|| ' PostgreSQL comment id ' || currval( pg_get_serial_sequence('comment', 'id') ),
 				-- NOT: source=source
@@ -318,22 +318,20 @@ export const load: PageServerLoad = async (incoming) => {
 			//   two columns from same subselect on INSERT INTO?
 			//   put zero as last element of path to then update again?
 			//   or -1 as first element of path?
+			// instead of generate, does one reply for every existing comment?
 			restricted = true;
 			sqlQuery = `
 			INSERT INTO comment
-			( id, path, content, post_id, creator_id, local, published )
-			SELECT 
+			( id, path, ap_id, content, post_id, creator_id, local, published )
+			SELECT
 				nextval(pg_get_serial_sequence('comment', 'id')),
-				-- SOLVE PROBLEM ToDo: how to get path of SELECTED comment
-				text2ltree('0.' || currval(pg_get_serial_sequence('comment', 'id')) ),
-				'ZipGen Stress-Test message in Huge Community\n\n comment ${now.toISOString()} c' || i || '\n\n all from the same random user',
+				text2ltree('0.9999999' || '.' || currval(pg_get_serial_sequence('comment', 'id')) ),
+				'${instanceName0}comment/' || currval( pg_get_serial_sequence('comment', 'id') ),
+				'ZipGen Stress-Test message in Huge Community\n\n comment ${now.toISOString()} c' || '?' || '\n\n all from the same random user.'
+					|| ' PostgreSQL comment id ' || currval( pg_get_serial_sequence('comment', 'id') ),
 				-- NOT: source=source
 				-- just one single random post in community
-				(SELECT id FROM post
-					WHERE community_id = ${hugeCommunity_id}
-					AND local=true
-					ORDER BY random() LIMIT 1
-					),
+				post_id,
 				-- random person, but same person for all quantity
 				-- NOT: source=source
 				(SELECT id FROM person
@@ -342,7 +340,14 @@ export const load: PageServerLoad = async (incoming) => {
 					),
 				true,
 				timezone('utc', NOW()) - ( random() * ( NOW() + '93 days' - NOW() ) )
-			FROM generate_series(1, 1500) AS source(i)
+			FROM comment
+			WHERE post_id IN
+				(SELECT id FROM post
+					WHERE community_id = ${hugeCommunity_id}
+					AND local=true
+					)
+			AND local=true
+			LIMIT 500
 			;`
 			break;
 
