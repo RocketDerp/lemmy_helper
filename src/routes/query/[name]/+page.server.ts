@@ -181,7 +181,8 @@ export const load: PageServerLoad = async (incoming) => {
 				nextval(pg_get_serial_sequence('comment', 'id')),
 				text2ltree('0.' || currval( pg_get_serial_sequence('comment', 'id')) ),
 				'${instanceName0}' || currval( pg_get_serial_sequence('comment', 'id') ),
-				'ZipGen Stress-Test message in spread of communities\n\n comment ${now.toISOString()} c' || i,
+				'ZipGen Stress-Test message in spread of communities\n\n comment ${now.toISOString()} c' || i
+				    || ' PostgreSQL comment id ' || currval( pg_get_serial_sequence('comment', 'id') ),
 				(SELECT id FROM post
 					WHERE source=source
 					AND community_id IN (
@@ -214,7 +215,8 @@ export const load: PageServerLoad = async (incoming) => {
 			( path, content, post_id, creator_id, local, published )
 			SELECT 
 				text2ltree('0.' || nextval(pg_get_serial_sequence('comment', 'id')) ),
-				'ZipGen Stress-Test message in Huge Community\n\n comment ${now.toISOString()} c' || i || '\n\n all from the same random user',
+				'ZipGen Stress-Test message in Huge Community\n\n comment ${now.toISOString()} c' || i || '\n\n all from the same random user.'
+					|| ' PostgreSQL comment id ' || currval( pg_get_serial_sequence('comment', 'id') ),
 				(SELECT id FROM post
 					WHERE source=source
 					AND community_id = ${hugeCommunity_id}
@@ -245,7 +247,8 @@ export const load: PageServerLoad = async (incoming) => {
 			SELECT 
 				nextval(pg_get_serial_sequence('comment', 'id')),
     			text2ltree('0.' || currval(pg_get_serial_sequence('comment', 'id')) ),
-				'ZipGen Stress-Test message in Huge Community\n\n comment ${now.toISOString()} c' || i || '\n\n all from the same random user',
+				'ZipGen Stress-Test message in Huge Community\n\n comment ${now.toISOString()} c' || i || '\n\n all from the same random user.'
+					|| ' PostgreSQL comment id ' || currval( pg_get_serial_sequence('comment', 'id') ),
 				-- NOT: source=source
 				-- just one single random post in community
 				(SELECT id FROM post
@@ -315,9 +318,12 @@ export const load: PageServerLoad = async (incoming) => {
 			restricted = true;
 			sqlQuery = `
 			INSERT INTO comment
-			( content, post_id, path, creator_id, local, published )
+			( id, path, content, post_id, creator_id, local, published )
 			SELECT 
-				'ZipGen Stress-Test message in Huge Community\n\n REPLY comment ${now.toISOString()} c' || i || '\n\n all from the same random user',
+				nextval(pg_get_serial_sequence('comment', 'id')),
+				-- SOLVE PROBLEM ToDo: how to get path of SELECTED comment
+				text2ltree('0.' || currval(pg_get_serial_sequence('comment', 'id')) ),
+				'ZipGen Stress-Test message in Huge Community\n\n comment ${now.toISOString()} c' || i || '\n\n all from the same random user',
 				-- NOT: source=source
 				-- just one single random post in community
 				(SELECT id FROM post
@@ -325,7 +331,6 @@ export const load: PageServerLoad = async (incoming) => {
 					AND local=true
 					ORDER BY random() LIMIT 1
 					),
-				-- ok, path is set to a level beyond
 				-- random person, but same person for all quantity
 				-- NOT: source=source
 				(SELECT id FROM person
@@ -334,7 +339,7 @@ export const load: PageServerLoad = async (incoming) => {
 					),
 				true,
 				timezone('utc', NOW()) - ( random() * ( NOW() + '93 days' - NOW() ) )
-			FROM generate_series(1, 500) AS source(i)
+			FROM generate_series(1, 1500) AS source(i)
 			;`
 			break;
 
