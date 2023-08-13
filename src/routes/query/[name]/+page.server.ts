@@ -313,22 +313,19 @@ export const load: PageServerLoad = async (incoming) => {
 //
 
 		case "benchmark_fill_comment_reply0":
-			// can this be done?
-			// can we query to get post_id and path out of a comment while inserting?
-			//   two columns from same subselect on INSERT INTO?
-			//   put zero as last element of path to then update again?
-			//   or -1 as first element of path?
-			// instead of generate, does one reply for every existing comment?
+			// PURPOSE: one random user replies to comments that already exist.
+			//   only the specified Huge Testing community.
 			restricted = true;
 			sqlQuery = `
 			INSERT INTO comment
 			( id, path, ap_id, content, post_id, creator_id, local, published )
 			SELECT
 				nextval(pg_get_serial_sequence('comment', 'id')),
-				text2ltree('0.9999999' || '.' || currval(pg_get_serial_sequence('comment', 'id')) ),
+				text2ltree( path::text || '.' || currval(pg_get_serial_sequence('comment', 'id')) ),
 				'${instanceName0}comment/' || currval( pg_get_serial_sequence('comment', 'id') ),
 				'ZipGen Stress-Test message in Huge Community\n\n comment ${now.toISOString()} c' || '?' || '\n\n all from the same random user.'
-					|| ' PostgreSQL comment id ' || currval( pg_get_serial_sequence('comment', 'id') ),
+					|| ' PostgreSQL comment id ' || currval( pg_get_serial_sequence('comment', 'id') )
+					|| ' path ' || path::text,
 				-- NOT: source=source
 				-- just one single random post in community
 				post_id,
@@ -345,9 +342,10 @@ export const load: PageServerLoad = async (incoming) => {
 				(SELECT id FROM post
 					WHERE community_id = ${hugeCommunity_id}
 					AND local=true
+					-- AND path level < 14?
 					)
 			AND local=true
-			LIMIT 500
+			LIMIT 12000
 			;`
 			break;
 
