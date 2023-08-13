@@ -212,9 +212,11 @@ export const load: PageServerLoad = async (incoming) => {
 			restricted = true;
 			sqlQuery = `
 			INSERT INTO comment
-			( path, content, post_id, creator_id, local, published )
-			SELECT 
-				text2ltree('0.' || nextval(pg_get_serial_sequence('comment', 'id')) ),
+			( id, path, ap_id, content, post_id, creator_id, local, published )
+			SELECT
+				nextval(pg_get_serial_sequence('comment', 'id')),
+				text2ltree('0.' || currval(pg_get_serial_sequence('comment', 'id')) ),
+				'${instanceName0}' || currval( pg_get_serial_sequence('comment', 'id') ),
 				'ZipGen Stress-Test message in Huge Community\n\n comment ${now.toISOString()} c' || i || '\n\n all from the same random user.'
 					|| ' PostgreSQL comment id ' || currval( pg_get_serial_sequence('comment', 'id') ),
 				(SELECT id FROM post
@@ -243,10 +245,11 @@ export const load: PageServerLoad = async (incoming) => {
 			restricted = true;
 			sqlQuery = `
 			INSERT INTO comment
-			( id, path, content, post_id, creator_id, local, published )
+			( id, path, ap_id, content, post_id, creator_id, local, published )
 			SELECT 
 				nextval(pg_get_serial_sequence('comment', 'id')),
     			text2ltree('0.' || currval(pg_get_serial_sequence('comment', 'id')) ),
+				'${instanceName0}' || currval( pg_get_serial_sequence('comment', 'id') ),
 				'ZipGen Stress-Test message in Huge Community\n\n comment ${now.toISOString()} c' || i || '\n\n all from the same random user.'
 					|| ' PostgreSQL comment id ' || currval( pg_get_serial_sequence('comment', 'id') ),
 				-- NOT: source=source
