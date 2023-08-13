@@ -39,19 +39,38 @@ export const load: PageServerLoad = async (incoming) => {
 	// this switch statement guards the parameter, only whitelist matching.
 	// ToDo: be more consistent about "pg_" prefix, but will break saved URLs
 	switch (incoming.params.name) {
-		case "benchmark_fill_p0":
+		// lemmy.world alone has over 10K communities 2023-08-12
+		case "benchmark_fill_community0":
+			// purpose, create bulk communities
 			restricted = true;
 			sqlQuery = `
-		 INSERT INTO post
-			( name, body, community_id, creator_id, local )
-		 SELECT 'post title ' || i, 'post body ' || i,
-		     2,
-			${postCreatorID0},
-			true
-		 FROM generate_series(1, 2500) AS source(i)
+			INSERT INTO community
+			( name, title, description, instance_id, local, public_key, actor_id )
+			SELECT 'zzy_com_' || i,
+			   'ZipGen Community ' || i,
+			   'description goes here, run ${now.toISOString()} c' || i,
+			   1,
+			   true,
+			   'NEED_PUBLIC_KEY',
+			   '${instanceName0}c/zzy_com_' || i
+			FROM generate_series(1, 1500) AS source(i)
 			;`
 			break;
-		case "benchmark_fill_p1":
+		case "benchmark_fill_post0":
+			restricted = true;
+			sqlQuery = `
+			INSERT INTO post
+				( name, body, community_id, creator_id, local )
+			SELECT 'post title ' || i, 'post body ' || i,
+				2,
+				${postCreatorID0},
+				true
+			FROM generate_series(1, 2500) AS source(i)
+			;`
+			break;
+		case "benchmark_fill_post1":
+			// PURPOSE: fill post with posts across all test communities
+			//    that wwere created in previous bulk community create
 			restricted = true;
 			// https://stackoverflow.com/questions/63945489/generate-table-with-random-values-from-other-tables-in-postgresql
 			// https://stackoverflow.com/questions/22964272/postgresql-get-a-random-datetime-timestamp-between-two-datetime-timestamp
@@ -79,9 +98,10 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 
-		case "benchmark_fill_p2":
+		case "benchmark_fill_post2":
 			restricted = true;
-			// target the communities created by jest run of simulation.
+			// PURPOSE: fill posts
+			//          target the communities created by jest run of simulation.
 			sqlQuery = `
 			INSERT INTO post
 			( name, body, community_id, creator_id, local, published )
@@ -104,7 +124,7 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 
-		case "benchmark_fill_p3":
+		case "benchmark_fill_post3":
 			restricted = true;
 			// target the communities created by jest run of simulation.
 			// specifically the testing community
@@ -123,22 +143,6 @@ export const load: PageServerLoad = async (incoming) => {
 				true,
 				timezone('utc', NOW()) - ( random() * ( NOW() + '128 days' - NOW() ) )
 			FROM generate_series(1, 25000) AS source(i)
-			;`
-			break;
-
-		case "benchmark_fill_c0":
-			restricted = true;
-			sqlQuery = `
-			INSERT INTO community
-			( name, title, description, instance_id, local, public_key, actor_id )
-			SELECT 'zzy_com_' || i,
-			   'ZipGen Community ' || i,
-			   'description goes here, run ${now.toISOString()} c' || i,
-			   1,
-			   true,
-			   'NEED_PUBLIC_KEY',
-			   '${instanceName0}c/zzy_com_' || i
-			FROM generate_series(1, 1500) AS source(i)
 			;`
 			break;
 
@@ -166,11 +170,17 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 		case "benchmark_fill_comment1":
+			// PURPOSE: create comment scattered across all the test communities
+			//   created by simulation test run, excluding the Huge community
 			restricted = true;
 			sqlQuery = `
 			INSERT INTO comment
-			( content, post_id, creator_id, local, published )
-			SELECT 
+			( id, path, ap_id, content, post_id, creator_id, local, published )
+			-- ( path, content, post_id, creator_id, local, published )
+			SELECT
+				nextval(pg_get_serial_sequence('comment', 'id')),
+				text2ltree('0.' || currval( pg_get_serial_sequence('comment', 'id')) ),
+				'${instanceName0}' || currval( pg_get_serial_sequence('comment', 'id') ),
 				'ZipGen Stress-Test message in spread of communities\n\n comment ${now.toISOString()} c' || i,
 				(SELECT id FROM post
 					WHERE source=source
@@ -201,8 +211,9 @@ export const load: PageServerLoad = async (incoming) => {
 			restricted = true;
 			sqlQuery = `
 			INSERT INTO comment
-			( content, post_id, creator_id, local, published )
+			( path, content, post_id, creator_id, local, published )
 			SELECT 
+				text2ltree('0.' || nextval(pg_get_serial_sequence('comment', 'id')) ),
 				'ZipGen Stress-Test message in Huge Community\n\n comment ${now.toISOString()} c' || i || '\n\n all from the same random user',
 				(SELECT id FROM post
 					WHERE source=source
@@ -230,8 +241,10 @@ export const load: PageServerLoad = async (incoming) => {
 			restricted = true;
 			sqlQuery = `
 			INSERT INTO comment
-			( content, post_id, creator_id, local, published )
+			( id, path, content, post_id, creator_id, local, published )
 			SELECT 
+				nextval(pg_get_serial_sequence('comment', 'id')),
+    			text2ltree('0.' || currval(pg_get_serial_sequence('comment', 'id')) ),
 				'ZipGen Stress-Test message in Huge Community\n\n comment ${now.toISOString()} c' || i || '\n\n all from the same random user',
 				-- NOT: source=source
 				-- just one single random post in community
@@ -252,7 +265,7 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 
-		case "benchmark_fill_comment_path0":
+		case "benchmark_fill_comment_path_fix0":
 			// attempt to fix path on newly bulk inserted comments
 			//   normally Lemmy does this in a SQL UPDATE after each INSERT
 			// ToDo: also ap_id http://changeme.invalid/620fbd982ef10ad479f2b560
@@ -269,7 +282,7 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 
-		case "benchmark_fill_comment_path1fix":
+		case "benchmark_fill_comment_path_fix1":
 			// this fixes earlier attempt where hard-coded value was set
 			//   normally Lemmy does this in a SQL UPDATE after each INSERT
 			// ToDo: also ap_id http://changeme.invalid/620fbd982ef10ad479f2b560
@@ -285,7 +298,14 @@ export const load: PageServerLoad = async (incoming) => {
 			WHERE comment.id = subquery.id
 			;`
 			break;
-			
+
+
+// ToDo: lemmy server
+// it is possible to rework the INSERT logic
+//   https://stackoverflow.com/questions/54817559/using-primary-key-foreign-key-to-build-ltree
+//    https://dba.stackexchange.com/questions/3281/how-do-i-use-currval-in-postgresql-to-get-the-last-inserted-id
+//
+
 		case "benchmark_fill_comment_reply0":
 			// can this be done?
 			// can we query to get post_id and path out of a comment while inserting?
@@ -1355,6 +1375,14 @@ SELECT "post"."id" AS post_id_0, "post"."name" AS post_name_0,
 			FROM comment
 			ORDER BY published DESC
 			LIMIT 10
+			;`
+			break;
+		case 'raw_comments1':
+			// focus on mewly inserted rows
+			sqlQuery = `SELECT id, post_id, published, ap_id, path, *
+			FROM comment
+			ORDER BY id DESC
+			LIMIT 30
 			;`
 			break;
 		case 'raw_comment_reply':
