@@ -327,7 +327,8 @@ export const load: PageServerLoad = async (incoming) => {
 				'${instanceName0}comment/' || currval( pg_get_serial_sequence('comment', 'id') ),
 				'ZipGen Stress-Test message in Huge Community\n\n comment ${now.toISOString()} c' || '?' || '\n\n all from the same random user.'
 					|| ' PostgreSQL comment id ' || currval( pg_get_serial_sequence('comment', 'id') )
-					|| ' path ' || path::text,
+					|| ' path ' || path::text
+					|| '\n\n> ' || REPLACE(content, '\n', ' CRLF '),
 				-- NOT: source=source
 				-- just one single random post in community
 				post_id,
