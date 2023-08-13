@@ -69,7 +69,7 @@ export const load: PageServerLoad = async (incoming) => {
 			;`
 			break;
 		case "benchmark_fill_post1":
-			// PURPOSE: fill post with posts across all test communities
+			// PURPOSE: mass INSERT Lemmy posts across all test communities
 			//    that wwere created in previous bulk community create
 			restricted = true;
 			// https://stackoverflow.com/questions/63945489/generate-table-with-random-values-from-other-tables-in-postgresql
@@ -100,7 +100,7 @@ export const load: PageServerLoad = async (incoming) => {
 
 		case "benchmark_fill_post2":
 			restricted = true;
-			// PURPOSE: fill posts
+			// PURPOSE: mass INSERT Lemmy posts across all test communities
 			//          target the communities created by jest run of simulation.
 			sqlQuery = `
 			INSERT INTO post
@@ -127,8 +127,8 @@ export const load: PageServerLoad = async (incoming) => {
 		case "benchmark_fill_post3":
 			restricted = true;
 			// target the communities created by jest run of simulation.
-			// specifically the testing community
-			// "Huge Community" focus, a ton in one community
+			//    specifically the testing community
+			//    "Huge Community" focus, a ton of posts in one community
 			sqlQuery = `
 			INSERT INTO post
 			( name, body, community_id, creator_id, local, published )
@@ -147,6 +147,7 @@ export const load: PageServerLoad = async (incoming) => {
 			break;
 
 		case "benchmark_fill_comment0":
+			// OBSOLETE?
 			restricted = true;
 			sqlQuery = `
 			INSERT INTO comment
@@ -207,6 +208,7 @@ export const load: PageServerLoad = async (incoming) => {
 			break;
 	
 		case "benchmark_fill_comment2":
+			// target the Huge Post community
 			// this was created to have a baseline for how long
 			//  comment insertion takes, without any tricky logic.
 			restricted = true;
