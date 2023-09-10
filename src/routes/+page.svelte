@@ -32,7 +32,9 @@
     <li><a href="query/pg_triggers/?output={data.output}">pg_triggers</a> - datatabase TRIGGER list <a href="query/pg_triggers1/?output={data.output}">pg_triggers1</a></li>
     <li><a href="query/pgstatements/?output={data.output}">pgcstatements</a> - stats -
         <a href="query/pgstatements1/?output={data.output}">pgcstatements1</a> (all columns) -
-       <a href="query/reset_pgstatements/?output=raw">RESET</a></li>
+       <a href="query/reset_pgstatements/?output=raw">RESET</a>,
+       <a href="query/install_pgstatements/?output=raw">INSTALL</a>
+    </li>
     <li><a href="query/pgrunning1/?output={data.output}">pgrunning1</a> database running</li>
     <li><a href="query/pgactivity/?output={data.output}">pgactivity</a> database pg_stat_activity</li>
     <li><a href="query/communitypending1/?output={data.output}">communitypending1</a> - Lemmy community join/subscribe pending. <a href="query/communitypending/">communitypending</a></li>
